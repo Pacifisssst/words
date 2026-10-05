@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Special occasions · 1d words</title>
+<meta name="description" content="Spotlight 9 · Module 1d · Special occasions — 60 words with pictures and sound">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+<style>
+:root{--bg:#fffdf7;--card:#ffffff;--ink:#111c37;--muted:#5b6680;--soft:#eef2ff;--line:#d8deeb;--blue:#2f59ff;--green:#11724a;--sun:#ffd54a;--red:#b83a25}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1426;--card:#151e35;--ink:#f3efe4;--muted:#aab6d0;--soft:#1b2542;--line:#2e3a58;--blue:#8aa8ff;--green:#7de7c6;--sun:#ffe27a;--red:#ff9b83}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 -apple-system,"Avenir Next","Segoe UI",Roboto,sans-serif}
+main{max-width:680px;margin:0 auto;padding:12px 16px 32px;min-height:100dvh;display:flex;flex-direction:column;gap:10px}
+header h1{font-size:1.25em;margin:0}header p{margin:0;color:var(--muted);font-size:.85em}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 .85em inherit;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.bar{display:flex;align-items:center;gap:8px;font-size:.85em;color:var(--muted)}
+.prog{flex:1;height:8px;background:var(--soft);border-radius:4px;overflow:hidden}.prog i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+.card{position:relative;background:var(--card);border:2px solid var(--line);border-radius:22px;overflow:hidden;cursor:pointer;user-select:none;display:flex;flex-direction:column;flex:1;min-height:0}
+.pic{width:100%;aspect-ratio:1/1;max-height:46dvh;transition:max-height .25s;object-fit:contain;background:var(--soft);display:block}
+.star{position:absolute;top:10px;left:10px;background:var(--sun);color:#111c37;border-radius:999px;padding:2px 10px;font-weight:800;font-size:.8em}
+.grp{position:absolute;top:10px;right:10px;background:rgba(17,28,55,.75);color:#fff;border-radius:999px;padding:2px 10px;font-size:.75em}
+.txt{padding:12px 16px 16px;display:flex;flex-direction:column;gap:6px;text-align:center;min-height:9em;justify-content:center}
+.ask{font-weight:800;font-size:1.3em;color:var(--blue)}.ask small{display:block;font-weight:500;font-size:.62em;color:var(--muted)}
+.en{font-weight:800;font-size:1.6em;line-height:1.1;color:var(--blue)}.def{color:var(--muted);font-size:.92em}
+.ru{font-weight:800;color:var(--green);font-size:1.15em}.ex{font-weight:600;font-size:1.02em}
+.hide{display:none!important}
+.ctrl{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+button.b{border:0;border-radius:14px;padding:12px 6px;font:700 .95em inherit;background:var(--soft);color:var(--ink);cursor:pointer;min-height:48px}
+button.b.main{background:var(--blue);color:#fff}button.b.ok{background:var(--green);color:#fff}button.b.again{background:var(--sun);color:#111c37}
+.judge{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.done{text-align:center;padding:24px 8px}.done b{font-size:1.4em;display:block;margin-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.grid button{border:2px solid var(--line);background:var(--card);border-radius:12px;padding:0;overflow:hidden;cursor:pointer;color:var(--ink);text-align:left}
+.grid img{width:100%;aspect-ratio:1;object-fit:cover;display:block}.grid span{display:block;font-size:.72em;font-weight:600;padding:3px 6px 5px;line-height:1.15}
+.grid .k{outline:3px solid var(--green);outline-offset:-3px}
+.foot{font-size:.78em;color:var(--muted);text-align:center}
+.mode{display:flex;gap:6px;align-items:center;font-size:.85em;color:var(--muted)}
+.card.open .pic{max-height:26dvh}
+</style>
+</head>
+<body>
+<main>
+<header><h1>🎂 Special occasions · 1d</h1><p>Spotlight 9 · 60 слов с картинками и звуком · нажимай на карточку</p></header>
+<div class="chips" id="decks"></div>
+<div class="mode"><button class="chip" id="modeBtn" aria-pressed="false">Сначала русский</button><button class="chip" id="unkBtn" aria-pressed="false">Только незнакомые</button><button class="chip" id="gridBtn" aria-pressed="false">Все карточки</button></div>
+<div class="bar"><span id="cnt">1 / 24</span><div class="prog"><i id="prog"></i></div><span id="known">✓ 0</span></div>
+
+<section id="study" style="display:contents">
+<div class="card" id="card" role="button" tabindex="0" aria-label="Следующий шаг карточки">
+ <img class="pic" id="pic" alt="">
+ <span class="star hide" id="star">★ главное</span><span class="grp" id="grp"></span>
+ <div class="txt">
+  <p class="ask" id="ask">What is it?<small>Что это? Скажи по-английски — потом нажми</small></p>
+  <p class="en hide" id="en"></p><p class="def hide" id="def"></p>
+  <p class="ru hide" id="ru"></p>
+  <p class="ex hide" id="ex"></p>
+ </div>
+</div>
+<div class="judge hide" id="judge"><button class="b again" id="again">↺ Ещё раз</button><button class="b ok" id="ok">✓ Знаю</button></div>
+<div class="ctrl"><button class="b" id="prev" aria-label="Назад">◀</button><button class="b" id="sayW">🔊 слово</button><button class="b" id="sayX">🔊 пример</button><button class="b" id="shuf" aria-label="Перемешать">🔀</button></div>
+<div class="done hide" id="done"><b>🎉 Готово!</b>Все карточки этой колоды пройдены. <br><br><button class="b main" id="restart">Ещё раз сначала</button></div>
+</section>
+<section id="gridView" class="hide"><div class="grid" id="grid"></div></section>
+<p class="foot">Картинка → слово и значение (звук) → перевод → пример (звук) → «Знаю» или «Ещё раз». Прогресс сохраняется на этом телефоне.</p>
+</main>
+<audio id="au" preload="none"></audio>
+<script src="words.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const store = { get(k, d) { try { return JSON.parse(localStorage.getItem('w1d:' + k)) ?? d } catch { return d } },
+                  set(k, v) { try { localStorage.setItem('w1d:' + k, JSON.stringify(v)) } catch {} } };
+  const DECKS = [['star', '★ Главные'], ['all', 'Все'], ...[...new Set(WORDS.map(w => w.g))].map(g => [g, g])];
+  let deck = store.get('deck', 'star'), ruFirst = store.get('ru', false), onlyUnk = false;
+  let known = new Set(store.get('known', [])), list = [], i = 0, step = 0;
+  const au = $('au');
+  const play = src => { au.src = src; au.currentTime = 0; au.play().catch(() => {}) };
+  const words = () => WORDS.filter(w => deck === 'all' || (deck === 'star' ? w.star : w.g === deck));
+  function build(shuffle) {
+    list = words().filter(w => !onlyUnk || !known.has(w.k));
+    if (shuffle) for (let a = list.length - 1; a > 0; a--) { const b = Math.floor(Math.random() * (a + 1)); [list[a], list[b]] = [list[b], list[a]] }
+    i = 0; step = 0; render();
+  }
+  function chips() {
+    $('decks').innerHTML = DECKS.map(([k, t]) => `<button class="chip" data-d="${k}" aria-pressed="${k === deck}">${t} · ${k === 'all' ? 60 : WORDS.filter(w => k === 'star' ? w.star : w.g === k).length}</button>`).join('');
+    $('modeBtn').setAttribute('aria-pressed', ruFirst); $('unkBtn').setAttribute('aria-pressed', onlyUnk);
+  }
+  function render() {
+    chips();
+    const all = words(); $('known').textContent = '✓ ' + all.filter(w => known.has(w.k)).length + ' / ' + all.length;
+    $('prog').style.width = (all.length ? 100 * all.filter(w => known.has(w.k)).length / all.length : 0) + '%';
+    const fin = i >= list.length;
+    $('done').classList.toggle('hide', !fin); $('card').classList.toggle('hide', fin); $('judge').classList.add('hide');
+    $('cnt').textContent = fin ? `${list.length} / ${list.length}` : `${i + 1} / ${list.length}`;
+    if (fin) return;
+    const w = list[i];
+    $('pic').src = `img/${w.k}.jpg`; $('star').classList.toggle('hide', !w.star); $('grp').textContent = w.gru;
+    $('en').textContent = w.en; $('def').textContent = w.def; $('ru').textContent = w.ru; $('ex').textContent = w.ex;
+    // steps: picture → English (+meaning, voice) → Russian → example (voice). «Сначала русский»: Russian is shown at once.
+    const o = order(), shown = o.slice(0, base() + step);
+    $('ask').innerHTML = ruFirst ? 'Как по-английски?<small>Скажи слово — потом нажми</small>' : 'What is it?<small>Что это? Скажи по-английски — потом нажми</small>';
+    $('ask').classList.toggle('hide', step > 0); $('card').classList.toggle('open', step > 0);
+    for (const k of ['en', 'ru', 'ex']) $(k).classList.toggle('hide', !shown.includes(k));
+    $('def').classList.toggle('hide', !shown.includes('en'));
+    $('judge').classList.toggle('hide', step < 3 - base());
+  }
+  const order = () => ruFirst ? ['ru', 'en', 'ex'] : ['en', 'ru', 'ex'], base = () => ruFirst ? 1 : 0;
+  function advance() {
+    if (i >= list.length || step >= 3 - base()) return;
+    step++; render();
+    const w = list[i], now = order()[base() + step - 1];
+    if (now === 'en') play(`audio/${w.k}-w.mp3`);
+    if (now === 'ex') play(`audio/${w.k}-x.mp3`);
+  }
+  function next(ok) {
+    const w = list[i]; if (ok) known.add(w.k); else known.delete(w.k);
+    store.set('known', [...known]);
+    if (!ok) list.push(w);                 // «Ещё раз» — the card comes back at the end
+    i++; step = 0; au.pause(); render();
+  }
+  $('card').addEventListener('click', advance);
+  $('ok').addEventListener('click', () => next(true)); $('again').addEventListener('click', () => next(false));
+  $('prev').addEventListener('click', () => { if (step > 0) step = 0; else if (i > 0) i--; au.pause(); render() });
+  $('sayW').addEventListener('click', () => list[i] && play(`audio/${list[i].k}-w.mp3`));
+  $('sayX').addEventListener('click', () => list[i] && play(`audio/${list[i].k}-x.mp3`));
+  $('shuf').addEventListener('click', () => build(true));
+  $('restart').addEventListener('click', () => build(false));
+  $('decks').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (!b) return; deck = b.dataset.d; store.set('deck', deck); showGrid(false); build(false) });
+  $('modeBtn').addEventListener('click', () => { ruFirst = !ruFirst; store.set('ru', ruFirst); step = 0; render() });
+  $('unkBtn').addEventListener('click', () => { onlyUnk = !onlyUnk; build(false) });
+  function showGrid(on) {
+    $('gridBtn').setAttribute('aria-pressed', on); $('gridView').classList.toggle('hide', !on);
+    $('study').style.display = on ? 'none' : 'contents';
+    if (on) $('grid').innerHTML = words().map(w => `<button data-k="${w.k}" class="${known.has(w.k) ? 'k' : ''}"><img src="img/${w.k}.jpg" alt="" loading="lazy"><span>${w.star ? '★ ' : ''}${w.en}</span></button>`).join('');
+  }
+  $('gridBtn').addEventListener('click', () => showGrid($('gridView').classList.contains('hide')));
+  $('grid').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (!b) return;
+    onlyUnk = false; list = words(); i = list.findIndex(w => w.k === b.dataset.k); step = 0; showGrid(false); render() });
+  addEventListener('keydown', e => {
+    if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); step >= 3 - base() ? next(true) : advance() }
+    if (e.key === 'ArrowLeft') $('prev').click();
+  });
+  build(false);
+})();
+</script>
+</body>
+</html>
