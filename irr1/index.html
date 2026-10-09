@@ -35,11 +35,11 @@ button.b.main{background:var(--blue);color:#fff}button.b.ok{background:var(--gre
 .mode{display:flex;gap:6px;align-items:center;font-size:.85em;color:var(--muted)}
 .card.open .pic{max-height:26dvh}
 </style>
-<style>.v1{font-weight:800;font-size:2em;line-height:1.1;margin:0}.v2{font-weight:900;font-size:2.2em;line-height:1.1;color:var(--green);margin:0}.mode{flex-wrap:wrap}.ipa{color:var(--muted);font-size:.95em;margin:2px 0}
+<style>.v1{font-weight:800;font-size:2em;line-height:1.1;margin:0}.v2{font-weight:900;font-size:2.2em;line-height:1.1;color:var(--green);margin:0}.v3{color:#7a5cff}.v2::before{content:'V2 ';font-size:.4em;color:var(--muted)}.v3::before{content:'V3 '}.mode{flex-wrap:wrap}.ipa{color:var(--muted);font-size:.95em;margin:2px 0}
 .tip{background:var(--soft);border-radius:10px;padding:6px 10px;font-size:.9em;margin:6px 0}.how{font-size:.86em;color:var(--muted);margin:4px 0 8px}</style>
 </head><body><main>
-<header><h1>🔁 Irregular verbs · set 1</h1><p>Spotlight 7 · Past Simple · 10 неправильных глаголов с картинками и звуком</p></header>
-<p class="how">Как учить: 3 раза по 5 минут (сегодня, в выходные, утром в понедельник). Сначала <b>скажите</b> прошедшую форму сами — потом нажмите и проверьте. Не знаете — «Ещё раз»: карточка вернётся.</p>
+<header><h1>🔁 Irregular verbs · set 1</h1><p>Spotlight 7 · Past Simple · 10 неправильных глаголов · три формы · с картинками и звуком</p></header>
+<p class="how">Как учить: 3 раза по 5 минут (сегодня, в выходные, утром в понедельник). Сначала <b>скажите</b> вторую и третью форму сами — потом нажмите и проверьте. Не знаете — «Ещё раз»: карточка вернётся.</p>
 <div class="mode"><button class="chip" id="modeBtn" aria-pressed="false">Сначала русский</button><button class="chip" id="unkBtn" aria-pressed="false">Только незнакомые</button><button class="chip" id="gridBtn" aria-pressed="false">Все карточки</button></div>
 <div class="bar"><span id="cnt">1 / 10</span><div class="prog"><i id="prog"></i></div><span id="known">✓ 0</span></div>
 <section id="study" style="display:contents">
@@ -47,18 +47,18 @@ button.b.main{background:var(--blue);color:#fff}button.b.ok{background:var(--gre
  <img class="pic" id="pic" alt="" onerror="this.style.display='none'" onload="this.style.display=''">
  <div class="txt">
   <p class="v1" id="v1"></p>
-  <p class="ask" id="ask">Past? <small>Скажите прошедшую форму вслух — потом нажмите</small></p>
-  <p class="v2 hide" id="v2"></p><p class="ipa hide" id="ipa"></p>
+  <p class="ask" id="ask">V2 · V3? <small>Скажите вторую и третью форму вслух — потом нажмите</small></p>
+  <p class="v2 hide" id="v2"></p><p class="v2 v3 hide" id="v3"></p><p class="ipa hide" id="ipa"></p>
   <p class="ru hide" id="ru"></p><p class="tip hide" id="tip"></p>
   <p class="ex hide" id="ex"></p>
  </div>
 </div>
 <div class="judge hide" id="judge"><button class="b again" id="again">↺ Ещё раз</button><button class="b ok" id="ok">✓ Знаю</button></div>
-<div class="ctrl"><button class="b" id="prev" aria-label="Назад">◀</button><button class="b" id="sayW">🔊 go–went</button><button class="b" id="sayX">🔊 пример</button><button class="b" id="shuf" aria-label="Перемешать">🔀</button></div>
+<div class="ctrl"><button class="b" id="prev" aria-label="Назад">◀</button><button class="b" id="sayW">🔊 3 формы</button><button class="b" id="sayX">🔊 пример</button><button class="b" id="shuf" aria-label="Перемешать">🔀</button></div>
 <div class="done hide" id="done"><b>🎉 Готово!</b>Все 10 пройдены. Повторите ещё раз завтра.<br><br><button class="b main" id="restart">Ещё раз сначала</button></div>
 </section>
 <section id="gridView" class="hide"><div class="grid" id="grid"></div></section>
-<p class="foot">Картинка и глагол → скажите прошедшую форму → проверьте (звук) → перевод и подсказка → пример (звук) → «Знаю» или «Ещё раз». Прогресс сохраняется на этом телефоне.</p>
+<p class="foot">Картинка и глагол → скажите 2-ю и 3-ю форму → проверьте (звук) → перевод и подсказка → пример (звук) → «Знаю» или «Ещё раз». Прогресс сохраняется на этом телефоне.</p>
 </main>
 <audio id="au" preload="none"></audio>
 <script src="words.js"></script>
@@ -85,13 +85,13 @@ button.b.main{background:var(--blue);color:#fff}button.b.ok{background:var(--gre
     const w = list[i];
     $('pic').src = `img/${w.k}.jpg`;
     $('v1').textContent = ruFirst && step === 0 ? w.ru.split(' → ')[0] : w.v1;
-    $('ask').innerHTML = ruFirst ? 'English: V1 – V2? <small>Скажите обе формы — потом нажмите</small>' : 'Past? <small>Скажите прошедшую форму вслух — потом нажмите</small>';
-    $('v2').textContent = w.v2; $('ipa').textContent = w.ipa; $('ru').textContent = w.ru; $('tip').textContent = w.tip; $('ex').textContent = w.ex;
+    $('ask').innerHTML = ruFirst ? 'English: V1 – V2 – V3? <small>Скажите три формы — потом нажмите</small>' : 'V2 · V3? <small>Скажите вторую и третью форму вслух — потом нажмите</small>';
+    $('v2').textContent = w.v2; $('v3').textContent = w.v3; $('ipa').textContent = w.ipa; $('ru').textContent = w.ru; $('tip').textContent = w.tip; $('ex').textContent = w.ex;
     $('ask').classList.toggle('hide', step > 0); $('card').classList.toggle('open', step > 0);
-    for (const k of ['v2', 'ipa']) $(k).classList.toggle('hide', step < 1);
+    for (const k of ['v2', 'v3', 'ipa']) $(k).classList.toggle('hide', step < 1);
     for (const k of ['ru', 'tip']) $(k).classList.toggle('hide', step < 2);
     $('ex').classList.toggle('hide', step < 3); $('judge').classList.toggle('hide', step < 3);
-    $('sayW').textContent = '🔊 ' + w.v1 + ' – ' + w.v2.split(' ')[0];
+    $('sayW').textContent = '🔊 ' + w.v1 + ' – ' + w.v2.split(' ')[0] + ' – ' + w.v3;
   }
   function advance() {
     if (i >= list.length || step >= 3) return;
@@ -115,7 +115,7 @@ button.b.main{background:var(--blue);color:#fff}button.b.ok{background:var(--gre
   function showGrid(on) {
     $('gridBtn').setAttribute('aria-pressed', on); $('gridView').classList.toggle('hide', !on);
     $('study').style.display = on ? 'none' : 'contents';
-    if (on) $('grid').innerHTML = WORDS.map(w => `<button data-k="${w.k}" class="${known.has(w.k) ? 'k' : ''}"><img src="img/${w.k}.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span>${w.v1} – ${w.v2}</span></button>`).join('');
+    if (on) $('grid').innerHTML = WORDS.map(w => `<button data-k="${w.k}" class="${known.has(w.k) ? 'k' : ''}"><img src="img/${w.k}.jpg" alt="" loading="lazy" onerror="this.style.display='none'"><span>${w.v1} – ${w.v2} – ${w.v3}</span></button>`).join('');
   }
   $('gridBtn').addEventListener('click', () => showGrid($('gridView').classList.contains('hide')));
   $('grid').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (!b) return;
