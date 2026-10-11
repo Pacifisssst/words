@@ -39,11 +39,11 @@ button.b.main{background:var(--blue);color:#fff}button.b.ok{background:var(--gre
 .foot{font-size:.78em;color:var(--muted);text-align:center}
 .mode{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.85em;color:var(--muted)}
 .card.open .pic{max-height:26dvh}
-.pic{background-repeat:no-repeat}.thumb{width:100%;aspect-ratio:1;background-repeat:no-repeat}.ipa{color:var(--muted);font-size:.95em}button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}@media(prefers-color-scheme:dark){.chip[aria-pressed="true"],button.b.main,button.b.ok{color:#0d1426}}</style>
+.pic{background-repeat:no-repeat}.thumb{width:100%;aspect-ratio:1;background-repeat:no-repeat}.ipa{color:var(--muted);font-size:.95em}button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}@media(prefers-color-scheme:dark){.chip[aria-pressed="true"],button.b.main,button.b.ok{color:#0d1426}}.homework-links{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.85em}.homework-links a{color:var(--blue);text-underline-offset:3px}.homework-links a:focus-visible{outline:3px solid var(--blue);outline-offset:3px}</style>
 </head>
 <body>
 <main>
-<header><h1>🏠 My place · 2b</h1><p>Spotlight 6 · 45 слов с картинками и звуком · нажимай на карточку</p></header>
+<header><h1>🏠 My place · 2b</h1><p>Spotlight 6 · 45 слов с картинками и звуком · нажимай на карточку</p></header><nav class="homework-links" aria-label="Домашняя работа"><a href="homework.pdf" target="_blank" rel="noopener">Памятка для телефона</a><a href="homework-print.pdf" target="_blank" rel="noopener">Для печати</a></nav>
 <div class="chips" id="decks"></div>
 <div class="mode"><button class="chip" id="modeBtn" aria-pressed="false">Сначала русский</button><button class="chip" id="unkBtn" aria-pressed="false">Только незнакомые</button><button class="chip" id="gridBtn" aria-pressed="false">Все карточки</button></div>
 <div class="bar"><span id="cnt">1 / 24</span><div class="prog"><i id="prog"></i></div><span id="known">✓ 0</span></div>
