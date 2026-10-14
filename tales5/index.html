@@ -1,45 +1,59 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Fairy tales · 5</title>
 <style>
-:root{--bg:#fbf7f0;--card:#fff;--ink:#1d1b18;--mute:#6b645a;--acc:#b5482a;--hi:#ffe9a8;--line:#e8e0d2}
-@media (prefers-color-scheme:dark){:root{--bg:#1a1816;--card:#26231f;--ink:#f3eee6;--mute:#a69d90;--acc:#f08a68;--hi:#5a4a1c;--line:#3a352f}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.35 -apple-system,system-ui,Roboto,sans-serif}
-main{max-width:640px;margin:0 auto;padding:16px 16px 120px}
-h1{font-size:26px;margin:8px 0 2px}.tr{color:var(--mute);margin:0 0 12px}
-.tabs{display:flex;gap:8px;margin:4px 0 16px}.tabs button,.bar button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:10px 14px;cursor:pointer}
-.tabs button[aria-pressed=true],.bar button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#fff}
-.ln{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.ln.on{background:var(--hi);border-color:var(--acc)}
-.who{font-size:13px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.04em}
-.en{font-size:20px;font-weight:600;margin:2px 0}.ru{color:var(--mute);font-size:16px}
+:root{--bg:#f3ead6;--paper:#fffbef;--ink:#1f2a1c;--mute:#6b6a58;--name:#1f5a22;--row:#e6f1d6;--edge:#d9893a;--red:#d8432c;--hi:#ffe27a;--shadow:0 10px 28px rgba(80,50,10,.18)}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1a14;--paper:#2a281e;--ink:#f6f0dc;--mute:#b6ae92;--name:#9fdc86;--row:#323a26;--edge:#c9792e;--red:#ff8a6e;--hi:#6b5a14;--shadow:0 10px 28px rgba(0,0,0,.45)}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.35 ui-rounded,"SF Pro Rounded","Nunito","Arial Rounded MT Bold",-apple-system,system-ui,sans-serif}
+main{max-width:620px;margin:0 auto;padding:14px 16px 110px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.tabs button{font:800 15px/1.2 inherit;border:3px solid var(--edge);background:var(--paper);color:var(--ink);border-radius:16px;padding:10px 8px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--red);border-color:var(--red);color:#fff;box-shadow:var(--shadow)}
+.card{background:var(--paper);border:4px solid var(--edge);border-radius:24px;overflow:hidden;box-shadow:var(--shadow)}
+.card img{display:block;width:100%;aspect-ratio:675/360;object-fit:cover;object-position:top;cursor:zoom-in}
+.title{padding:12px 16px 4px;text-align:center}
+.title h1{margin:0;font-size:28px;font-weight:900;color:var(--red);letter-spacing:.01em}
+.title p{margin:2px 0 0;color:var(--mute);font-weight:700}
+.hint{margin:6px 16px 10px;text-align:center;color:var(--mute);font-size:14px}
+.ln{display:grid;grid-template-columns:7.2em 1fr;gap:10px;padding:11px 14px;border-top:1px solid rgba(0,0,0,.06);cursor:pointer;transition:background .2s}
+.ln:nth-child(odd){background:var(--row)}
+.ln.on{background:var(--hi)!important;box-shadow:inset 6px 0 0 var(--red)}
+.who{font-weight:900;color:var(--name);font-size:15px;line-height:1.2;padding-top:3px}
+.en{font-weight:800;font-size:19px;line-height:1.25}.ru{color:var(--mute);font-size:15px;margin-top:2px}
 body.noru .ru{display:none}
-.bar{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;justify-content:center;flex-wrap:nowrap}.bar button{padding:9px 11px;font-size:15px;white-space:nowrap}
-.hint{color:var(--mute);font-size:15px;margin:0 0 12px}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 30%);display:flex;justify-content:center}
+.bar div{display:flex;gap:6px;background:var(--paper);border:3px solid var(--edge);border-radius:999px;padding:5px;box-shadow:var(--shadow)}
+.bar button{font:800 15px inherit;border:0;border-radius:999px;padding:10px 13px;background:transparent;color:var(--ink);cursor:pointer;white-space:nowrap}
+.bar button.go{background:var(--red);color:#fff}.bar button[aria-pressed=true]{background:var(--name);color:var(--paper)}
+#zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:12px;z-index:9}
+#zoom img{max-width:100%;max-height:100%;border-radius:14px}#zoom.show{display:flex}
+@media (max-width:380px){.ln{grid-template-columns:1fr;gap:0}.who{padding:0}}
 </style></head><body>
-<main><div class="tabs" id="tabs"></div><h1 id="t"></h1><p class="tr" id="tr"></p>
-<p class="hint">Нажми на строчку — услышишь её. «▶ Всё» — вся сказка.</p><div id="lines"></div></main>
-<div class="bar"><button id="all">▶ Всё</button><button id="stop">■ Стоп</button><button id="slow" aria-pressed="false">🐢 Медленно</button><button id="ru" aria-pressed="true">RU</button></div>
+<main><div class="tabs" id="tabs"></div>
+<div class="card"><img id="pic" alt=""><div class="title"><h1 id="t"></h1><p id="tr"></p></div>
+<p class="hint">Нажми на строчку — услышишь её · ▶ — вся сказка</p><div id="lines"></div></div></main>
+<div class="bar"><div><button id="all" class="go">▶ Всё</button><button id="stop">■</button><button id="slow" aria-pressed="false">🐢 Медленно</button><button id="ru" aria-pressed="true">RU</button></div></div>
+<div id="zoom"><img id="zimg" alt=""></div>
 <audio id="a" preload="auto"></audio>
 <script>
-const D=[{"k": "rrh", "t": "Little Red Riding Hood", "tr": "Красная Шапочка", "L": [["Narrator", "Red Riding Hood is going to Grandma.", "Красная Шапочка идёт к бабушке."], ["Wolf", "Hello, little girl! Where are you going?", "Привет, девочка! Куда ты идёшь?"], ["Red Riding Hood", "To my Grandma’s house.", "В домик моей бабушки."], ["Narrator", "The wolf runs to Grandma’s house first.", "Волк бежит к бабушкиному дому первым."], ["Grandma", "Help! A wolf! (hides in the cupboard)", "Помогите! Волк! (прячется в шкаф)"], ["Narrator", "Now the wolf is in Grandma’s bed.", "Теперь волк в бабушкиной кровати."], ["Red Riding Hood", "Grandma, what big eyes you have!", "Бабушка, какие у тебя большие глаза!"], ["Wolf", "All the better to see you with!", "Это чтобы лучше тебя видеть!"], ["Red Riding Hood", "Grandma, what big teeth you have!", "Бабушка, какие у тебя большие зубы!"], ["Wolf", "All the better to EAT you!", "Это чтобы тебя СЪЕСТЬ!"], ["Woodcutter", "Stop, Wolf! Go away!", "Стой, волк! Уходи!"], ["Grandma", "(comes out) Thank you! Let’s have tea!", "(выходит) Спасибо! Давайте пить чай!"]], "m": {"play": [[3.067, 5.757], [6.457, 10.876], [11.576, 14.315], [15.015, 17.897], [18.597, 21.792], [22.492, 25.087], [25.787, 29.293], [29.993, 32.492], [33.192, 36.891], [37.591, 40.017], [40.717, 44.464], [45.164, 48.959]], "slow": [[3.067, 6.427], [9.977, 15.497], [19.047, 22.468], [24.668, 28.267], [31.817, 35.806], [37.556, 40.795], [44.345, 48.726], [51.826, 54.948], [58.498, 63.118], [66.218, 69.246], [72.346, 77.027], [79.227, 83.969]]}}, {"k": "lion", "t": "The Lion and the Mouse", "tr": "Лев и Мышь", "L": [["Lion", "Grrr! I’m hungry. I can eat you!", "Р-р-р! Я голодный. Я могу тебя съесть!"], ["Mouse", "Please, let me go! I can help you one day!", "Пожалуйста, отпусти меня! Однажды я смогу тебе помочь!"], ["Lion", "Ha-ha! OK, go!", "Ха-ха! Ладно, иди!"], ["Hunter 1", "Look! A lion! Get the net!", "Смотри! Лев! Неси сеть!"], ["Hunter 2", "He can’t run now!", "Теперь он не убежит!"], ["Lion", "Help! Help!", "Помогите! Помогите!"], ["Mouse", "I’m coming! Crunch, crunch!", "Я иду (бегу)! Хрум-хрум!"], ["Lion", "I’m free! Thank you, little friend!", "Я свободен! Спасибо, маленький друг!"], ["Narrator", "Little friends can be great friends.", "Маленькие друзья могут быть большими (настоящими) друзьями."]], "m": {"play": [[2.923, 7.845], [8.545, 14.236], [14.936, 18.947], [19.647, 24.113], [24.813, 26.712], [27.412, 30.415], [31.115, 35.605], [36.305, 40.868], [41.568, 44.163]], "slow": [[2.923, 9.074], [12.624, 19.736], [24.636, 29.645], [31.395, 36.975], [40.075, 42.443], [44.643, 48.392], [49.692, 55.301], [57.501, 63.203], [66.303, 69.542]]}}];let cur=0,slow=false,end=null,idx=-1;const a=document.getElementById('a');
-const $=id=>document.getElementById(id);
-function src(){return 'audio/'+D[cur].k+'-'+(slow?'slow':'play')+'.mp3'}
-function render(){const d=D[cur];$('t').textContent=d.t;$('tr').textContent=d.tr;
+const D=[{"k": "rrh", "t": "Little Red Riding Hood", "tr": "Красная Шапочка", "L": [["Narrator", "Red Riding Hood is going to Grandma.", "Красная Шапочка идёт к бабушке."], ["Wolf", "Hello, little girl! Where are you going?", "Привет, девочка! Куда ты идёшь?"], ["Red Riding Hood", "To my Grandma’s house.", "В домик моей бабушки."], ["Narrator", "The wolf runs to Grandma’s house first.", "Волк бежит к бабушкиному дому первым."], ["Grandma", "Help! A wolf! (hides in the cupboard)", "Помогите! Волк! (прячется в шкаф)"], ["Narrator", "Now the wolf is in Grandma’s bed.", "Теперь волк в бабушкиной кровати."], ["Red Riding Hood", "Grandma, what big eyes you have!", "Бабушка, какие у тебя большие глаза!"], ["Wolf", "All the better to see you with!", "Это чтобы лучше тебя видеть!"], ["Red Riding Hood", "Grandma, what big teeth you have!", "Бабушка, какие у тебя большие зубы!"], ["Wolf", "All the better to EAT you!", "Это чтобы тебя СЪЕСТЬ!"], ["Woodcutter", "Stop, Wolf! Go away!", "Стой, волк! Уходи!"], ["Grandma", "(comes out) Thank you! Let’s have tea!", "(выходит) Спасибо! Давайте пить чай!"]], "m": {"play": [[3.067, 5.757], [6.457, 10.876], [11.576, 14.315], [15.015, 17.897], [18.597, 21.792], [22.492, 25.087], [25.787, 29.293], [29.993, 32.492], [33.192, 36.891], [37.591, 40.017], [40.717, 44.464], [45.164, 48.959]], "slow": [[3.067, 6.427], [9.977, 15.497], [19.047, 22.468], [24.668, 28.267], [31.817, 35.806], [37.556, 40.795], [44.345, 48.726], [51.826, 54.948], [58.498, 63.118], [66.218, 69.246], [72.346, 77.027], [79.227, 83.969]]}}, {"k": "lion", "t": "The Lion and the Mouse", "tr": "Лев и Мышь", "L": [["Lion", "Grrr! I’m hungry. I can eat you!", "Р-р-р! Я голодный. Я могу тебя съесть!"], ["Mouse", "Please, let me go! I can help you one day!", "Пожалуйста, отпусти меня! Однажды я смогу тебе помочь!"], ["Lion", "Ha-ha! OK, go!", "Ха-ха! Ладно, иди!"], ["Hunter 1", "Look! A lion! Get the net!", "Смотри! Лев! Неси сеть!"], ["Hunter 2", "He can’t run now!", "Теперь он не убежит!"], ["Lion", "Help! Help!", "Помогите! Помогите!"], ["Mouse", "I’m coming! Crunch, crunch!", "Я иду (бегу)! Хрум-хрум!"], ["Lion", "I’m free! Thank you, little friend!", "Я свободен! Спасибо, маленький друг!"], ["Narrator", "Little friends can be great friends.", "Маленькие друзья могут быть большими (настоящими) друзьями."]], "m": {"play": [[2.923, 7.845], [8.545, 14.236], [14.936, 18.947], [19.647, 24.113], [24.813, 26.712], [27.412, 30.415], [31.115, 35.605], [36.305, 40.868], [41.568, 44.163]], "slow": [[2.923, 9.074], [12.624, 19.736], [24.636, 29.645], [31.395, 36.975], [40.075, 42.443], [44.643, 48.392], [49.692, 55.301], [57.501, 63.203], [66.303, 69.542]]}}];let cur=0,slow=false,end=null,idx=-1;const a=document.getElementById('a'),$=id=>document.getElementById(id);
+const src=()=>'audio/'+D[cur].k+'-'+(slow?'slow':'play')+'.mp3', marks=()=>D[cur].m[slow?'slow':'play'];
+function render(){const d=D[cur];$('t').textContent=d.t;$('tr').textContent=d.tr;$('pic').src=$('zimg').src='img/'+d.k+'-card.jpg';
  $('tabs').innerHTML=D.map((x,i)=>`<button aria-pressed="${i==cur}" data-i="${i}">${x.t}</button>`).join('');
- $('lines').innerHTML=d.L.map((l,i)=>`<div class="ln" data-i="${i}"><div class="who">${l[0]}</div><div class="en">${l[1]}</div><div class="ru">${l[2]}</div></div>`).join('');
+ $('lines').innerHTML=d.L.map((l,i)=>`<div class="ln" data-i="${i}"><div class="who">${l[0]}</div><div><div class="en">${l[1]}</div><div class="ru">${l[2]}</div></div></div>`).join('');
  stop();a.src=src();}
-function marks(){return D[cur].m[slow?'slow':'play']}
-function mark(i){document.querySelectorAll('.ln').forEach((e,j)=>e.classList.toggle('on',j==i));idx=i;
- if(i>=0){const e=document.querySelectorAll('.ln')[i];const r=e.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight-90)e.scrollIntoView({block:'center',behavior:'smooth'})}}
-function play(from,to){if(!a.src.endsWith(src()))a.src=src();end=to;a.currentTime=from;a.play().catch(()=>{});}
+function mark(i){const L=document.querySelectorAll('.ln');L.forEach((e,j)=>e.classList.toggle('on',j==i));idx=i;
+ if(i>=0){const r=L[i].getBoundingClientRect();if(r.top<0||r.bottom>innerHeight-90)L[i].scrollIntoView({block:'center',behavior:'smooth'})}}
+function play(from,to){if(!a.src.endsWith(src()))a.src=src();end=to;a.currentTime=from;a.play().catch(()=>{})}
 function stop(){a.pause();end=null;mark(-1)}
 a.ontimeupdate=()=>{const t=a.currentTime;if(end!=null&&t>=end){a.pause();end=null;return}
- const m=marks();let k=-1;m.forEach((x,i)=>{if(t>=x[0]-.05&&t<=x[1]+.6)k=i});if(k!=idx)mark(k)};
+ let k=-1;marks().forEach((x,i)=>{if(t>=x[0]-.05&&t<=x[1]+.6)k=i});if(k!=idx)mark(k)};
 a.onended=()=>mark(-1);
 $('tabs').onclick=e=>{const b=e.target.closest('button');if(b){cur=+b.dataset.i;render();scrollTo(0,0)}};
 $('lines').onclick=e=>{const l=e.target.closest('.ln');if(!l)return;const x=marks()[+l.dataset.i];play(x[0],x[1]+.15)};
 $('all').onclick=()=>play(0,null);$('stop').onclick=stop;
 $('slow').onclick=()=>{slow=!slow;$('slow').setAttribute('aria-pressed',slow);stop();a.src=src()};
-$('ru').onclick=()=>{const on=document.body.classList.toggle('noru');$('ru').setAttribute('aria-pressed',!on)};
+$('ru').onclick=()=>{const off=document.body.classList.toggle('noru');$('ru').setAttribute('aria-pressed',!off)};
+$('pic').onclick=()=>$('zoom').classList.add('show');$('zoom').onclick=()=>$('zoom').classList.remove('show');
 render();
 </script></body></html>
