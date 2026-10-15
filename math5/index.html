@@ -200,6 +200,9 @@ img.ph{border-radius:50%;object-fit:cover!important;border:3px solid #fff;box-sh
 .flyer .em{font-size:60px;line-height:1}
 .flyer .t{background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 12px;font-size:15px;line-height:1.3;width:210px;box-shadow:0 4px 0 var(--line)}
 @keyframes fly{0%{transform:translateX(-100%) rotate(-8deg)}30%,70%{transform:translateX(calc(50vw - 50%)) rotate(0)}100%{transform:translateX(100vw) rotate(6deg)}}
+.testtag{font-size:12px;font-style:normal;color:#fff;background:var(--red);border-radius:8px;padding:2px 7px;vertical-align:middle;letter-spacing:.05em}
+.testbar{display:flex;gap:6px;margin:4px 0 8px}
+.testbar button{flex:1;font-size:13px;font-weight:900;padding:7px 4px;border-radius:10px;border:2px dashed var(--red);color:var(--red-ink);background:var(--red-bg)}
 .shake{animation:shake .38s}
 @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 .pop{animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
@@ -420,7 +423,9 @@ const UNITS=[
 ];
 
 // ====== сохранение (только в этом браузере) ======
-const KEY='kot-x-v1';
+// тестовая ссылка учителя: ?test — свои сохранения и кнопки «верно / ошибка / пройти уровень»
+const TEST=/[?&]test\b/.test(location.search);
+const KEY=TEST?'kot-x-test':'kot-x-v1';
 let save={xp:0,u:{},t:{},name:''};
 try{save=Object.assign(save,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
 const store=()=>{try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}};
@@ -466,7 +471,7 @@ function home(){
   const offs=[0,-50,-70,-40,20,60,0];
   app.innerHTML=`
   <header class="top"><div class="wrap">
-    <div class="logo">Кот <i>Икс</i></div>
+    <div class="logo">Кот <i>Икс</i>${TEST?' <span class="testtag">ТЕСТ</span>':''}</div>
     <div class="pill st" title="Пройдено уровней">${IC.star}${doneN}/${total}</div>
     <div class="pill xp" title="Очки">${IC.bolt}${save.xp}</div>
     <button class="iconbtn" id="snd" aria-label="${muted?'Включить звук':'Выключить звук'}">${muted?IC.mute:IC.sound}</button>
@@ -552,12 +557,18 @@ function ask(){
       <div class="prog" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(pct,3)}%"></i></div>
       ${L.hearts!==null?`<div class="hearts">${IC.heart}${L.hearts}</div><div class="boss-mini" id="bm">${pic('dragon','Дракон')}</div>`:''}</div>
     <div class="combo"><span class="${L.combo>=3?'fire':''}">${L.combo>=3?`${L.combo} подряд — огонь!`:''}</span></div>
+    ${TEST?'<div class="testbar"><button id="tOk">✓ Верно</button><button id="tBad">✗ Ошибка</button><button id="tWin">⏭ Весь уровень</button></div>':''}
     <div class="qbody" id="qb">${tag?'<div>'+tag+'</div>':''}${body}</div>
   </div>
   <div class="bottom" id="bt"><div class="wrap"><button class="btn" id="chk" disabled>Проверить</button></div></div>
   <div class="sheet" id="sh"></div>`;
   document.getElementById('x').onclick=()=>{if(confirm('Выйти? Прогресс этого уровня пропадёт.'))home()};
   document.getElementById('chk').onclick=check;
+  if(TEST){
+    document.getElementById('tOk').onclick=()=>testAnswer(true);
+    document.getElementById('tBad').onclick=()=>testAnswer(false);
+    document.getElementById('tWin').onclick=()=>{L.queue=[L.queue[0]];L.total=L.ok+1;testAnswer(true)};
+  }
   document.getElementById('hb').onclick=()=>{if(L.hintShown)return;L.hintShown=true;sTap();
     document.getElementById('hint').innerHTML=`<div class="hint pop">${pic('robot')}<span>${fmt(q.hint||'Подумай, какое действие обратное.')}</span></div>`};
   if(q.type==='num'){
@@ -591,6 +602,15 @@ function key(k){
   ready();
 }
 function ready(){const q=L.q;let ok=L.ans!==null;if(q.type==='build')ok=L.ans.length>0;document.getElementById('chk').disabled=!ok}
+// тест: подставить верный или неверный ответ и проверить
+function testAnswer(right){
+  if(L.locked)return;const q=L.q;
+  if(q.type==='num')L.ans=right?q.ans:(q.ans==='none'?'1':'none');
+  else if(q.type==='choice')L.ans=right?q.correct:(q.correct+1)%q.opts.length;
+  else if(right){const used=new Set();L.ans=q.accept[0].split(' ').map(t=>{const k=q.tiles.findIndex((x,i)=>x===t&&!used.has(i));used.add(k);return k})}
+  else L.ans=q.tiles.map((t,k)=>k);
+  check();
+}
 function isRight(){
   const q=L.q;
   if(q.type==='num')return L.ans==='none'?q.ans==='none':(q.ans!=='none'&&+L.ans===q.ans);
