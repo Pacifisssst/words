@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Кот Икс — уравнения</title>
+<meta name="description" content="Тренажёр уравнений для 5 класса: коробка с числом, ловушки, задачи-истории.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2c2f45; --ink2:#5d6280; --line:#e4e6ef; --bg:#ffffff; --soft:#f5f6fb;
+  --green:#3fbf2a; --green-d:#2e9a1c; --green-bg:#ddf9cc; --green-ink:#2a7f16;
+  --red:#ff5a5f; --red-d:#d93a40; --red-bg:#ffe1e2; --red-ink:#c22a30;
+  --blue:#1fa8f0; --blue-d:#1287c6; --blue-bg:#e3f4fd;
+  --purple:#8b5cf6; --purple-d:#6d3fe0; --purple-bg:#efe8ff;
+  --gold:#ffbf1f; --gold-d:#e09a00; --orange:#ff9233;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,"Avenir Next",system-ui,sans-serif;font-weight:700}
+body{min-height:100dvh}
+::selection{background:var(--purple-bg);color:var(--purple-d)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+.v{font-style:italic;font-weight:900;color:var(--purple-d)}
+.ic{width:24px;height:24px;flex:none}
+
+/* ---------- кнопки ---------- */
+.btn{display:block;width:100%;padding:15px 18px;border-radius:16px;font-size:18px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;
+  background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-d);transition:transform .08s,box-shadow .08s,filter .15s}
+.btn:active{transform:translateY(4px);box-shadow:0 0 0 var(--green-d)}
+.btn[disabled]{background:var(--line);color:#a3a8bf;box-shadow:0 4px 0 #d3d6e2;cursor:default}
+.btn.red{background:var(--red);box-shadow:0 4px 0 var(--red-d)}
+.btn.blue{background:var(--blue);box-shadow:0 4px 0 var(--blue-d)}
+.btn.ghost{background:#fff;color:var(--blue);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+
+/* ---------- главная ---------- */
+.top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:2px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:60px}
+.logo{font-size:22px;font-weight:900;color:var(--orange);letter-spacing:-.01em;margin-right:auto}
+.logo i{color:var(--purple-d)}
+.pill{display:flex;align-items:center;gap:6px;font-weight:900;font-size:17px}
+.pill.xp{color:var(--gold-d)} .pill.st{color:var(--orange)}
+.iconbtn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--ink2)}
+.iconbtn:hover{background:var(--soft)}
+
+.hello{display:flex;align-items:flex-end;gap:10px;margin:18px 0 6px}
+.hello img{width:118px;height:118px;object-fit:contain;flex:none}
+.bubble{position:relative;background:#fff;border:2px solid var(--line);border-radius:18px;padding:12px 14px;font-size:16px;line-height:1.35;margin-bottom:22px}
+.bubble:before{content:"";position:absolute;left:-10px;bottom:16px;width:16px;height:16px;background:#fff;border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+.bubble b{color:var(--purple-d)}
+
+.path{position:relative;padding:52px 0 120px}
+.unit{display:flex;flex-direction:column;align-items:center;margin:0 auto 30px;width:max-content;position:relative}
+.node{width:82px;height:76px;border-radius:50%;display:grid;place-items:center;color:#fff;position:relative;
+  background:var(--c,var(--green));box-shadow:0 7px 0 var(--cd,var(--green-d));transition:transform .08s,box-shadow .08s}
+.node:active{transform:translateY(6px);box-shadow:0 1px 0 var(--cd,var(--green-d))}
+.node svg{width:38px;height:38px}
+.node.done{--c:var(--gold);--cd:var(--gold-d)}
+.node.next:after{content:"";position:absolute;inset:-9px;border-radius:50%;border:4px solid var(--c,var(--green));opacity:.35}
+.unit .name{margin-top:14px;font-size:16px;font-weight:900;text-align:center}
+.unit .sub{font-size:13px;color:var(--ink2);font-weight:700;text-align:center;max-width:200px}
+.stars{display:flex;gap:2px;margin-top:4px;height:16px}
+.stars svg{width:16px;height:16px}
+.start-tag{position:absolute;top:-44px;background:#fff;border:2px solid var(--line);color:var(--c,var(--green));border-radius:12px;padding:6px 12px;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;animation:bob 1.6s ease-in-out infinite}
+.start-tag:after{content:"";position:absolute;left:50%;bottom:-8px;width:12px;height:12px;background:#fff;border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.reset{display:block;margin:10px auto 0;color:var(--ink2);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- правило перед уровнем ---------- */
+.intro{padding:20px 0 130px}
+.intro h1{font-size:28px;line-height:1.15;margin:8px 0 4px;font-weight:900;text-wrap:balance}
+.intro .lead{color:var(--ink2);font-size:17px;margin:0 0 16px}
+.intro .robo{display:flex;gap:12px;align-items:flex-start}
+.intro .robo img{width:92px;height:92px;object-fit:contain;flex:none}
+.rules{display:flex;flex-direction:column;gap:10px;flex:1}
+.rule{background:var(--soft);border-radius:16px;padding:12px 14px;font-size:17px;line-height:1.4}
+.rule .eq{font-size:20px;font-weight:900;white-space:nowrap}
+.rule small{display:block;color:var(--ink2);font-size:15px;margin-top:2px}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid var(--line);padding:14px 0 calc(14px + env(safe-area-inset-bottom))}
+
+/* ---------- урок ---------- */
+.lbar{display:flex;align-items:center;gap:12px;height:62px}
+.prog{flex:1;height:18px;border-radius:99px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;border-radius:99px;background:var(--green);position:relative;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.prog i:after{content:"";position:absolute;left:10px;right:10px;top:4px;height:5px;border-radius:9px;background:rgba(255,255,255,.35)}
+.hearts{display:flex;align-items:center;gap:4px;color:var(--red);font-weight:900;font-size:18px}
+.combo{font-size:14px;color:var(--orange);font-weight:900;min-height:20px;margin-top:2px}
+.qbody{padding:6px 0 260px}
+.tag{display:inline-flex;align-items:center;gap:6px;color:var(--purple-d);background:var(--purple-bg);border-radius:10px;padding:3px 10px;font-size:13px;font-weight:900;margin-bottom:8px}
+.tag.bonus{color:var(--gold-d);background:#fff3cf}
+.prompt{font-size:22px;line-height:1.25;font-weight:900;margin:0 0 14px;text-wrap:balance}
+.story{display:flex;gap:12px;align-items:flex-start;background:var(--soft);border-radius:18px;padding:12px;margin-bottom:14px}
+.story img{width:116px;height:76px;object-fit:cover;border-radius:12px;flex:none;background:#fff}
+.story p{margin:0;font-size:16px;line-height:1.4;font-weight:700}
+.scene{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.scene img{width:104px;height:104px;object-fit:contain;flex:none}
+.scene .say{position:relative;border:2px solid var(--line);border-radius:16px;padding:12px 14px;font-size:24px;font-weight:900;flex:1;min-width:0}
+.scene .say:before{content:"";position:absolute;left:-9px;top:50%;width:14px;height:14px;background:#fff;border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateY(-50%) rotate(45deg)}
+.bigeq{font-size:30px;font-weight:900;letter-spacing:.01em;white-space:nowrap}
+.box{display:inline-grid;place-items:center;min-width:46px;height:44px;padding:0 8px;border-radius:12px;background:var(--purple);color:#fff;font-style:italic;box-shadow:0 3px 0 var(--purple-d);vertical-align:middle;margin:0 2px}
+.answerline{display:flex;align-items:center;justify-content:center;gap:10px;font-size:26px;font-weight:900;margin:6px 0 16px}
+.slot{min-width:120px;height:58px;border-radius:16px;border:3px dashed #c9b8fb;background:var(--purple-bg);display:grid;place-items:center;font-size:30px;color:var(--purple-d);padding:0 14px}
+.slot.full{border-style:solid;border-color:var(--purple)}
+.slot.none{font-size:18px;text-align:center;line-height:1.1}
+.unitlbl{font-size:20px;color:var(--ink2)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:360px;margin:0 auto}
+.key{height:56px;border-radius:14px;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--line);font-size:24px;font-weight:900;display:grid;place-items:center}
+.key:active{transform:translateY(4px);box-shadow:none}
+.key.wide{grid-column:1/-1;font-size:17px;color:var(--purple-d);background:var(--purple-bg);border-color:#d7c8fd;box-shadow:0 4px 0 #d7c8fd}
+.key.wide.on{background:var(--purple);color:#fff;border-color:var(--purple);box-shadow:0 4px 0 var(--purple-d)}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 14px;border-radius:16px;border:2px solid var(--line);box-shadow:0 4px 0 var(--line);background:#fff;font-size:21px;font-weight:900}
+.opt .n{width:28px;height:28px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font-size:14px;color:var(--ink2);flex:none}
+.opt.sel{border-color:var(--blue);background:var(--blue-bg);box-shadow:0 4px 0 var(--blue);color:var(--blue-d)}
+.opt.sel .n{border-color:var(--blue);color:var(--blue-d)}
+.opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.lineup{min-height:66px;border-bottom:2px solid var(--line);display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 0;margin-bottom:18px}
+.lineup.empty:before{content:"Нажимай на плитки по порядку";color:#a3a8bf;font-size:15px}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.tile{min-width:48px;height:50px;padding:0 14px;border-radius:12px;border:2px solid var(--line);box-shadow:0 3px 0 var(--line);background:#fff;font-size:24px;font-weight:900}
+.tile.used{visibility:hidden}
+.hintbtn{display:inline-flex;align-items:center;gap:6px;color:var(--blue-d);font-weight:900;font-size:15px;padding:8px 0;margin-top:6px}
+.hint{display:flex;gap:10px;align-items:center;background:var(--blue-bg);border-radius:16px;padding:10px 12px;margin-top:6px;font-size:16px;line-height:1.35}
+.hint img{width:52px;height:52px;object-fit:contain;flex:none}
+
+/* ---------- лист с ответом ---------- */
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:9;padding:16px 0 calc(16px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.9,.25,1)}
+.sheet.show{transform:none}
+.sheet.ok{background:var(--green-bg);color:var(--green-ink)}
+.sheet.bad{background:var(--red-bg);color:var(--red-ink)}
+.sheet h3{margin:0 0 4px;font-size:24px;font-weight:900;display:flex;align-items:center;gap:8px}
+.sheet .why{font-size:16px;line-height:1.4;margin:0 0 14px;color:var(--ink)}
+.sheet .why b{color:inherit}
+.sheet .row{display:flex;gap:12px;align-items:flex-start}
+.sheet .row img{width:74px;height:74px;object-fit:contain;flex:none;margin-top:-34px}
+.sheet.ok .btn{background:var(--green)} .sheet.bad .btn{background:var(--red);box-shadow:0 4px 0 var(--red-d)}
+
+/* ---------- итог ---------- */
+.done-screen{text-align:center;padding:24px 0 140px}
+.done-screen img{width:200px;height:200px;object-fit:contain}
+.done-screen h1{font-size:32px;font-weight:900;margin:8px 0 6px;color:var(--gold-d)}
+.done-screen p{color:var(--ink2);font-size:17px;margin:0 0 18px}
+.res{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
+.res div{flex:1;max-width:150px;border-radius:16px;border:2px solid var(--c);overflow:hidden}
+.res b{display:block;background:var(--c);color:#fff;font-size:13px;text-transform:uppercase;letter-spacing:.05em;padding:4px}
+.res span{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 4px;font-size:22px;font-weight:900;color:var(--c)}
+.bigstars{display:flex;gap:6px;justify-content:center;margin:0 0 14px}
+.bigstars svg{width:46px;height:46px}
+.namebox{padding:28px 0 140px;text-align:center}
+.namebox img{width:150px;height:150px;object-fit:contain}
+.namebox h1{font-size:26px;font-weight:900;margin:8px 0 6px}
+.namebox p{color:var(--ink2);font-size:16px;margin:0 0 18px}
+.namebox input{width:100%;font:inherit;font-size:22px;font-weight:800;color:var(--ink);padding:14px 16px;border-radius:16px;border:2px solid var(--line);background:var(--soft);outline:none;text-align:center;caret-color:var(--purple)}
+.namebox input:focus{border-color:var(--purple);background:#fff}
+.cert{margin:12px 0 0;border-radius:24px;border:3px solid var(--purple);padding:18px 16px 16px;background:linear-gradient(180deg,var(--purple-bg),#fff 45%)}
+.cert .who{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.cert .who img{width:76px;height:76px;object-fit:contain;flex:none}
+.cert .nm{font-size:24px;font-weight:900;line-height:1.15}
+.cert .cl{color:var(--ink2);font-size:15px}
+.cert ul{list-style:none;margin:0;padding:0;border-top:2px solid var(--line)}
+.cert li{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:2px solid var(--line);font-size:17px}
+.cert li .nm2{flex:1}
+.cert li .st{display:flex;gap:1px}
+.cert li .st svg{width:20px;height:20px}
+.cert li .no{color:#a3a8bf;font-size:15px}
+.cert li .tm{color:var(--ink2);font-size:13px;width:74px;text-align:right}
+.cert .sum{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:space-between;align-items:center;margin-top:12px;font-size:17px;font-weight:900}
+.cert .sum span{white-space:nowrap}
+.cert .sum .big{font-size:18px;color:var(--green-d)}
+.cert .sum .big.not{color:var(--orange)}
+.cert .now{margin-top:8px;color:var(--ink2);font-size:14px;text-align:center}
+.shot{display:flex;gap:10px;align-items:center;background:var(--blue-bg);color:var(--blue-d);border-radius:16px;padding:10px 14px;font-size:16px;line-height:1.35}
+.homebtns{display:flex;flex-direction:column;gap:12px;margin:10px 0 0}
+canvas.conf{position:fixed;inset:0;pointer-events:none;z-index:20}
+.shake{animation:shake .38s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.pop{animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:380px){.prompt{font-size:20px}.bigeq{font-size:26px}.scene img{width:84px;height:84px}.opt{font-size:19px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+'use strict';
+// ====== значки (свой рисунок, один стиль) ======
+const IC={
+ heart:'<svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.8 8.2 3 4.5 6.6 4.5c2.1 0 3.6 1.2 4.4 2.5.8-1.3 2.3-2.5 4.4-2.5 3.6 0 5.8 3.7 4.2 7.3C19.5 16.4 12 21 12 21z"/></svg>',
+ bolt:'<svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 2 4.8 13.2c-.4.5 0 1.3.6 1.3H11l-1.4 7.1c-.1.6.7.9 1 .4l8.6-11.2c.4-.5 0-1.3-.6-1.3H13l1.5-7c.1-.6-.7-.9-1-.5z"/></svg>',
+ star:'<svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.6l2.7 5.6 6.1.8c.6.1.9.9.4 1.3l-4.4 4.3 1.1 6.1c.1.6-.6 1.1-1.1.8L12 18.6l-5.4 2.9c-.6.3-1.2-.2-1.1-.8l1.1-6.1-4.4-4.3c-.5-.4-.2-1.2.4-1.3l6.1-.8L11.4 2.6c.2-.5 1-.5 1.2 0z"/></svg>',
+ close:'<svg class="ic" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="3" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></svg>',
+ sound:'<svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" d="M4 9.5v5c0 .6.4 1 1 1h3l4.3 3.6c.6.5 1.7.1 1.7-.8V5.7c0-.9-1.1-1.3-1.7-.8L8 8.5H5c-.6 0-1 .4-1 1z"/><path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" d="M17 9a4.5 4.5 0 0 1 0 6M19.5 6.5a8 8 0 0 1 0 11"/></svg>',
+ mute:'<svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" d="M4 9.5v5c0 .6.4 1 1 1h3l4.3 3.6c.6.5 1.7.1 1.7-.8V5.7c0-.9-1.1-1.3-1.7-.8L8 8.5H5c-.6 0-1 .4-1 1z"/><path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M17 9.5l4.5 5M21.5 9.5 17 14.5"/></svg>',
+ check:'<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ cross:'<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>',
+ bulb:'<svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5a7 7 0 0 0-4.2 12.6c.6.5 1 1.2 1 2V18h6.4v-.9c0-.8.4-1.5 1-2A7 7 0 0 0 12 2.5zM9 19.5h6v.5a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-.5z"/></svg>',
+ box:'<svg viewBox="0 0 40 40"><rect x="6" y="15" width="28" height="20" rx="3" fill="#fff" opacity=".95"/><rect x="4" y="10" width="32" height="8" rx="3" fill="#fff"/><path d="M20 10v25" stroke="currentColor" stroke-width="4"/><path d="M20 10c-3-6-10-6-9-1 1 3 6 2 9 1zm0 0c3-6 10-6 9-1-1 3-6 2-9 1z" fill="#fff"/></svg>',
+ trap:'<svg viewBox="0 0 40 40"><path d="M20 5 36 33H4z" fill="#fff" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path d="M20 15v9" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="20" cy="29" r="2.4" fill="currentColor"/></svg>',
+ shop:'<svg viewBox="0 0 40 40"><path d="M6 15h28l-2 18a3 3 0 0 1-3 2H11a3 3 0 0 1-3-2z" fill="#fff"/><path d="M13 15a7 7 0 0 1 14 0" stroke="#fff" stroke-width="3.5" fill="none"/><circle cx="16" cy="23" r="2.4" fill="currentColor"/><circle cx="24" cy="25" r="2.4" fill="currentColor"/></svg>',
+ road:'<svg viewBox="0 0 40 40"><path d="M8 36c3-9 15-8 13-17-1-6 7-9 11-8" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="1 7"/><path d="M30 4v12M30 4l8 3-8 3" stroke="#fff" stroke-width="3" fill="#fff" stroke-linejoin="round"/></svg>',
+ gem:'<svg viewBox="0 0 40 40"><path d="M12 7h16l8 10-16 17L4 17z" fill="#fff"/><path d="M4 17h32M12 7l8 27 8-27" stroke="currentColor" stroke-width="2" fill="none" opacity=".5"/></svg>',
+ pencil:'<svg viewBox="0 0 40 40"><path d="M8 32l3-9L27 7l6 6-16 16z" fill="#fff"/><path d="M8 32l9-3-6-6z" fill="currentColor" opacity=".5"/><path d="M24 10l6 6" stroke="currentColor" stroke-width="2.5"/></svg>',
+ dragon:'<svg viewBox="0 0 40 40"><path d="M8 30c0-10 6-17 14-17 6 0 10 4 10 9 0 6-5 10-12 10H10a2 2 0 0 1-2-2z" fill="#fff"/><path d="M14 13 11 5l7 5M24 12l3-8 3 9" fill="#fff"/><circle cx="25" cy="21" r="2.2" fill="currentColor"/><path d="M32 25h4" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>'
+};
+
+// ====== картинки: сначала сжатые, потом от Codex, потом старые ======
+const PIC={hi:'pic01',think:'pic09',yes:'pic11',oops:'pic09',win:'pic11',robot:'pic09',dragon:'pic02',scale:'pic09',shop:'pic08',hike:'pic01',minerals:'pic02',pencils:'pic01'};
+const CHAR={hi:'cat-hi',think:'cat-think',yes:'cat-yes',oops:'cat-oops',win:'cat-win',robot:'robot',dragon:'dragon'};
+function srcs(k){
+  const name=CHAR[k]||('scene-'+k), ext=CHAR[k]?'png':'jpg';
+  return [`img/w/${name}.webp`,`img/codex/${name}.${ext}`,`img/old/${PIC[k]}.jpg`];
+}
+function pic(k,alt=''){const s=srcs(k);return `<img src="${s[0]}" data-s="${s.join('|')}" data-i="0" alt="${alt}" onerror="nextPic(this)">`}
+function nextPic(el){const s=el.dataset.s.split('|');const i=+el.dataset.i+1;if(i<s.length){el.dataset.i=i;el.src=s[i]}else el.style.visibility='hidden'}
+
+// ====== помощники ======
+const MI='−';
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=s=>esc(s).replace(/\b([xym])\b/g,'<i class="v">$1</i>');
+const boxed=s=>esc(s).replace(/\b([xym])\b/g,'<span class="box">$1</span>');
+function choice(o){const opts=shuf(o.opts);return {...o,type:'choice',opts,correct:opts.indexOf(o.opts[0])}}
+
+// ====== уравнения «коробка» ======
+function eqQ(form,a,b,book){
+  let eq,ans,why,hint;
+  if(form==='x+a'||form==='a+x'){
+    eq=form==='x+a'?`x + ${a} = ${b}`:`${a} + x = ${b}`;
+    if(b<=a){ans='none';why=`${a} + x никак не может быть меньше ${a}: прибавили и стало меньше? Так не бывает. <b>Натуральных корней нет.</b>`}
+    else{ans=b-a;why=`Ищем неизвестное слагаемое: из суммы вычитаем известное. x = ${b} ${MI} ${a} = <b>${ans}</b>. Проверка: ${ans} + ${a} = ${b}.`}
+    hint=`К ${a} что-то прибавили и получили ${b}. Сделай обратное действие: вычти.`;
+  }else if(form==='x-a'){
+    eq=`x ${MI} ${a} = ${b}`;ans=a+b;
+    why=`Из коробки забрали ${a}, осталось ${b}. Значит, было x = ${b} + ${a} = <b>${ans}</b>. Проверка: ${ans} ${MI} ${a} = ${b}.`;
+    hint=`Из числа вычли ${a}. Обратное действие — прибавь.`;
+  }else{ // a-x
+    eq=`${a} ${MI} x = ${b}`;
+    if(b>=a){ans='none';why=`Из ${a} вычли число и получили ${b}${b>a?' — больше, чем было':''}? Так не бывает. <b>Натуральных корней нет.</b>`}
+    else{ans=a-b;why=`Ищем вычитаемое: из уменьшаемого вычитаем разность. x = ${a} ${MI} ${b} = <b>${ans}</b>. Проверка: ${a} ${MI} ${ans} = ${b}.`}
+    hint=`x здесь вычитают из ${a}. Чтобы найти его, из ${a} вычти ${b}.`;
+  }
+  return {type:'num',eq,ans,why,hint,book,unit:''};
+}
+function randEq(allowNone){
+  const f=pick(['x+a','a+x','x-a','a-x']);
+  if(allowNone&&Math.random()<.45&&f!=='x-a'){
+    if(f==='a-x'){const a=R(20,70);return eqQ(f,a,a+R(4,40))}
+    const a=R(45,99);return eqQ(f,a,R(10,a-4));
+  }
+  if(f==='x-a')return eqQ(f,R(11,60),R(11,90));
+  if(f==='a-x'){const a=R(40,99),x=R(5,a-10);return eqQ(f,a,a-x)}
+  const a=R(12,89),x=R(11,99);return eqQ(f,a,a+x);
+}
+function opQ(){
+  const f=pick(['x+a','x-a','a-x']);let a,b,eq,good,bad;
+  if(f==='x+a'){a=R(15,60);b=a+R(10,60);eq=`x + ${a} = ${b}`;good=`${b} ${MI} ${a}`;bad=[`${b} + ${a}`,`${a} ${MI} ${b}`]}
+  else if(f==='x-a'){a=R(15,60);b=a+R(3,30);eq=`x ${MI} ${a} = ${b}`;good=`${b} + ${a}`;bad=[`${b} ${MI} ${a}`,`${a} ${MI} ${b}`]}
+  else{a=R(50,99);b=R(10,a-10);eq=`${a} ${MI} x = ${b}`;good=`${a} ${MI} ${b}`;bad=[`${a} + ${b}`,`${b} ${MI} ${a}`]}
+  return choice({prompt:'Как найти x?',eq,opts:[good,...bad],why:`Делаем обратное действие: x = <b>${good}</b>.`,hint:'Было «+» — делай «−». Было «−» — делай «+». Если x вычитают из числа — вычитай.'});
+}
+
+// ====== задачи-истории: «было — убыло — убыло — осталось» (как 2.206 г) ======
+const SHOP=[
+ {pic:'shop',big:1,u:'кг',s:(A,B,C)=>`В магазине было ${A} кг овощей и фруктов. Сколько-то продали в первый день, ${B} кг — во второй день. Осталось ${C} кг.`,q:'Сколько килограммов продали в первый день?',q2:'Сколько килограммов продали за два дня вместе?'},
+ {pic:'shop',big:1,u:'л',s:(A,B,C)=>`В цистерне было ${A} л молока. Утром разлили по бутылкам сколько-то литров, днём — ещё ${B} л. Осталось ${C} л.`,q:'Сколько литров разлили утром?',q2:'Сколько литров разлили за утро и день вместе?'},
+ {pic:'pencils',big:0,u:'книг',s:(A,B,C)=>`В библиотеке было ${A} книг про космос. В понедельник выдали несколько книг, во вторник — ${B}. На полке осталось ${C}.`,q:'Сколько книг выдали в понедельник?',q2:'Сколько книг выдали за два дня вместе?'},
+ {pic:'hike',big:0,u:'чел.',s:(A,B,C)=>`В автобусе ехали ${A} человек. На первой остановке вышли несколько, на второй — ещё ${B}. В автобусе осталось ${C} человек.`,q:'Сколько человек вышло на первой остановке?',q2:'Сколько человек вышло на двух остановках вместе?'},
+ {pic:'yes',big:0,u:'монет',s:(A,B,C)=>`У Кота Икса было ${A} монет. Сколько-то он потратил на пиццу, потом ${B} монет — на лимонад. Осталось ${C} монет.`,q:'Сколько монет ушло на пиццу?',q2:'Сколько монет он потратил всего?'}
+];
+function shopSet(t,A,B,C,book){
+  const story=t.s(A,B,C),x=A-B-C,both=A-C;
+  return [
+   choice({story,pic:t.pic,book,prompt:'Выбери уравнение. Неизвестное — x.',opts:[`${A} ${MI} x ${MI} ${B} = ${C}`,`${A} + x ${MI} ${B} = ${C}`,`${A} ${MI} x + ${B} = ${C}`,`x ${MI} ${A} ${MI} ${B} = ${C}`],
+     why:`Было ${A}. Отняли x, потом отняли ${B} — осталось ${C}: <b>${A} ${MI} x ${MI} ${B} = ${C}</b>.`,hint:'Идём по истории: было → отняли → ещё отняли → осталось.'}),
+   {type:'num',story,pic:t.pic,book,prompt:t.q2,ans:both,unit:t.u,why:`Было ${A}, осталось ${C}. Значит, ушло ${A} ${MI} ${C} = <b>${both}</b>.`,hint:'Сравни: сколько было и сколько осталось.'},
+   {type:'num',story,pic:t.pic,book,prompt:t.q,ans:x,unit:t.u,why:`За два раза ушло ${both}. Из них ${B} во второй раз. Значит, в первый: ${both} ${MI} ${B} = <b>${x}</b>.`,hint:`Всего ушло ${both}. Убери то, что ушло во второй раз.`}
+  ];
+}
+function randShop(){
+  const t=pick(SHOP);let x,B,C;
+  if(t.big){x=R(5,40)*10;B=R(5,30)*10;C=R(5,30)*10}else{x=R(4,25);B=R(3,20);C=R(5,30)}
+  return shopSet(t,x+B+C,B,C);
+}
+
+// ====== «ещё a — и будет b» (как 2.202 е) ======
+const MORE=[
+ {pic:'hike',u:'км',s:(a,b)=>`Если Миша пройдёт ещё ${a} км, то весь его путь составит ${b} км.`,q:'Сколько километров уже прошёл Миша?'},
+ {pic:'think',u:'стр.',s:(a,b)=>`Если Кот Икс прочитает ещё ${a} страниц, то всего прочитает ${b} страниц.`,q:'Сколько страниц он уже прочитал?'},
+ {pic:'robot',u:'монет',s:(a,b)=>`Если Робот Бип накопит ещё ${a} монет, у него будет ${b} монет.`,q:'Сколько монет у Робота Бипа сейчас?'},
+ {pic:'dragon',u:'шт.',s:(a,b)=>`Если Дракон съест ещё ${a} пирожков, то всего съест ${b} пирожков.`,q:'Сколько пирожков Дракон уже съел?'},
+ {pic:'shop',u:'л',s:(a,b)=>`Если в бочку налить ещё ${a} л воды, в ней станет ${b} л.`,q:'Сколько литров в бочке сейчас?'}
+];
+function moreSet(t,a,b,book,build){
+  const story=t.s(a,b),x=b-a;
+  const q1=build?{type:'build',story,pic:t.pic,book,prompt:'Собери уравнение из плиток.',tiles:shuf(['x','+',String(a),'=',String(b),MI]),accept:[`x + ${a} = ${b}`,`${a} + x = ${b}`],
+       why:`Было x, прибавили ${a} — стало ${b}: <b>x + ${a} = ${b}</b>.`,hint:'Сначала x, потом что к нему добавили, потом «=» и сколько стало.'}
+   :choice({story,pic:t.pic,book,prompt:'Выбери уравнение. Неизвестное — x.',opts:[`x + ${a} = ${b}`,`x ${MI} ${a} = ${b}`,`${a} ${MI} x = ${b}`,`x + ${b} = ${a}`],
+       why:`«Ещё ${a}» — значит, прибавляем: <b>x + ${a} = ${b}</b>.`,hint:'«Ещё» — это плюс.'});
+  return [q1,{type:'num',story,pic:t.pic,book,prompt:t.q,ans:x,unit:t.u,why:`x + ${a} = ${b}, x = ${b} ${MI} ${a} = <b>${x}</b>. Проверка: ${x} + ${a} = ${b}.`,hint:`Из ${b} убери ${a}.`}];
+}
+function randMore(build){const t=pick(MORE.slice(1));const a=R(3,25),x=R(4,40);return moreSet(t,a,a+x,null,build)}
+
+// ====== «на … больше, на … меньше, столько же, сколько вместе» (как 2.208 а) ======
+const TRIO=[
+ {A:['Олег','Олега'],B:['Настя','Насти'],C:['Саша','Саши'],what:'коллекционируют минералы',th:'минералов',pic:'minerals'},
+ {A:['Кот Икс','Кота Икса'],B:['Робот Бип','Робота Бипа'],C:['Дракон','Дракона'],what:'собирают наклейки',th:'наклеек',pic:'minerals'},
+ {A:['Кот Икс','Кота Икса'],B:['Дракон','Дракона'],C:['Робот Бип','Робота Бипа'],what:'собирают шишки',th:'шишек',pic:'hike'}
+];
+function trioSet(t,a,c,book){
+  const A=t.A[1],B=t.B[1],C=t.C[1];
+  const story=`${t.A[0]}, ${t.B[0]} и ${t.C[0]} ${t.what}. У ${A} y ${t.th}, у ${B} — на ${a} больше, чем у ${A}, а у ${C} — на ${c} меньше, чем у ${A}. У ${B} столько же, сколько у ${A} и ${C} вместе.`;
+  return [
+   choice({story,pic:t.pic,book,prompt:`Сколько ${t.th} у ${B}?`,opts:[`y + ${a}`,`y ${MI} ${a}`,`${a} ${MI} y`,`${a}`],why:`«На ${a} больше» — прибавляем: <b>y + ${a}</b>.`,hint:'«Больше» — плюс, «меньше» — минус.'}),
+   choice({story,pic:t.pic,book,prompt:`Сколько ${t.th} у ${C}?`,opts:[`y ${MI} ${c}`,`y + ${c}`,`${c} ${MI} y`,`${c}`],why:`«На ${c} меньше, чем у ${A}» — вычитаем из y: <b>y ${MI} ${c}</b>.`,hint:'«Меньше» — минус.'}),
+   choice({story,pic:t.pic,book,prompt:'Какое уравнение подходит?',opts:[`y + ${a} = y + (y ${MI} ${c})`,`y + ${a} = y ${MI} ${c}`,`y = (y + ${a}) + (y ${MI} ${c})`,`y ${MI} ${c} = y + (y + ${a})`],
+     why:`Слева — у ${B} (y + ${a}). Справа — у ${A} и ${C} вместе: y + (y ${MI} ${c}). <b>y + ${a} = y + (y ${MI} ${c})</b>.`,hint:`Найди, у кого «столько же, сколько вместе», — это левая часть.`}),
+   {type:'num',bonus:1,story,pic:t.pic,book,prompt:`Хитрость! Сколько ${t.th} у ${C}?`,ans:a,unit:'',why:`У ${B} — это «у ${A} + ${a}». И ещё это «у ${A} + у ${C}». Значит, у ${C} ровно <b>${a}</b>.`,hint:`Сравни: у ${B} = у ${A} + ${a} и у ${B} = у ${A} + у ${C}.`},
+   {type:'num',bonus:1,story,pic:t.pic,book,prompt:`А сколько у ${A}? Найди y.`,ans:a+c,unit:'',why:`У ${C}: y ${MI} ${c} = ${a}. Значит, y = ${a} + ${c} = <b>${a+c}</b>. Проверка: у ${B} ${a+c} + ${a} = ${2*a+c}; у ${A} и ${C} вместе ${a+c} + ${a} = ${2*a+c}.`,hint:`У ${C} ${a}, и это на ${c} меньше, чем у ${A}.`}
+  ];
+}
+function randTrio(){const a=R(5,20),c=R(3,20);return trioSet(pick(TRIO.slice(1)),a,c)}
+
+// ====== три набора (как 2.208 б) ======
+const SETS=[
+ {n:'наборе',w:'карандашей',v:'В первом наборе',pic:'pencils',s:(a,c)=>`В первом наборе m карандашей, во втором — на ${a} карандашей больше, чем в первом, а в третьем — на ${c} карандашей меньше, чем во втором. Во втором наборе оказалось столько же карандашей, сколько в первом и третьем наборах вместе.`,one:'в первом',two:'во втором',three:'в третьем'},
+ {n:'коробке',w:'конфет',pic:'shop',s:(a,c)=>`В первой коробке m конфет, во второй — на ${a} конфет больше, чем в первой, а в третьей — на ${c} меньше, чем во второй. Во второй коробке столько же конфет, сколько в первой и третьей вместе.`,one:'в первой',two:'во второй',three:'в третьей'},
+ {n:'полке',w:'книг',pic:'pencils',s:(a,c)=>`На первой полке m книг, на второй — на ${a} книг больше, чем на первой, а на третьей — на ${c} меньше, чем на второй. На второй полке столько же книг, сколько на первой и третьей вместе.`,one:'на первой',two:'на второй',three:'на третьей'}
+];
+function setsSet(t,a,c,book){
+  const story=t.s(a,c);
+  return [
+   choice({story,pic:t.pic,book,prompt:`Сколько ${t.w} ${t.two}?`,opts:[`m + ${a}`,`m ${MI} ${a}`,`${a} ${MI} m`],why:`На ${a} больше, чем ${t.one}: <b>m + ${a}</b>.`,hint:'«Больше» — плюс.'}),
+   choice({story,pic:t.pic,book,prompt:`Сколько ${t.w} ${t.three}?`,opts:[`m + ${a} ${MI} ${c}`,`m ${MI} ${c}`,`m + ${a} + ${c}`,`m ${MI} ${a} ${MI} ${c}`],why:`На ${c} меньше, чем ${t.two} (а там m + ${a}): <b>m + ${a} ${MI} ${c}</b>, то есть m + ${a-c}.`,hint:`Сравнивают не с первым, а со вторым! Во втором m + ${a}.`}),
+   choice({story,pic:t.pic,book,prompt:'Какое уравнение подходит?',opts:[`m + ${a} = m + (m + ${a} ${MI} ${c})`,`m + ${a} = m + ${a} ${MI} ${c}`,`m = (m + ${a}) + (m + ${a} ${MI} ${c})`,`m + ${a} ${MI} ${c} = m + (m + ${a})`],
+     why:`${t.two[0].toUpperCase()+t.two.slice(1)} (m + ${a}) = ${t.one} (m) + ${t.three} (m + ${a} ${MI} ${c}).`,hint:`«Столько же, сколько вместе» — это ${t.two}.`}),
+   {type:'num',bonus:1,story,pic:t.pic,book,prompt:`Хитрость! Сколько ${t.w} ${t.three}?`,ans:a,unit:'',why:`${t.two[0].toUpperCase()+t.two.slice(1)}: «первый + ${a}» и «первый + третий». Значит, ${t.three} ровно <b>${a}</b>.`,hint:`Сравни две записи второго: m + ${a} и m + третий.`},
+   {type:'num',bonus:1,story,pic:t.pic,book,prompt:'Найди m.',ans:c,unit:'',why:`${t.three[0].toUpperCase()+t.three.slice(1)} m + ${a-c} = ${a}, значит m = ${a} ${MI} ${a-c} = <b>${c}</b>. Проверка: ${c}, ${c+a} и ${a}; ${c} + ${a} = ${c+a}.`,hint:`${t.three[0].toUpperCase()+t.three.slice(1)} m + ${a-c}, и это ${a}.`}
+  ];
+}
+function randSets(){const a=R(8,20),c=R(3,a-3);return setsSet(pick(SETS.slice(1)),a,c)}
+
+// ====== уровни ======
+const UNITS=[
+ {id:'box',name:'Коробка Икс',sub:'x + 37 = 71',ic:'box',c:'#8b5cf6',cd:'#6d3fe0',side:'hi',
+  title:'Что лежит в коробке?',lead:'x — это закрытая коробка с числом. Открываем её обратным действием.',
+  rules:[['x + 37 = 71','x = 71 − 37 = 34'],['x − 37 = 71','x = 71 + 37 = 108'],['90 − x = 21','x = 90 − 21 = 69'],['Нашёл x?','Подставь его в уравнение и проверь.']],
+  make:()=>[eqQ('x+a',37,71,'№ 2.211 а'),eqQ('x-a',37,71,'№ 2.211 б'),opQ(),randEq(),opQ(),randEq(),randEq(),randEq()]},
+ {id:'trap',name:'Ловушки',sub:'37 − x = 71',ic:'trap',c:'#ff9233',cd:'#d96d10',side:'oops',
+  title:'Бывает ли такое число?',lead:'Натуральные числа — 1, 2, 3, 4… Иногда уравнение — ловушка, и такого числа нет.',
+  rules:[['37 − x = 71','Вычли — и стало больше? Не бывает.'],['71 + x = 37','Прибавили — и стало меньше? Не бывает.'],['Ответ','Кнопка «Нет натуральных корней». Считать не нужно — сравни числа.']],
+  make:()=>{const q=[eqQ('a-x',37,71,'№ 2.211 в'),eqQ('a+x',71,37,'№ 2.211 г')];for(let i=0;i<6;i++)q.push(randEq(true));q.forEach(x=>x.allowNone=1);return q}},
+ {id:'shop',name:'Магазин',sub:'было — продали — осталось',ic:'shop',c:'#3fbf2a',cd:'#2e9a1c',side:'shop',
+  title:'Задача-история',lead:'Записываем по порядку, что случилось, как в истории.',
+  rules:[['1. Неизвестное','обозначаем буквой x'],['2. История','600 − x − 160 = 200'],['3. Хитрость','Сначала: сколько ушло всего? 600 − 200 = 400. Потом: 400 − 160 = 240.']],
+  make:()=>[...shopSet(SHOP[0],600,160,200,'№ 2.206 г'),...randShop(),...randShop().slice(1)]},
+ {id:'more',name:'Ещё — и будет',sub:'x + 3 = 10',ic:'road',c:'#1fa8f0',cd:'#1287c6',side:'hike',
+  title:'«Ещё 3 — и будет 10»',lead:'«Ещё» — это плюс. Сколько было — неизвестно, это x.',
+  rules:[['Миша прошёл x км','ещё 3 км — и весь путь 10 км'],['Уравнение','x + 3 = 10'],['Ответ','x = 10 − 3 = 7 км']],
+  make:()=>[...moreSet(MORE[0],3,10,'№ 2.202 е'),...randMore(true),...randMore(false),...randMore(true)]},
+ {id:'gems',name:'Минералы',sub:'на 10 больше, на 12 меньше',ic:'gem',c:'#ff5a8a',cd:'#d93468',side:'minerals',
+  title:'Больше, меньше, вместе',lead:'Здесь нужно составить уравнение. А потом — хитрость, чтобы его решить без труда.',
+  rules:[['«на 10 больше»','y + 10'],['«на 12 меньше»','y − 12'],['«столько же, сколько вместе»','знак «=»: y + 10 = y + (y − 12)'],['Хитрость','Настя = Олег + 10 и Настя = Олег + Саша. Значит, у Саши 10!']],
+  make:()=>[...trioSet(TRIO[0],10,12,'№ 2.208 а'),...randTrio()]},
+ {id:'pens',name:'Карандаши',sub:'три набора',ic:'pencil',c:'#14b8a6',cd:'#0e8f81',side:'pencils',
+  title:'Три набора',lead:'Осторожно: третий сравнивают не с первым, а со вторым.',
+  rules:[['Первый','m'],['Второй, на 12 больше','m + 12'],['Третий, на 10 меньше второго','m + 12 − 10, то есть m + 2'],['Хитрость','Второй = первый + 12 и второй = первый + третий. Значит, в третьем 12.']],
+  make:()=>[...setsSet(SETS[0],12,10,'№ 2.208 б'),...randSets()]},
+ {id:'boss',name:'Дракон',sub:'всё вместе · 3 сердечка',ic:'dragon',c:'#ef4444',cd:'#b91c1c',side:'dragon',boss:1,
+  title:'Бой с Драконом',lead:'Все задачи из учебника и похожие. У тебя 3 сердечка. Ошибёшься 3 раза — бой начнётся заново.',
+  rules:[['Коробка','обратное действие'],['Ловушка','нет натуральных корней'],['История','по порядку, как было']],
+  make:()=>{
+    const q=['x+a',37,71,'№ 2.211 а','x-a',37,71,'№ 2.211 б','a-x',37,71,'№ 2.211 в','a+x',71,37,'№ 2.211 г'];
+    const out=[];for(let i=0;i<q.length;i+=4)out.push(eqQ(q[i],q[i+1],q[i+2],q[i+3]));
+    out.push(shopSet(SHOP[0],600,160,200,'№ 2.206 г')[2],moreSet(MORE[0],3,10,'№ 2.202 е')[1],
+      {...trioSet(TRIO[0],10,12,'№ 2.208 а')[4],bonus:0,prompt:'Сколько минералов у Олега?'},
+      {...setsSet(SETS[0],12,10,'№ 2.208 б')[4],bonus:0,prompt:'Сколько карандашей в первом наборе?'},
+      randEq(true),randEq(true),randShop()[2],randMore()[1]);
+    out.forEach(x=>{if(x.type==='num'&&!x.story)x.allowNone=1});
+    return out;
+  }}
+];
+
+// ====== сохранение (только в этом браузере) ======
+const KEY='kot-x-v1';
+let save={xp:0,u:{},t:{},name:''};
+try{save=Object.assign(save,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+const store=()=>{try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}};
+let muted=false;try{muted=localStorage.getItem(KEY+'-mute')==='1'}catch(e){}
+
+// ====== звук ======
+let ac;
+function tone(freqs,dur=.12,type='sine',vol=.18){
+  if(muted)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+  let t=ac.currentTime;freqs.forEach(f=>{const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur);t+=dur*.8})}catch(e){}
+}
+const sGood=()=>tone([660,880,1320],.11,'triangle'),sBad=()=>tone([220,180],.16,'square',.08),sTap=()=>tone([520],.04,'triangle',.08),sWin=()=>tone([523,659,784,1047,1319],.13,'triangle');
+
+// ====== экраны ======
+const app=document.getElementById('app');
+function home(){
+  const total=UNITS.length,doneN=UNITS.filter(u=>save.u[u.id]).length;
+  const nextI=UNITS.findIndex(u=>!save.u[u.id]);
+  const offs=[0,-50,-70,-40,20,60,0];
+  app.innerHTML=`
+  <header class="top"><div class="wrap">
+    <div class="logo">Кот <i>Икс</i></div>
+    <div class="pill st" title="Пройдено уровней">${IC.star}${doneN}/${total}</div>
+    <div class="pill xp" title="Очки">${IC.bolt}${save.xp}</div>
+    <button class="iconbtn" id="snd" aria-label="${muted?'Включить звук':'Выключить звук'}">${muted?IC.mute:IC.sound}</button>
+  </div></header>
+  <main class="wrap">
+    <div class="hello">${pic('hi','Кот Икс')}<div class="bubble">Привет! Я <b>Кот Икс</b>. В моей коробке спрятано число. Помоги его найти — и завтра на проверочной будет легко!</div></div>
+    <div class="path">${UNITS.map((u,i)=>{
+      const st=save.u[u.id]||0;
+      return `<div class="unit" style="transform:translateX(${offs[i]}px);--c:${u.c};--cd:${u.cd}">
+        ${i===nextI?'<div class="start-tag">'+(i===0?'Начать':'Дальше')+'</div>':''}
+        <button class="node ${st?'done':''} ${i===nextI?'next':''}" data-u="${i}" aria-label="${u.name}">${IC[u.ic]}</button>
+        <div class="stars">${st?[1,2,3].map(k=>`<span style="color:${k<=st?'var(--gold)':'var(--line)'}">${IC.star}</span>`).join(''):''}</div>
+        <div class="name">${u.name}</div><div class="sub">${fmt(u.sub)}</div>
+      </div>`}).join('')}
+      <div class="homebtns"><button class="btn blue" id="mine">Мой результат для учителя</button></div>
+      <button class="reset" id="reset">Начать всё заново</button>
+    </div>
+  </main>`;
+  app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{sTap();const i=+b.dataset.u;save.name?intro(i):askName(()=>intro(i))});
+  document.getElementById('mine').onclick=()=>{sTap();save.name?mine():askName(mine)};
+  document.getElementById('snd').onclick=()=>{muted=!muted;try{localStorage.setItem(KEY+'-mute',muted?'1':'0')}catch(e){}home()};
+  document.getElementById('reset').onclick=()=>{if(confirm('Стереть звёзды и очки?')){save={xp:0,u:{},t:{},name:save.name};store();home()}};
+  window.scrollTo(0,0);
+}
+
+function intro(i){
+  const u=UNITS[i];
+  app.innerHTML=`
+  <div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
+  <div class="intro">
+    <h1>${u.title}</h1><p class="lead">${u.lead}</p>
+    <div class="robo">${pic(u.boss?'dragon':'robot','')}<div class="rules">${u.rules.map(r=>`<div class="rule"><span class="eq">${fmt(r[0])}</span><small>${fmt(r[1])}</small></div>`).join('')}</div></div>
+  </div></div>
+  <div class="bottom"><div class="wrap"><button class="btn" id="go" style="background:${u.c};box-shadow:0 4px 0 ${u.cd}">${u.boss?'В бой!':'Поехали!'}</button></div></div>`;
+  document.getElementById('x').onclick=home;
+  document.getElementById('go').onclick=()=>{sTap();lesson(i)};
+  window.scrollTo(0,0);
+}
+
+let L; // текущий урок
+function lesson(i){
+  const u=UNITS[i];
+  const qs=u.make();
+  L={u,i,queue:qs,total:qs.length,ok:0,mist:0,hearts:u.boss?3:null,combo:0,best:0,t0:Date.now(),retry:new Set()};
+  ask();
+}
+function ask(){
+  if(!L.queue.length)return finish();
+  const q=L.q=L.queue[0];L.ans=null;L.hintShown=false;
+  const pct=Math.round(L.ok/L.total*100);
+  let body='';
+  const tag=(q.book?`<span class="tag">${IC.star.replace('class="ic"','class="ic" style="width:16px;height:16px"')}из учебника ${q.book}</span> `:'')+(q.bonus?'<span class="tag bonus">бонус</span>':'');
+  if(q.story) body+=`<div class="story">${pic(q.pic)}<p>${fmt(q.story)}</p></div>`;
+  if(q.type==='num'&&!q.story){
+    body+=`<div class="scene">${pic('think')}<div class="say"><div class="bigeq">${boxed(q.eq)}</div></div></div>
+      <p class="prompt">${fmt(q.allowNone?'Найди x — или нажми «нет корней».':'Чему равен x?')}</p>`;
+  }else body+=`<p class="prompt">${fmt(q.prompt)}</p>`;
+  if(q.eq&&q.type==='choice') body+=`<div class="scene">${pic('think')}<div class="say"><div class="bigeq">${boxed(q.eq)}</div></div></div>`;
+  if(q.type==='num'){
+    body+=`<div class="answerline">${q.story?'':'<span class="v">x</span> ='}<div class="slot" id="slot" aria-live="polite">?</div>${q.unit?`<span class="unitlbl">${q.unit}</span>`:''}</div>
+    <div class="pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="key" data-k="${n}">${n}</button>`).join('')}
+      <button class="key" data-k="c" aria-label="Стереть">⌫</button><button class="key" data-k="0">0</button><button class="key" data-k="cc" aria-label="Очистить" style="font-size:16px">сброс</button>
+      ${q.allowNone?'<button class="key wide" data-k="none">Нет натуральных корней</button>':''}</div>`;
+  }else if(q.type==='choice'){
+    body+=`<div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-o="${k}"><span class="n">${k+1}</span><span>${fmt(o)}</span></button>`).join('')}</div>`;
+  }else{
+    body+=`<div class="lineup empty" id="line"></div><div class="bank">${q.tiles.map((t,k)=>`<button class="tile" data-t="${k}">${fmt(t)}</button>`).join('')}</div>`;
+  }
+  body+=`<button class="hintbtn" id="hb">${IC.bulb}Подсказка</button><div id="hint"></div>`;
+  app.innerHTML=`
+  <div class="wrap">
+    <div class="lbar"><button class="iconbtn" id="x" aria-label="Выйти">${IC.close}</button>
+      <div class="prog" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(pct,3)}%"></i></div>
+      ${L.hearts!==null?`<div class="hearts">${IC.heart}${L.hearts}</div>`:''}</div>
+    <div class="combo">${L.combo>=3?`${L.combo} подряд — огонь!`:''}</div>
+    <div class="qbody" id="qb">${tag?'<div>'+tag+'</div>':''}${body}</div>
+  </div>
+  <div class="bottom" id="bt"><div class="wrap"><button class="btn" id="chk" disabled>Проверить</button></div></div>
+  <div class="sheet" id="sh"></div>`;
+  document.getElementById('x').onclick=()=>{if(confirm('Выйти? Прогресс этого уровня пропадёт.'))home()};
+  document.getElementById('chk').onclick=check;
+  document.getElementById('hb').onclick=()=>{if(L.hintShown)return;L.hintShown=true;sTap();
+    document.getElementById('hint').innerHTML=`<div class="hint pop">${pic('robot')}<span>${fmt(q.hint||'Подумай, какое действие обратное.')}</span></div>`};
+  if(q.type==='num'){
+    app.querySelectorAll('.key').forEach(b=>b.onclick=()=>key(b.dataset.k));
+  }else if(q.type==='choice'){
+    app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{sTap();L.ans=+b.dataset.o;app.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',o===b));ready()});
+  }else{
+    L.ans=[];
+    app.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{sTap();L.ans.push(+b.dataset.t);b.classList.add('used');drawLine()});
+  }
+  window.scrollTo(0,0);
+}
+function drawLine(){
+  const line=document.getElementById('line');const q=L.q;
+  line.classList.toggle('empty',!L.ans.length);
+  line.innerHTML=L.ans.map((k,p)=>`<button class="tile" data-p="${p}">${fmt(q.tiles[k])}</button>`).join('');
+  line.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{const k=L.ans.splice(+b.dataset.p,1)[0];app.querySelector(`.bank .tile[data-t="${k}"]`).classList.remove('used');drawLine()});
+  ready();
+}
+function key(k){
+  if(L.locked)return;sTap();
+  let v=L.ans===null||L.ans==='none'?'':String(L.ans);
+  if(k==='none'){L.ans=L.ans==='none'?null:'none'}
+  else if(k==='c'){v=v.slice(0,-1);L.ans=v===''?null:v}
+  else if(k==='cc'){L.ans=null}
+  else if(v.length<4){v=(v==='0'?'':v)+k;L.ans=v}
+  const s=document.getElementById('slot');
+  s.textContent=L.ans===null?'?':L.ans==='none'?'нет корней':L.ans;
+  s.className='slot'+(L.ans!==null?' full':'')+(L.ans==='none'?' none':'');
+  const nb=app.querySelector('.key.wide');if(nb)nb.classList.toggle('on',L.ans==='none');
+  ready();
+}
+function ready(){const q=L.q;let ok=L.ans!==null;if(q.type==='build')ok=L.ans.length>0;document.getElementById('chk').disabled=!ok}
+function isRight(){
+  const q=L.q;
+  if(q.type==='num')return L.ans==='none'?q.ans==='none':(q.ans!=='none'&&+L.ans===q.ans);
+  if(q.type==='choice')return L.ans===q.correct;
+  return q.accept.includes(L.ans.map(k=>q.tiles[k]).join(' '));
+}
+function rightText(){
+  const q=L.q;
+  if(q.type==='num')return q.ans==='none'?'нет натуральных корней':q.ans+(q.unit?' '+q.unit:'');
+  if(q.type==='choice')return fmt(q.opts[q.correct]);
+  return fmt(q.accept[0]);
+}
+function check(){
+  const q=L.q,good=isRight();L.locked=true;
+  const sh=document.getElementById('sh');
+  L.queue.shift();
+  if(good){L.ok++;L.combo++;L.best=Math.max(L.best,L.combo);sGood()}
+  else{L.mist++;L.combo=0;sBad();
+    if(L.hearts!==null)L.hearts--;
+    L.queue.push(q); L.total+=0;
+    document.getElementById('qb').classList.add('shake');
+  }
+  const praise=pick(['Отлично!','Верно!','Супер!','Точно в цель!','Так держать!']);
+  sh.className='sheet '+(good?'ok':'bad');
+  sh.innerHTML=`<div class="wrap"><div class="row">${pic(good?'yes':'oops')}<div style="flex:1">
+    <h3>${good?IC.check+praise:IC.cross+'Почти!'}</h3>
+    <p class="why">${good?q.why:`Правильный ответ: <b>${rightText()}</b>.<br>${q.why}`}</p></div></div>
+    <button class="btn" id="nx">${!good&&L.hearts===0?'Ой…':'Дальше'}</button></div>`;
+  document.getElementById('bt').style.visibility='hidden';
+  requestAnimationFrame(()=>sh.classList.add('show'));
+  const p=app.querySelector('.prog i');if(p)p.style.width=Math.max(Math.round(L.ok/L.total*100),3)+'%';
+  const h=app.querySelector('.hearts');if(h)h.innerHTML=IC.heart+L.hearts;
+  document.getElementById('nx').onclick=()=>{L.locked=false;if(L.hearts===0)return lost();ask()};
+  document.getElementById('nx').focus({preventScroll:true});
+}
+function lost(){
+  app.innerHTML=`<div class="wrap"><div class="done-screen">${pic('dragon')}
+    <h1 style="color:var(--red)">Сердечки кончились</h1><p>Дракон в этот раз победил. Повтори правило — и попробуй снова!</p></div></div>
+    <div class="bottom"><div class="wrap" style="display:flex;flex-direction:column;gap:12px">
+    <button class="btn red" id="again">Ещё раз</button><button class="btn ghost" id="hm">На карту</button></div></div>`;
+  document.getElementById('again').onclick=()=>lesson(L.i);
+  document.getElementById('hm').onclick=home;
+}
+function finish(){
+  const first=L.total, acc=Math.round(first/(first+L.mist)*100);
+  const stars=L.mist===0?3:L.mist<=2?2:1;
+  const xp=10+first+(L.u.boss?20:0)+(stars===3?5:0);
+  save.xp+=xp;save.u[L.u.id]=Math.max(save.u[L.u.id]||0,stars);save.t=save.t||{};save.t[L.u.id]=Date.now();store();
+  const sec=Math.round((Date.now()-L.t0)/1000);
+  app.innerHTML=`<div class="wrap"><div class="done-screen">${pic('win','Кот Икс с кубком')}
+    <h1>${L.u.boss?'Дракон побеждён!':'Уровень пройден!'}</h1>
+    <p>${stars===3?'Ни одной ошибки — ты мастер уравнений.':L.mist?`Ошибок: ${L.mist}. Эти задачи вернулись в конце и решены верно.`:''}</p>
+    <div class="bigstars">${[1,2,3].map(k=>`<span class="pop" style="color:${k<=stars?'var(--gold)':'var(--line)'};animation-delay:${k*.15}s">${IC.star.replace('class="ic"','')}</span>`).join('')}</div>
+    <div class="res"><div style="--c:var(--gold)"><b>Очки</b><span>${IC.bolt}+${xp}</span></div>
+      <div style="--c:var(--green)"><b>Точность</b><span>${acc}%</span></div>
+      <div style="--c:var(--blue)"><b>Время</b><span>${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}</span></div></div>
+    ${L.best>=3?`<p>Лучшая серия: ${L.best} подряд!</p>`:''}
+  </div></div>
+  <div class="bottom"><div class="wrap" style="display:flex;flex-direction:column;gap:12px">
+    ${L.u.boss?'<button class="btn blue" id="mn">Мой результат для учителя</button>':''}<button class="btn" id="hm">Продолжить</button></div></div>`;
+  document.getElementById('hm').onclick=home;
+  const mn=document.getElementById('mn');if(mn)mn.onclick=mine;
+  sWin();confetti();
+}
+function confetti(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const c=document.createElement('canvas');c.className='conf';document.body.appendChild(c);
+  const x=c.getContext('2d'),W=c.width=innerWidth*devicePixelRatio,H=c.height=innerHeight*devicePixelRatio;
+  const cols=['#8b5cf6','#ffbf1f','#3fbf2a','#1fa8f0','#ff5a8a','#ff9233'];
+  const P=Array.from({length:140},()=>({x:W/2,y:H*.35,vx:(Math.random()-.5)*W*.03,vy:-Math.random()*H*.03-H*.008,r:Math.random()*6+4,c:pick(cols),a:Math.random()*6,s:(Math.random()-.5)*.3}));
+  let f=0;(function tick(){x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=H*.0009;p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.a+=p.s;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r,-p.r/2,p.r*2*devicePixelRatio/1.5,p.r*devicePixelRatio/1.5);x.restore()});
+    if(++f<160)requestAnimationFrame(tick);else c.remove()})();
+}
+
+function askName(next){
+  app.innerHTML=`<div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
+    <div class="namebox">${pic('hi','Кот Икс')}<h1>Как тебя зовут?</h1>
+    <p>Имя и фамилия — чтобы учитель увидел твой результат. Они останутся только на этом телефоне.</p>
+    <input id="nm" maxlength="40" autocomplete="name" placeholder="Например: Аня Смирнова" value="${esc(save.name||'')}"></div></div>
+    <div class="bottom"><div class="wrap"><button class="btn" id="ok" disabled>Готово</button></div></div>`;
+  const inp=document.getElementById('nm'),ok=document.getElementById('ok');
+  const valid=()=>inp.value.trim().split(/\s+/).filter(Boolean).length>=2;
+  inp.oninput=()=>ok.disabled=!valid();ok.disabled=!valid();
+  const go=()=>{if(!valid())return;save.name=inp.value.trim().replace(/\s+/g,' ');store();next()};
+  ok.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};
+  document.getElementById('x').onclick=home;
+  setTimeout(()=>inp.focus(),50);
+}
+function mine(){
+  const t=save.t||{},doneN=UNITS.filter(u=>save.u[u.id]).length,boss=!!save.u.boss;
+  const d=ms=>{const x=new Date(ms);return x.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+x.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})};
+  app.innerHTML=`<div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="На карту">${IC.close}</button></div>
+    <div class="shot">${IC.bulb}<span>Сделай скриншот этого экрана и отправь учителю.</span></div>
+    <div class="cert">
+      <div class="who">${pic(boss?'win':'hi')}<div><div class="nm">${esc(save.name)}</div><div class="cl">5Б · Кот Икс · уравнения</div><button class="hintbtn" id="cn" style="padding:2px 0;margin:0;font-size:14px">Изменить имя</button></div></div>
+      <ul>${UNITS.map(u=>{const st=save.u[u.id]||0;return `<li><span class="nm2">${u.name}</span>
+        ${st?`<span class="st">${[1,2,3].map(k=>`<span style="color:${k<=st?'var(--gold)':'var(--line)'}">${IC.star}</span>`).join('')}</span><span class="tm">${t[u.id]?d(t[u.id]):''}</span>`:'<span class="no">не пройден</span>'}</li>`}).join('')}</ul>
+      <div class="sum"><span>Пройдено: ${doneN} из ${UNITS.length}</span><span class="big ${boss?'':'not'}">${boss?'Дракон побеждён':'Дракон ждёт'}</span></div>
+      <div class="sum" style="margin-top:6px"><span>Очки</span><span style="color:var(--gold-d);display:flex;align-items:center;gap:4px">${IC.bolt}${save.xp}</span></div>
+      <div class="now">Экран открыт: ${d(Date.now())}</div>
+    </div>
+    <div style="height:130px"></div></div>
+    <div class="bottom"><div class="wrap" style="display:flex;flex-direction:column;gap:12px">
+      <button class="btn" id="hm">На карту</button></div></div>`;
+  document.getElementById('x').onclick=home;document.getElementById('hm').onclick=home;
+  document.getElementById('cn').onclick=()=>askName(mine);
+  window.scrollTo(0,0);
+}
+
+// клавиатура: цифры, Backspace, Enter, 1–4 для выбора
+addEventListener('keydown',e=>{
+  if(!L||!document.getElementById('chk'))return;
+  const sh=document.getElementById('sh');
+  if(e.key==='Enter'){e.preventDefault();if(sh&&sh.classList.contains('show'))document.getElementById('nx').click();else if(!document.getElementById('chk').disabled)check();return}
+  if(L.locked)return;
+  if(L.q.type==='num'){if(/^[0-9]$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('c')}
+  else if(L.q.type==='choice'&&/^[1-4]$/.test(e.key)){const b=app.querySelector(`.opt[data-o="${+e.key-1}"]`);if(b)b.click()}
+});
+home();
+</script>
+</body>
+</html>
