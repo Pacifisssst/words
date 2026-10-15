@@ -75,6 +75,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .intro .lead{color:var(--ink2);font-size:17px;margin:0 0 16px}
 .intro .robo{display:flex;gap:12px;align-items:flex-start}
 .intro .robo img{width:92px;height:92px;object-fit:contain;flex:none}
+.introscene img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:18px;margin:0 0 14px;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
 .rules{display:flex;flex-direction:column;gap:10px;flex:1}
 .rule{background:var(--soft);border-radius:16px;padding:12px 14px;font-size:17px;line-height:1.4}
 .rule .eq{font-size:20px;font-weight:900;white-space:nowrap}
@@ -174,7 +175,31 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .cert .now{margin-top:8px;color:var(--ink2);font-size:14px;text-align:center}
 .shot{display:flex;gap:10px;align-items:center;background:var(--blue-bg);color:var(--blue-d);border-radius:16px;padding:10px 14px;font-size:16px;line-height:1.35}
 .homebtns{display:flex;flex-direction:column;gap:12px;margin:10px 0 0}
-canvas.conf{position:fixed;inset:0;pointer-events:none;z-index:20}
+canvas.conf{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
+/* ---------- анимации и мемы ---------- */
+.hello img{animation:bob 2.6s ease-in-out infinite}
+.node.next{animation:breathe 1.8s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.06)}}
+.sheet .row img.jump{animation:jump .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes jump{0%{transform:translateY(30px) scale(.6)}60%{transform:translateY(-12px) scale(1.1)}100%{transform:none}}
+.sheet .row img.wobble{animation:wobble .7s}
+@keyframes wobble{20%{transform:rotate(-12deg)}45%{transform:rotate(9deg)}70%{transform:rotate(-5deg)}100%{transform:none}}
+.sheet .row img.six7{animation:six7 .5s ease-in-out 3}
+@keyframes six7{25%{transform:translateY(-8px) rotate(-8deg)}75%{transform:translateY(-8px) rotate(8deg)}}
+img.ph{border-radius:50%;object-fit:cover!important;border:3px solid #fff;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.joke{margin:2px 0 8px;font-size:16px;font-weight:900;line-height:1.3;color:var(--ink);background:rgba(255,255,255,.75);border-radius:12px;padding:7px 11px;display:inline-block}
+.combo .fire{display:inline-block;animation:pulse .5s}
+@keyframes pulse{40%{transform:scale(1.18)}}
+.boss-mini img{width:40px;height:40px;object-fit:contain;display:block}
+.boss-mini.hit{animation:hit .55s}
+@keyframes hit{15%{transform:translateX(-6px) rotate(-10deg);filter:brightness(1.6) saturate(.4)}40%{transform:translateX(6px) rotate(8deg)}65%{transform:translateX(-3px)}100%{transform:none}}
+.cher{display:flex;align-items:center;gap:10px;justify-content:center;margin:6px auto 0;max-width:360px;background:var(--soft);border-radius:16px;padding:8px 12px;font-size:15px;text-align:left}
+.done-screen .cher img{width:56px;height:56px;flex:none}
+.flyer{position:fixed;top:52%;left:0;z-index:30;display:flex;align-items:center;gap:8px;pointer-events:none;animation:fly 4.2s cubic-bezier(.3,.7,.7,.3) forwards}
+.flyer img{width:120px;height:120px;object-fit:contain;flex:none}
+.flyer .em{font-size:60px;line-height:1}
+.flyer .t{background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 12px;font-size:15px;line-height:1.3;width:210px;box-shadow:0 4px 0 var(--line)}
+@keyframes fly{0%{transform:translateX(-100%) rotate(-8deg)}30%,70%{transform:translateX(calc(50vw - 50%)) rotate(0)}100%{transform:translateX(100vw) rotate(6deg)}}
 .shake{animation:shake .38s}
 @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 .pop{animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
@@ -210,11 +235,16 @@ const IC={
 // ====== картинки: сначала сжатые, потом от Codex, потом старые ======
 const PIC={hi:'pic01',think:'pic09',yes:'pic11',oops:'pic09',win:'pic11',robot:'pic09',dragon:'pic02',scale:'pic09',shop:'pic08',hike:'pic01',minerals:'pic02',pencils:'pic01'};
 const CHAR={hi:'cat-hi',think:'cat-think',yes:'cat-yes',oops:'cat-oops',win:'cat-win',robot:'robot',dragon:'dragon'};
+// мемы: Черемша — из уроков английского; 6–7 и Бомбардиро — от ChatGPT (пока их нет — запасные)
+const MEME={cherSad:['img/w/cher-sad.webp','img/old/pic09.jpg'],cherLunch:['img/w/cher-lunch.webp','img/old/pic11.jpg'],
+ six7:['img/w/cat-67.webp','img/codex/cat-67.png','img/w/cat-yes.webp','img/codex/cat-yes.png'],
+ bomb:['img/w/bombardiro.webp','img/codex/bombardiro.png']};
 function srcs(k){
+  if(MEME[k])return MEME[k];
   const name=CHAR[k]||('scene-'+k), ext=CHAR[k]?'png':'jpg';
   return [`img/w/${name}.webp`,`img/codex/${name}.${ext}`,`img/old/${PIC[k]}.jpg`];
 }
-function pic(k,alt=''){const s=srcs(k);return `<img src="${s[0]}" data-s="${s.join('|')}" data-i="0" alt="${alt}" onerror="nextPic(this)">`}
+function pic(k,alt='',cls=''){const s=srcs(k);return `<img src="${s[0]}" data-s="${s.join('|')}" data-i="0" alt="${alt}"${cls?` class="${cls}"`:''} onerror="nextPic(this)">`}
 function nextPic(el){const s=el.dataset.s.split('|');const i=+el.dataset.i+1;if(i<s.length){el.dataset.i=i;el.src=s[i]}else el.style.visibility='hidden'}
 
 // ====== помощники ======
@@ -268,10 +298,11 @@ function opQ(){
 // ====== задачи-истории: «было — убыло — убыло — осталось» (как 2.206 г) ======
 const SHOP=[
  {pic:'shop',big:1,u:'кг',s:(A,B,C)=>`В магазине было ${A} кг овощей и фруктов. Сколько-то продали в первый день, ${B} кг — во второй день. Осталось ${C} кг.`,q:'Сколько килограммов продали в первый день?',q2:'Сколько килограммов продали за два дня вместе?'},
- {pic:'shop',big:1,u:'л',s:(A,B,C)=>`В цистерне было ${A} л молока. Утром разлили по бутылкам сколько-то литров, днём — ещё ${B} л. Осталось ${C} л.`,q:'Сколько литров разлили утром?',q2:'Сколько литров разлили за утро и день вместе?'},
- {pic:'pencils',big:0,u:'книг',s:(A,B,C)=>`В библиотеке было ${A} книг про космос. В понедельник выдали несколько книг, во вторник — ${B}. На полке осталось ${C}.`,q:'Сколько книг выдали в понедельник?',q2:'Сколько книг выдали за два дня вместе?'},
- {pic:'hike',big:0,u:'чел.',s:(A,B,C)=>`В автобусе ехали ${A} человек. На первой остановке вышли несколько, на второй — ещё ${B}. В автобусе осталось ${C} человек.`,q:'Сколько человек вышло на первой остановке?',q2:'Сколько человек вышло на двух остановках вместе?'},
- {pic:'yes',big:0,u:'монет',s:(A,B,C)=>`У Кота Икса было ${A} монет. Сколько-то он потратил на пиццу, потом ${B} монет — на лимонад. Осталось ${C} монет.`,q:'Сколько монет ушло на пиццу?',q2:'Сколько монет он потратил всего?'}
+ {pic:'shop',big:1,u:'л',s:(A,B,C)=>`У кота Матроскина в цистерне было ${A} л молока. Утром он разлил по бутылкам сколько-то литров, днём — ещё ${B} л. Осталось ${C} л.`,q:'Сколько литров Матроскин разлил утром?',q2:'Сколько литров он разлил за утро и день вместе?'},
+ {pic:'shop',big:1,u:'кг',s:(A,B,C)=>`Тралалело Тралала продавал бананы на пляже. Было ${A} кг. Сколько-то купили утром, ${B} кг — вечером. Осталось ${C} кг.`,q:'Сколько килограммов купили утром?',q2:'Сколько килограммов купили за день вместе?'},
+ {pic:'pencils',big:0,u:'книг',s:(A,B,C)=>`Лосяш выдаёт книги про космос. Было книг: ${A}. В понедельник он выдал несколько, во вторник — ${B}. На полке осталось книг: ${C}.`,q:'Сколько книг Лосяш выдал в понедельник?',q2:'Сколько книг он выдал за два дня вместе?'},
+ {pic:'hike',big:0,u:'',s:(A,B,C)=>`В автобусе ехали миньоны, всего ${A}. На первой остановке вышли несколько, на второй — ещё ${B}. Миньонов в автобусе осталось: ${C}.`,q:'Сколько миньонов вышло на первой остановке?',q2:'Сколько миньонов вышло на двух остановках вместе?'},
+ {pic:'yes',big:0,u:'',s:(A,B,C)=>`У Черепашек-ниндзя было монет: ${A}. Сколько-то они потратили на пиццу, потом ${B} — на лимонад. Монет осталось: ${C}.`,q:'Сколько монет ушло на пиццу?',q2:'Сколько монет потратили всего?'}
 ];
 function shopSet(t,A,B,C,book){
   const story=t.s(A,B,C),x=A-B-C,both=A-C;
@@ -283,7 +314,7 @@ function shopSet(t,A,B,C,book){
   ];
 }
 function randShop(){
-  const t=pick(SHOP);let x,B,C;
+  const t=pick(SHOP.slice(1));let x,B,C;
   if(t.big){x=R(5,40)*10;B=R(5,30)*10;C=R(5,30)*10}else{x=R(4,25);B=R(3,20);C=R(5,30)}
   return shopSet(t,x+B+C,B,C);
 }
@@ -291,11 +322,13 @@ function randShop(){
 // ====== «ещё a — и будет b» (как 2.202 е) ======
 const MORE=[
  {pic:'hike',u:'км',s:(a,b)=>`Если Миша пройдёт ещё ${a} км, то весь его путь составит ${b} км.`,q:'Сколько километров уже прошёл Миша?'},
- {pic:'think',u:'стр.',s:(a,b)=>`Если Кот Икс прочитает ещё ${a} страниц, то всего прочитает ${b} страниц.`,q:'Сколько страниц он уже прочитал?'},
- {pic:'robot',u:'монет',s:(a,b)=>`Если Робот Бип накопит ещё ${a} монет, у него будет ${b} монет.`,q:'Сколько монет у Робота Бипа сейчас?'},
- {pic:'dragon',u:'шт.',s:(a,b)=>`Если Дракон съест ещё ${a} пирожков, то всего съест ${b} пирожков.`,q:'Сколько пирожков Дракон уже съел?'},
- {pic:'shop',u:'л',s:(a,b)=>`Если в бочку налить ещё ${a} л воды, в ней станет ${b} л.`,q:'Сколько литров в бочке сейчас?'}
+ {pic:'think',u:'стр.',s:(a,b)=>`Гермиона читает толстую книгу заклинаний. Если она прочитает ещё ${a} стр., то всего будет ${b} стр.`,q:'Сколько страниц Гермиона уже прочитала?'},
+ {pic:'yes',u:'',s:(a,b)=>`Скрудж Макдак копит монеты. Если он накопит ещё ${a}, монет у него станет: ${b}. Ни одной меньше!`,q:'Сколько монет у Скруджа сейчас?'},
+ {pic:'dragon',u:'',s:(a,b)=>`Карлсон уже съел сколько-то плюшек. Если он съест ещё ${a}, то всего будет ${b}.`,q:'Сколько плюшек Карлсон уже съел?'},
+ {pic:'shop',u:'л',s:(a,b)=>`Лунтик наливает воду в бочку. Если налить ещё ${a} л, в бочке станет ${b} л.`,q:'Сколько литров в бочке сейчас?'},
+ {pic:'hike',u:'км',s:(a,b)=>`Винни-Пух идёт в гости к Кролику. Если он пройдёт ещё ${a} км, весь путь составит ${b} км.`,q:'Сколько километров Винни-Пух уже прошёл?'}
 ];
+const KARLSON=MORE[3]; // 33 + 67 = 100 → мем «6–7»
 function moreSet(t,a,b,book,build){
   const story=t.s(a,b),x=b-a;
   const q1=build?{type:'build',story,pic:t.pic,book,prompt:'Собери уравнение из плиток.',tiles:shuf(['x','+',String(a),'=',String(b),MI]),accept:[`x + ${a} = ${b}`,`${a} + x = ${b}`],
@@ -309,8 +342,8 @@ function randMore(build){const t=pick(MORE.slice(1));const a=R(3,25),x=R(4,40);r
 // ====== «на … больше, на … меньше, столько же, сколько вместе» (как 2.208 а) ======
 const TRIO=[
  {A:['Олег','Олега'],B:['Настя','Насти'],C:['Саша','Саши'],what:'коллекционируют минералы',th:'минералов',pic:'minerals'},
- {A:['Кот Икс','Кота Икса'],B:['Робот Бип','Робота Бипа'],C:['Дракон','Дракона'],what:'собирают наклейки',th:'наклеек',pic:'minerals'},
- {A:['Кот Икс','Кота Икса'],B:['Дракон','Дракона'],C:['Робот Бип','Робота Бипа'],what:'собирают шишки',th:'шишек',pic:'hike'}
+ {A:['Шрек','Шрека'],B:['Осёл','Осла'],C:['Фиона','Фионы'],what:'коллекционируют минералы',th:'минералов',pic:'minerals'},
+ {A:['Кот Икс','Кота Икса'],B:['Дракон','Дракона'],C:['Черемша','Черемши'],what:'собирают шишки',th:'шишек',pic:'hike'}
 ];
 function trioSet(t,a,c,book){
   const A=t.A[1],B=t.B[1],C=t.C[1];
@@ -329,7 +362,7 @@ function randTrio(){const a=R(5,20),c=R(3,20);return trioSet(pick(TRIO.slice(1))
 // ====== три набора (как 2.208 б) ======
 const SETS=[
  {n:'наборе',w:'карандашей',v:'В первом наборе',pic:'pencils',s:(a,c)=>`В первом наборе m карандашей, во втором — на ${a} карандашей больше, чем в первом, а в третьем — на ${c} карандашей меньше, чем во втором. Во втором наборе оказалось столько же карандашей, сколько в первом и третьем наборах вместе.`,one:'в первом',two:'во втором',three:'в третьем'},
- {n:'коробке',w:'конфет',pic:'shop',s:(a,c)=>`В первой коробке m конфет, во второй — на ${a} конфет больше, чем в первой, а в третьей — на ${c} меньше, чем во второй. Во второй коробке столько же конфет, сколько в первой и третьей вместе.`,one:'в первой',two:'во второй',three:'в третьей'},
+ {n:'коробке',w:'конфет',pic:'shop',s:(a,c)=>`Тун-тун-сахур разложил конфеты по трём коробкам. В первой коробке m конфет, во второй — на ${a} конфет больше, чем в первой, а в третьей — на ${c} меньше, чем во второй. Во второй коробке столько же конфет, сколько в первой и третьей вместе.`,one:'в первой',two:'во второй',three:'в третьей'},
  {n:'полке',w:'книг',pic:'pencils',s:(a,c)=>`На первой полке m книг, на второй — на ${a} книг больше, чем на первой, а на третьей — на ${c} меньше, чем на второй. На второй полке столько же книг, сколько на первой и третьей вместе.`,one:'на первой',two:'на второй',three:'на третьей'}
 ];
 function setsSet(t,a,c,book){
@@ -362,7 +395,7 @@ const UNITS=[
  {id:'more',name:'Ещё — и будет',sub:'x + 3 = 10',ic:'road',c:'#1fa8f0',cd:'#1287c6',side:'hike',
   title:'«Ещё 3 — и будет 10»',lead:'«Ещё» — это плюс. Сколько было — неизвестно, это x.',
   rules:[['Миша прошёл x км','ещё 3 км — и весь путь 10 км'],['Уравнение','x + 3 = 10'],['Ответ','x = 10 − 3 = 7 км']],
-  make:()=>[...moreSet(MORE[0],3,10,'№ 2.202 е'),...randMore(true),...randMore(false),...randMore(true)]},
+  make:()=>[...moreSet(MORE[0],3,10,'№ 2.202 е'),...randMore(true),...moreSet(KARLSON,33,100,null,false),...randMore(true)]},
  {id:'gems',name:'Минералы',sub:'на 10 больше, на 12 меньше',ic:'gem',c:'#ff5a8a',cd:'#d93468',side:'minerals',
   title:'Больше, меньше, вместе',lead:'Здесь нужно составить уравнение. А потом — хитрость, чтобы его решить без труда.',
   rules:[['«на 10 больше»','y + 10'],['«на 12 меньше»','y − 12'],['«столько же, сколько вместе»','знак «=»: y + 10 = y + (y − 12)'],['Хитрость','Настя = Олег + 10 и Настя = Олег + Саша. Значит, у Саши 10!']],
@@ -399,7 +432,31 @@ function tone(freqs,dur=.12,type='sine',vol=.18){
   if(muted)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();
   let t=ac.currentTime;freqs.forEach(f=>{const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur);t+=dur*.8})}catch(e){}
 }
-const sGood=()=>tone([660,880,1320],.11,'triangle'),sBad=()=>tone([220,180],.16,'square',.08),sTap=()=>tone([520],.04,'triangle',.08),sWin=()=>tone([523,659,784,1047,1319],.13,'triangle');
+function actx(){if(muted)return null;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}catch(e){return null}}
+// нота со скольжением: f0 → f1
+function slide(f0,f1,dur,type='sine',vol=.16,at=0){const c=actx();if(!c)return;const t=c.currentTime+at,o=c.createOscillator(),g=c.createGain();
+  o.type=type;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.02)}
+// шум: свист самолёта, удар
+function noise(dur,f0,f1,vol=.25,at=0){const c=actx();if(!c)return;const t=c.currentTime+at,n=c.createBufferSource(),b=c.createBuffer(1,c.sampleRate*dur,c.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;n.buffer=b;const f=c.createBiquadFilter();f.type='bandpass';f.Q.value=1.2;f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,t+dur);
+  const g=c.createGain();g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(vol,t+dur*.4);g.gain.exponentialRampToValueAtTime(.001,t+dur);n.connect(f).connect(g).connect(c.destination);n.start(t)}
+const sGood=()=>tone([660,880,1320],.11,'triangle'),sTap=()=>tone([520],.04,'triangle',.08),sWin=()=>tone([523,659,784,1047,1319],.13,'triangle');
+const sBad=()=>{slide(420,140,.42,'sawtooth',.07);slide(300,110,.42,'square',.04,.03)}; // «бу-у-м»
+const sCombo=n=>tone([523,659,784,1047].slice(0,Math.min(4,n-1)).concat([1319]),.07,'triangle',.14);
+const s67=()=>{slide(392,392,.22,'square',.09);slide(330,262,.34,'square',.09,.26)}; // «сикс — се-евен»
+const sHit=()=>{noise(.25,900,200,.35);slide(160,60,.3,'sawtooth',.12)};
+const sWhoosh=()=>noise(1.6,300,2400,.18);
+// победная песенка после Дракона (≈7 с)
+function sSong(){
+  const c=actx();if(!c)return;
+  const N={C4:262,D4:294,E4:330,F4:349,G4:392,A4:440,B4:494,C5:523,D5:587,E5:659,F5:698,G5:784,A5:880,C6:1047};
+  const mel=[['E5',1],['G5',1],['C6',2],['G5',1],['E5',1],['G5',2],['A5',1],['G5',1],['F5',1],['E5',1],['D5',2],['G4',2],
+             ['E5',1],['G5',1],['C6',2],['A5',1],['C6',1],['G5',2],['F5',1],['E5',1],['D5',1],['G5',1],['C6',4]];
+  const bass=[['C4',4],['C4',4],['F4',4],['G4',4],['C4',4],['F4',4],['G4',4],['C4',4]];
+  const q=.19;let t=0;
+  mel.forEach(([n,l])=>{slide(N[n],N[n],l*q*.95,'triangle',.15,t);t+=l*q});
+  t=0;bass.forEach(([n,l])=>{slide(N[n]/2,N[n]/2,l*q*.9,'sine',.13,t);t+=l*q});
+}
 
 // ====== экраны ======
 const app=document.getElementById('app');
@@ -441,6 +498,7 @@ function intro(i){
   <div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
   <div class="intro">
     <h1>${u.title}</h1><p class="lead">${u.lead}</p>
+    ${u.id==='box'?`<div class="introscene">${pic('scale','Весы: коробка и кубики')}</div>`:''}
     <div class="robo">${pic(u.boss?'dragon':'robot','')}<div class="rules">${u.rules.map(r=>`<div class="rule"><span class="eq">${fmt(r[0])}</span><small>${fmt(r[1])}</small></div>`).join('')}</div></div>
   </div></div>
   <div class="bottom"><div class="wrap"><button class="btn" id="go" style="background:${u.c};box-shadow:0 4px 0 ${u.cd}">${u.boss?'В бой!':'Поехали!'}</button></div></div>`;
@@ -453,8 +511,17 @@ let L; // текущий урок
 function lesson(i){
   const u=UNITS[i];
   const qs=u.make();
-  L={u,i,queue:qs,total:qs.length,ok:0,mist:0,hearts:u.boss?3:null,combo:0,best:0,t0:Date.now(),retry:new Set()};
+  L={u,i,queue:qs,total:qs.length,ok:0,mist:0,hearts:u.boss?3:null,combo:0,best:0,bad:0,t0:Date.now(),retry:new Set()};
   ask();
+  if(u.boss)setTimeout(()=>flyer('Бомбардиро Крокодило летел мимо, увидел твоё уравнение — и испугался!'),700);
+}
+// Бомбардиро пролетает через экран
+function flyer(text){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const f=document.createElement('div');f.className='flyer';
+  f.innerHTML=`${pic('bomb','Бомбардиро Крокодило')}<span class="t">${text}</span>`;
+  const im=f.querySelector('img');im.onerror=()=>{const s=im.dataset.s.split('|'),i=+im.dataset.i+1;if(i<s.length){im.dataset.i=i;im.src=s[i]}else im.outerHTML='<span class="em">🐊✈️</span>'};
+  document.body.appendChild(f);sWhoosh();setTimeout(()=>f.remove(),4300);
 }
 function ask(){
   if(!L.queue.length)return finish();
@@ -483,8 +550,8 @@ function ask(){
   <div class="wrap">
     <div class="lbar"><button class="iconbtn" id="x" aria-label="Выйти">${IC.close}</button>
       <div class="prog" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(pct,3)}%"></i></div>
-      ${L.hearts!==null?`<div class="hearts">${IC.heart}${L.hearts}</div>`:''}</div>
-    <div class="combo">${L.combo>=3?`${L.combo} подряд — огонь!`:''}</div>
+      ${L.hearts!==null?`<div class="hearts">${IC.heart}${L.hearts}</div><div class="boss-mini" id="bm">${pic('dragon','Дракон')}</div>`:''}</div>
+    <div class="combo"><span class="${L.combo>=3?'fire':''}">${L.combo>=3?`${L.combo} подряд — огонь!`:''}</span></div>
     <div class="qbody" id="qb">${tag?'<div>'+tag+'</div>':''}${body}</div>
   </div>
   <div class="bottom" id="bt"><div class="wrap"><button class="btn" id="chk" disabled>Проверить</button></div></div>
@@ -540,16 +607,25 @@ function check(){
   const q=L.q,good=isRight();L.locked=true;
   const sh=document.getElementById('sh');
   L.queue.shift();
-  if(good){L.ok++;L.combo++;L.best=Math.max(L.best,L.combo);sGood()}
-  else{L.mist++;L.combo=0;sBad();
+  const six7=good&&q.type==='num'&&[6,7,67].includes(q.ans);
+  let face=good?'yes':'oops',fcls=good?'jump':'wobble',joke='';
+  if(good){L.ok++;L.combo++;L.bad=0;L.best=Math.max(L.best,L.combo);
+    if(six7){s67();face='six7';fcls='six7';joke='Сикс-севен! 🤷 Ответ засчитан.'}
+    else if(L.combo>=3)sCombo(L.combo);else sGood();
+    if(L.hearts!==null){setTimeout(sHit,120);const bm=document.getElementById('bm');if(bm){bm.classList.remove('hit');void bm.offsetWidth;bm.classList.add('hit')}}
+  }
+  else{L.mist++;L.combo=0;L.bad++;sBad();
     if(L.hearts!==null)L.hearts--;
     L.queue.push(q); L.total+=0;
     document.getElementById('qb').classList.add('shake');
+    if(L.bad>=3)joke='Не переживай, это всего лишь двойка будет, если ты не соберёшься 😼';
+    else if(Math.random()<.5){face='cherSad';fcls='wobble ph';joke='Черемша сочувствует. Попробуй ещё!'}
   }
   const praise=pick(['Отлично!','Верно!','Супер!','Точно в цель!','Так держать!']);
   sh.className='sheet '+(good?'ok':'bad');
-  sh.innerHTML=`<div class="wrap"><div class="row">${pic(good?'yes':'oops')}<div style="flex:1">
-    <h3>${good?IC.check+praise:IC.cross+'Почти!'}</h3>
+  sh.innerHTML=`<div class="wrap"><div class="row">${pic(face,'',fcls)}<div style="flex:1">
+    <h3>${good?IC.check+(six7?'6–7!':praise):IC.cross+'Почти!'}</h3>
+    ${joke?`<p class="joke">${joke}</p>`:''}
     <p class="why">${good?q.why:`Правильный ответ: <b>${rightText()}</b>.<br>${q.why}`}</p></div></div>
     <button class="btn" id="nx">${!good&&L.hearts===0?'Ой…':'Дальше'}</button></div>`;
   document.getElementById('bt').style.visibility='hidden';
@@ -581,12 +657,13 @@ function finish(){
       <div style="--c:var(--green)"><b>Точность</b><span>${acc}%</span></div>
       <div style="--c:var(--blue)"><b>Время</b><span>${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}</span></div></div>
     ${L.best>=3?`<p>Лучшая серия: ${L.best} подряд!</p>`:''}
+    <div class="cher">${pic('cherLunch','Черемша','ph')}<span>Черемша довольна: +1 морковка в зоопарк!</span></div>
   </div></div>
   <div class="bottom"><div class="wrap" style="display:flex;flex-direction:column;gap:12px">
     ${L.u.boss?'<button class="btn blue" id="mn">Мой результат для учителя</button>':''}<button class="btn" id="hm">Продолжить</button></div></div>`;
   document.getElementById('hm').onclick=home;
   const mn=document.getElementById('mn');if(mn)mn.onclick=mine;
-  sWin();confetti();
+  if(L.u.boss){sSong();confetti();setTimeout(confetti,1600);setTimeout(confetti,3400)}else{sWin();confetti()}
 }
 function confetti(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
