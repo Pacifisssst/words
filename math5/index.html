@@ -76,9 +76,9 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .intro .robo{display:flex;gap:12px;align-items:flex-start}
 .intro .robo img{width:92px;height:92px;object-fit:contain;flex:none}
 .introscene img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:18px;margin:0 0 14px;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
-.rules{display:flex;flex-direction:column;gap:10px;flex:1}
+.rules{display:flex;flex-direction:column;gap:10px;flex:1;min-width:0}
 .rule{background:var(--soft);border-radius:16px;padding:12px 14px;font-size:17px;line-height:1.4}
-.rule .eq{font-size:20px;font-weight:900;white-space:nowrap}
+.rule .eq{font-size:20px;font-weight:900;overflow-wrap:break-word}
 .rule small{display:block;color:var(--ink2);font-size:15px;margin-top:2px}
 .bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid var(--line);padding:14px 0 calc(14px + env(safe-area-inset-bottom))}
 
@@ -513,7 +513,7 @@ function lesson(i){
   const qs=u.make();
   L={u,i,queue:qs,total:qs.length,ok:0,mist:0,hearts:u.boss?3:null,combo:0,best:0,bad:0,t0:Date.now(),retry:new Set()};
   ask();
-  if(u.boss)setTimeout(()=>flyer('Бомбардиро Крокодило летел мимо, увидел твоё уравнение — и испугался!'),700);
+  if(u.boss)setTimeout(()=>document.getElementById('chk')&&L.u.boss&&flyer('Бомбардиро Крокодило летел мимо, увидел твоё уравнение — и испугался!'),700);
 }
 // Бомбардиро пролетает через экран
 function flyer(text){
