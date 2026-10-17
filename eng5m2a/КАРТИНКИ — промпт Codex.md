@@ -1,56 +1,54 @@
 # Картинки для английской игры «Spidey» (5Б, Module 2a)
 
-Пять картинок с тем же котом, что в «Коте Иксе», и одна сцена-фон.
-Пока их нет — игра показывает запасные кадры кота и работает полностью.
+Ниже — ОДИН блок. Вставить в Codex как есть, ничего не дописывать: пути к образцу,
+папка вывода и имена файлов уже внутри.
 
-## Как отдать Codex
+```
+Open the reference picture ~/development/words/eng5m2a/img/w/cat-hi.webp and look at it first:
+every image below must show THE SAME orange cartoon cat — same face, same fur colour, same
+friendly children's-book style, thick clean outlines, flat bright colours.
 
-Приложить файл-образец кота: `~/development/words/math5/img/w/cat-yes.webp`
-(или `img/w/cat-yes.webp` из этой папки — он уже скопирован).
+In five of the six images the cat wears a spider-hero costume: a red and blue bodysuit with
+thin black web lines, a red mask over the head with two big white almond eye shapes, ears
+sticking out. Keep the cat's orange tail and paws visible. Do not copy any existing film
+character or logo — this is our own cat in a home-made costume.
 
-Промпт одним куском:
+Save the files into ~/development/words/eng5m2a/img/codex/ and write nothing anywhere else:
+do not delete, move or overwrite any other file in that folder or the repository.
 
----
+No text, no letters, no numbers anywhere in any image.
 
-Draw five character images and one background scene of **the same orange cartoon cat**
-as in the attached reference picture — same face, same fur colour, same friendly style.
+Five characters — plain white background, square 1024x1024, full body, centred:
 
-Save ONLY into `img/codex/` of this folder. **Do not delete or overwrite any other files.**
+1. cat-bag.png — the costumed cat holds an open school bag; a pencil case, a ruler and a
+   rolled map are falling out of it. Cheerful, slightly surprised.
+2. cat-listen.png — the costumed cat wears big headphones over the mask, one paw raised to
+   its ear, listening carefully.
+3. cat-write.png — the costumed cat sits at a small desk, pencil in paw, writing in an
+   exercise book, leaning in with effort.
+4. cat-globe.png — the costumed cat hugs a globe, a small suitcase beside it with plain
+   coloured stickers (shapes only, no words).
+5. cat-wall.png — the costumed cat sits on top of a red brick wall, tail hanging down,
+   both paws up, proud and victorious, a thin web strand going up out of frame.
 
-**No text, no letters, no numbers anywhere in the images.**
+One scene — 1280x720, no characters at all:
 
-Characters — white background, square 1024×1024, full body, centred:
+6. scene-wall.png — a red brick wall filling the frame, a large spider web in the top-left
+   corner, an evening city skyline behind the wall.
 
-1. `cat-bag.png` — the cat holds an open school bag; a pencil case, a ruler and a rolled map
-   are falling out of it. Cheerful, slightly surprised.
-2. `cat-listen.png` — the cat wears big headphones, one paw raised to its ear, eyes closed,
-   listening carefully.
-3. `cat-write.png` — the cat sits at a small desk with a pencil in its paw, writing in an
-   exercise book, tongue sticking out with effort.
-4. `cat-globe.png` — the cat hugs a globe, a small suitcase with travel stickers next to it
-   (stickers are plain coloured shapes, no words).
-5. `cat-wall.png` — the cat sits on top of a red brick wall, tail hanging down, proud and
-   victorious, paws up.
+Nothing scary, nothing dark: this is for ten-year-old children.
+```
 
-Scene — 1280×720:
+## Потом (делаю я)
 
-6. `scene-wall.png` — a red brick wall across the whole frame, a large spider web in the
-   top-left corner, a city skyline and evening sky behind the wall. **No characters in this one.**
-
-Style for all six: flat, friendly, bright, thick clean outlines, children's-book look,
-the same as the reference cat. Nothing scary.
-
----
-
-## После генерации (делаю я)
-
-1. Посмотреть глазами — кот тот же?
+1. Посмотреть глазами: кот тот же? Костюм одинаковый на всех пяти?
 2. Сжать: `cwebp -q 80 -resize 480 0 img/codex/cat-bag.png -o img/w/cat-bag.webp`
-   (сцену — `-resize 640 0`).
+   (сцену — `-resize 640 0`), проверить и запушить.
 3. Игра подхватит сама: порядок поиска `img/w/*.webp` → `img/codex/*.png` → запасной кадр.
+   Пока картинок нет, показывается обычный Кот Икс — игра полная.
 
-## Чего НЕ рисовать
+## Чего не рисовать
 
-- **Человека-паука** и любых чужих персонажей (правило 15.10: только имена, не рисунки).
-  Паутина и кирпичная стена — можно, это не персонаж.
-- Детей, школу 218, надписи.
+- Настоящего Человека-паука, его логотип и кадры из фильмов. Наш кот в своём костюме —
+  как в песне «Spidey on the Wall» (его решение 17.10).
+- Детей, школу 218, любые надписи.
