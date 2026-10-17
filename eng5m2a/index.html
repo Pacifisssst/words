@@ -347,6 +347,13 @@ const wimg=k=>B+WK[k].img, wsay=k=>B+WK[k].w, wex=k=>B+WK[k].x;
 const PAIRS=[['russia','russian'],['theuk','british'],['theusa','american'],['canada','canadian'],
  ['australia','australian'],['newzealand','newzealander'],['france','french'],['japan','japanese']];
 const COUNTRIES=PAIRS.map(p=>p[0]), NATS=PAIRS.map(p=>p[1]);
+// ⚠️ New Zealand — единственная страна этого списка БЕЗ прилагательного: «New Zealander» —
+// существительное (как a Spaniard, a Pole), поэтому только «He is a New Zealander», с артиклем.
+// У остальных слово-прилагательное: «He is Russian / British / Japanese» — артикля нет.
+// Проверено 17.10 по Oxford Learner's Dictionaries (New Zealander — noun), EF и dotEFL
+// (adjective «New Zealand», noun «a New Zealander»). До этого уровень выдавал «He is New Zealander».
+const NOUNNAT={newzealander:'a New Zealander'};
+const natWord=k=>NOUNNAT[k]||WK[k].en;
 // слова с собственной картинкой (для «слушай → покажи»)
 const PICWORDS=[...COUNTRIES,'amazing','aunt','spider','findout','speakenglish','powers','fast','people'];
 // слова, которые стоит уметь написать
@@ -393,6 +400,7 @@ const BUILDS=[
  {w:['Pikachu','is from','Japan'],extra:['are from'],ru:'Пикачу из Японии.',book:'домашка № 2'},
  {w:['He','can','run fast'],extra:["can't"],ru:'Он умеет быстро бегать.',book:'домашка № 2'},
  {w:['She','is','Japanese'],extra:['are'],ru:'Она японка.'},
+ {w:['I','am','a','New Zealander'],extra:['is'],ru:'Я новозеландец.'},
  {w:['They','have got','special powers'],extra:['has got'],ru:'У них есть особые силы.'}
 ];
 function buildQ(b){
@@ -403,16 +411,41 @@ function buildQ(b){
 function lvlBuild(){return [buildQ(BUILDS[0]),buildQ(BUILDS[1]),...take(BUILDS.slice(2),4).map(buildQ)]}
 
 function natQ(p,book){
-  const c=WK[p[0]],n=WK[p[1]];
-  const others=take(NATS.filter(x=>x!==p[1]),3).map(k=>WK[k].en);
+  const c=WK[p[0]],n=WK[p[1]],noun=NOUNNAT[p[1]],right=natWord(p[1]);
+  // у слова-существительного проверяем сам артикль: «a New Zealander» против «New Zealander»
+  const others=noun?[n.en,n.en+'s',c.en]:take(NATS.filter(x=>x!==p[1]),3).map(natWord);
   const he=pick(['He','She']);
-  return choice({qid:'страна → национальность',book,img:wimg(p[0]),
+  return choice({qid:noun?'национальность с артиклем a':'страна → национальность',book,img:wimg(p[0]),
     prompt:`${he} is from ${c.en}. ${he} is ___.`,ru:`${he==='He'?'Он':'Она'} из страны «${c.ru}».`,
-    opts:[n.en,...others],
-    why:`${c.en} → <b>${n.en}</b>. ${c.ru} → ${n.ru}.`,
-    hint:'Страна и национальность — разные слова: Japan → Japanese.'});
+    opts:[right,...others],
+    why:noun?`${c.en} → <b>${right}</b>. У этой страны нет слова-прилагательного, «новозеландец» — существительное, как «a Spaniard». Поэтому нужен артикль <b>a</b>.`
+            :`${c.en} → <b>${right}</b>. ${c.ru} → ${n.ru}.`,
+    hint:noun?'Прилагательного «New Zealandish» не бывает. Нужен человек: a New Zealander.':'Страна и национальность — разные слова: Japan → Japanese.'});
 }
-function lvlNat(){return [natQ(PAIRS[0],'с. 37'),...shuf(PAIRS.slice(1)).map(p=>natQ(p))]}
+
+// Упражнения на артикль (его просьба 17.10): где a нужен, а где его быть не может.
+const ARTS=[
+ {t:"I'm from New Zealand. I'm ___.",a:'a New Zealander',o:['New Zealander','a New Zealand','New Zealand'],
+  ru:'Я из Новой Зеландии.',
+  why:'<b>I’m a New Zealander.</b> «New Zealander» — существительное (человек), один человек → артикль <b>a</b>.',
+  hint:'Один человек — значит a.'},
+ {t:"They're from New Zealand. They're ___.",a:'New Zealanders',o:['a New Zealanders','a New Zealander','New Zealand'],
+  ru:'Они из Новой Зеландии.',
+  why:'<b>They’re New Zealanders.</b> Их много → -s и БЕЗ артикля: a бывает только у одного.',
+  hint:'Их много. A с «много» не ставится.'},
+ {t:"She's from France. She's ___.",a:'French',o:['a French','a France','France'],
+  ru:'Она из Франции.',
+  why:'<b>She’s French.</b> Здесь слово-прилагательное («какая она») — артикль НЕ нужен.',
+  hint:'French — какая она, а не кто она.'},
+ {t:"He's from the UK. He's ___.",a:'British',o:['a British','a Britain','Britain'],
+  ru:'Он из Великобритании.',
+  why:'<b>He’s British.</b> British — прилагательное, артикля нет. «a British» не говорят.',
+  hint:'British — какой он. Артикль не нужен.'}
+];
+function artQ(q){
+  return choice({qid:'национальность с артиклем a',prompt:q.t,ru:q.ru,opts:[q.a,...q.o],why:q.why,hint:q.hint});
+}
+function lvlNat(){return [natQ(PAIRS[0],'с. 37'),...shuf(PAIRS.slice(1)).map(p=>natQ(p)),artQ(ARTS[0]),...take(ARTS.slice(1),1).map(artQ)]}
 
 function hearPicQ(k){
   const others=take(PICWORDS.filter(x=>x!==k&&WK[x].img!==WK[k].img),3);
@@ -494,8 +527,8 @@ const UNITS=[
   rules:[['Кто','I · He · She · They'],['Что делает','have got · has got · is · can'],['Что именно','a pencil case · from Japan · fast']],
   make:lvlBuild},
  {id:'nat',name:'Откуда ты?',sub:'Japan → Japanese',ic:'globe',c:'#1fa8f0',cd:'#1287c6',
-  title:'Страна и национальность',lead:'Страна — это место. Национальность — какой ты. Это разные слова.',
-  rules:[['Russia','Russian'],['Japan','Japanese'],['Canada','Canadian'],['the UK','British']],
+  title:'Страна и национальность',lead:'Страна — это место. Национальность — какой ты. Это разные слова. И одно особое: New Zealand → a New Zealander, с артиклем.',
+  rules:[['Russia','Russian'],['Japan','Japanese'],['the UK','British'],['New Zealand','a New Zealander — с артиклем a!']],
   make:lvlNat},
  {id:'hearpic',name:'Слушай',sub:'▶ и покажи картинку',ic:'ear',c:'#14b8a6',cd:'#0e8f81',
   title:'Слушай и покажи',lead:'Нажми ▶ и выбери картинку. Слушать можно сколько угодно раз.',
@@ -575,20 +608,34 @@ async function loadRoster(){
 
 // ====== звук ======
 let ac;
-function tone(freqs,dur=.12,type='sine',vol=.18){
-  if(muted)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();
-  let t=ac.currentTime;freqs.forEach(f=>{const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+dur);t+=dur*.8})}catch(e){}
+// ⚠️ Его слово 17.10: «звук, когда правильно, резкий — как будто ошибка». Причина не в нотах:
+// громкость включалась сразу на полную (setValueAtTime(vol)) — на телефоне это слышно как щелчок-удар,
+// а удар в начале и есть то, чем обычно звучит ошибка. Теперь у каждой нотки мягкая атака (env)
+// и затухание в ноль. «Верно» — вверх и тише, «ошибка» — вниз (sBad): спутать нельзя.
+function env(g,t,dur,vol){
+  g.gain.setValueAtTime(.0001,t);
+  g.gain.linearRampToValueAtTime(vol,t+Math.min(.014,dur*.35));
+  g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+}
+function tone(freqs,dur=.12,type='sine',vol=.15){
+  const c=actx();if(!c)return;
+  let t=c.currentTime;
+  freqs.forEach(f=>{const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;
+    env(g,t,dur,vol);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.03);t+=dur*.8});
 }
 function actx(){if(muted)return null;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}catch(e){return null}}
 function slide(f0,f1,dur,type='sine',vol=.16,at=0){const c=actx();if(!c)return;const t=c.currentTime+at,o=c.createOscillator(),g=c.createGain();
-  o.type=type;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.02)}
+  o.type=type;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dur);env(g,t,dur,vol);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.02)}
 function noise(dur,f0,f1,vol=.25,at=0){const c=actx();if(!c)return;const t=c.currentTime+at,n=c.createBufferSource(),b=c.createBuffer(1,c.sampleRate*dur,c.sampleRate),d=b.getChannelData(0);
   for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;n.buffer=b;const f=c.createBiquadFilter();f.type='bandpass';f.Q.value=1.2;f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,t+dur);
   const g=c.createGain();g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(vol,t+dur*.4);g.gain.exponentialRampToValueAtTime(.001,t+dur);n.connect(f).connect(g).connect(c.destination);n.start(t)}
-const sGood=()=>tone([660,880,1320],.11,'triangle'),sTap=()=>tone([520],.04,'triangle',.08),sWin=()=>tone([523,659,784,1047,1319],.13,'triangle');
+const sGood=()=>tone([660,880,1320],.13,'triangle',.13),sTap=()=>tone([520],.045,'triangle',.07),sWin=()=>tone([523,659,784,1047,1319],.13,'triangle',.14);
 const sBad=()=>{slide(420,140,.42,'sawtooth',.07);slide(300,110,.42,'square',.04,.03)};
 const sCombo=n=>tone([523,659,784,1047].slice(0,Math.min(4,n-1)).concat([1319]),.07,'triangle',.14);
-const s67=()=>{slide(392,392,.22,'square',.09);slide(330,262,.34,'square',.09,.26)};
+// ⚠️ «6-7» на 6-м и 7-м верном подряд: шутка играла ВМЕСТО «верно» — квадратной волной и вниз,
+// а падающий резкий звук у нас значит ошибку (его слово 17.10: «иногда звук, когда правильно,
+// резкий, как будто ошибка»). Теперь сначала обычное «верно», и только потом мем — мягче и тише.
+const s67=()=>{sGood();slide(392,392,.2,'triangle',.07,.34);slide(330,262,.3,'triangle',.07,.56)};
 const sHit=()=>{noise(.25,900,200,.35);slide(160,60,.3,'sawtooth',.12)};
 function sSong(){
   const c=actx();if(!c)return;
