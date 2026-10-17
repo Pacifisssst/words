@@ -314,6 +314,9 @@ const PICS={
  wall:['img/w/cat-wall.webp','img/codex/cat-wall.png','img/w/cat-win.webp'],
  scene:['img/w/scene-wall.webp','img/codex/scene-wall.png']
 };
+// Какая картинка кота на экране правила. Уровня нет в таблице — обычный Кот Икс.
+// Картинки ещё нет на диске — pic() сам сползает по запасным (см. PICS).
+const UPIC={bag:'bag',nat:'globe',spell:'write',hearpic:'listen',hearru:'listen',gap:'listen',boss:'wall'};
 function pic(k,cls=''){
   const s=PICS[k]||PICS.hi;
   return `<img class="mascot ${cls}" src="${s[0]}" data-s="${s.join('|')}" data-i="0" alt="" onerror="nextPic(this)">`;
@@ -647,8 +650,9 @@ function intro(i){
   app.innerHTML=`
   <div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
   <div class="intro">
+    ${u.boss?`<div class="introscene"><img src="${PICS.scene[0]}" data-s="${PICS.scene.join('|')}" data-i="0" alt="" onerror="nextPic(this)"></div>`:''}
     <h1>${u.title}</h1><p class="lead">${u.lead}</p>
-    <div class="robo">${pic(u.boss?'wall':'hi')}<div class="rules">${u.rules.map(r=>`<div class="rule"><span class="eq">${esc(r[0])}</span><small>${esc(r[1])}</small></div>`).join('')}</div></div>
+    <div class="robo">${pic(UPIC[u.id]||'hi')}<div class="rules">${u.rules.map(r=>`<div class="rule"><span class="eq">${esc(r[0])}</span><small>${esc(r[1])}</small></div>`).join('')}</div></div>
   </div></div>
   <div class="bottom"><div class="wrap"><button class="btn" id="go" style="background:${u.c};box-shadow:0 4px 0 ${u.cd}">${u.boss?'В бой!':'Поехали!'}</button></div></div>`;
   document.getElementById('x').onclick=home;
