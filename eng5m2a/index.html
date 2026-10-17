@@ -595,15 +595,17 @@ addEventListener('pagehide',()=>{
   try{navigator.sendBeacon(API+'/log?key='+encodeURIComponent(SEND_KEY),
     new Blob([JSON.stringify({game:GAME,items:save.queue})],{type:'application/json'}))}catch(e){}
 });
-async function loadRoster(){
-  try{
-    const stop=new AbortController();setTimeout(()=>stop.abort(),3000);
-    const r=await fetch(API+'/roster?game='+GAME,{headers:{'x-key':SEND_KEY},signal:stop.signal});
-    if(!r.ok)return null;
-    const d=await r.json();
-    if(Array.isArray(d.pupils)&&d.pupils.length){save.roster=d.pupils;store();return d.pupils}
-  }catch(e){}
-  return null;
+// Вход по коду: игра спрашивает Worker про ОДИН код и получает одного ребёнка.
+// Списка класса в игре больше нет — значит нельзя случайно (или нарочно) сыграть «за Аню».
+async function whoIs(code){
+  const stop=new AbortController();setTimeout(()=>stop.abort(),8000);
+  const r=await fetch(API+'/who?game='+GAME+'&code='+encodeURIComponent(code),
+    {headers:{'x-key':SEND_KEY},signal:stop.signal});
+  if(r.status===404)return 'нет';
+  if(r.status===429)return 'много';
+  if(!r.ok)return null;
+  const d=await r.json();
+  return (d.pupil&&d.pupil.id)?d.pupil:null;
 }
 
 // ====== звук ======
@@ -878,29 +880,39 @@ function confetti(){
     if(++f<160)requestAnimationFrame(tick);else c.remove()})();
 }
 
-// ====== кто ты (список класса) ======
+// ====== кто ты (код из сообщения родителям) ======
+// ⚠️ Код проверяется через интернет: списка кодов в игре нет и быть не должно.
+// Один раз вошёл — код запомнен, дальше игра работает и без сети.
 async function askName(next){
   app.innerHTML=`<div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
-    <div class="namebox">${pic('hi')}<h1>Кто ты?</h1>
-    <p>Нажми своё имя — учитель увидит, что ты занимался.</p>
-    <div class="whoami" id="who"><p class="ru">Загружаю список…</p></div></div></div>`;
+    <div class="namebox">${pic('hi')}<h1>Твой код</h1>
+    <p>Код прислали твоему родителю вместе со ссылкой. Четыре знака, большие буквы и цифры.</p>
+    <input class="tin" id="cd" maxlength="6" inputmode="text" autocapitalize="characters" autocomplete="off"
+      spellcheck="false" placeholder="Например: KRM7" value="">
+    <p class="ru" id="err" style="color:var(--red);min-height:22px;margin:8px 0 0"></p>
+    <button class="btn" id="ok" style="margin-top:4px">Войти</button></div></div>`;
   document.getElementById('x').onclick=home;
-  const box=document.getElementById('who');
-  const list=save.roster||await loadRoster();
-  if(list&&list.length){
-    box.innerHTML=list.map(p=>`<button data-id="${esc(p.id)}">${esc(p.name)}</button>`).join('');
-    box.querySelectorAll('button').forEach(b=>b.onclick=()=>{sTap();
-      save.pupil={id:b.dataset.id,name:b.textContent};store();next()});
-  }else{
-    box.innerHTML=`<p class="ru">Списка нет — напиши имя сам.</p>
-      <input class="tin" id="nm" maxlength="30" placeholder="Например: Аня" value="${esc((save.pupil||{}).name||'')}">
-      <button class="btn" id="ok" style="margin-top:12px">Готово</button>`;
-    const inp=document.getElementById('nm');
-    document.getElementById('ok').onclick=()=>{const v=inp.value.trim();if(!v)return;
-      save.pupil={id:'self:'+v.toLowerCase(),name:v};store();next()};
-  }
+  const inp=document.getElementById('cd'),btn=document.getElementById('ok'),err=document.getElementById('err');
+  const clean=v=>v.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
+  inp.oninput=()=>{const c=inp.selectionStart;inp.value=clean(inp.value);inp.setSelectionRange(c,c);err.textContent=''};
+  inp.onkeydown=e=>{if(e.key==='Enter')btn.click()};
+  btn.onclick=async()=>{
+    const code=clean(inp.value);
+    if(code.length<3){err.textContent='Напиши код целиком.';return}
+    if(TEST){save.pupil={id:'test:'+code.toLowerCase(),name:'Тест '+code};store();return next()}
+    btn.disabled=true;const was=btn.textContent;btn.textContent='Проверяю…';
+    let who=null;
+    try{who=await whoIs(code)}catch(e){who=null}
+    btn.disabled=false;btn.textContent=was;
+    if(who==='нет'){err.textContent='Такого кода нет. Посмотри сообщение учителя ещё раз.';return}
+    if(who==='много'){err.textContent='Слишком много попыток. Подожди час или спроси учителя.';return}
+    if(!who){err.textContent='Нет интернета — код проверяется через сеть. Попробуй позже.';return}
+    sTap();save.pupil={id:who.id,name:who.name};store();next();
+  };
+  inp.focus();
   window.scrollTo(0,0);
 }
+
 function mine(){
   const t=save.t||{},doneN=UNITS.filter(u=>save.u[u.id]).length,boss=!!save.u.boss;
   const waiting=(save.queue||[]).length;
@@ -932,7 +944,7 @@ addEventListener('keydown',e=>{
   if(L.locked||L.q.type==='text')return;
   if(L.q.type==='choice'&&/^[1-4]$/.test(e.key)){const b=app.querySelector(`.opt[data-o="${+e.key-1}"],.picopt[data-o="${+e.key-1}"]`);if(b)b.click()}
 });
-if(!save.roster)loadRoster();
+
 flush();
 home();
 </script>
