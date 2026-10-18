@@ -48,7 +48,7 @@ ALL.forEach(v => { if (formsOf.has(reg(v.v1)) && ![v.v1, v.v2, v.v3].includes(re
 [...DID, ...PAST, ...USED, ...UPS].forEach(d => { if (!VK[d[1]]) bad.add('нет глагола ' + d[1]) });
 FIX.forEach(f => { if (!f[0].includes(f[1])) bad.add('FIX: в «' + f[0] + '» нет ' + f[1]) });
 PAST.forEach(p => { if (!p[0].includes(`(${p[1]})`)) bad.add('PAST: нет скобки (' + p[1] + ')') });
-TESTS.forEach(t => { if (!SETS[t.set] || !/^\d{4}-\d\d-\d\d$/.test(t.date)) bad.add('TESTS: плохая строка ' + JSON.stringify(t)) });
+TESTS.forEach(t => { if (!SETS[t.set] || !/^\d{4}-\d\d-\d\dT\d\d:\d\d$/.test(t.end)) bad.add('TESTS: плохая строка ' + JSON.stringify(t)) });
 // файлы на диске
 const pics = [...files].filter(f => f.endsWith('.jpg')), miss = pics.filter(f => !fs.existsSync(f));
 [...files].filter(f => f.endsWith('.mp3')).forEach(f => { if (!fs.existsSync(f)) bad.add('нет звука: ' + f) });
