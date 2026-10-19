@@ -19,6 +19,6 @@ for(let r=0;r<400;r++)for(const u of UNITS){if(u.screen)continue;const qs=u.make
       if(q.gap&&q.gap.includes('___')&&q.opts.some((o,i)=>i!==q.correct&&q.gap.replace('___',o)===q.gap.replace('___',q.opts[q.correct])))err('два верных '+q.qid);
       if(q.gap&&/___/.test(q.gap)===false&&q.qid.startsWith('пропуск'))err('пропуск не спрятан '+q.qid);}
     if(q.type==='build'){const t=[...q.tiles];for(const w of q.right){const i=t.indexOf(w);if(i<0){err('нет плитки '+w);break}t.splice(i,1)}
-      if(q.tiles.length!==q.right.length+1)err('лишняя плитка не одна '+q.qid);}
+      if(q.tiles.length!==q.right.length)err('лишние плитки '+q.qid);}
     if(q.audio&&!has(q.audio))err('нет '+q.audio);}}
 console.log(bad?`✗ ${bad} проблем`:`✓ ${n} заданий, всё чисто`);process.exit(bad?1:0);
