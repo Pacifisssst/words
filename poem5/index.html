@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Get a Five! — стих · 5 класс</title>
+<title>Get a Five! — стихи · 5 класс</title>
 <meta name="description" content="Учим стих I Know What to Do: перевод каждого слова, голос, рифмы, плитки, расскажи наизусть.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -251,6 +251,11 @@ img.ph{border-radius:50%;object-fit:cover!important;border:3px solid #fff;box-sh
 .dlg{position:fixed;inset:0;z-index:50;background:rgba(20,24,40,.45);display:grid;place-items:center;padding:16px}
 .dlgbox{background:#fff;border-radius:22px;padding:20px 16px 16px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;text-align:center}
 .dlgbox p{margin:0 0 6px;font-size:20px;font-weight:900}
+.pick{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--line);border-radius:20px;padding:14px 16px;margin:0 0 14px}
+.pick b{display:block;font-size:22px;font-weight:900;color:var(--purple-d);margin-bottom:4px}
+.pick span{display:block;font-size:16px;line-height:1.35;color:var(--ink)}
+.pick small{display:block;margin-top:6px;color:var(--ink2);font-size:14px;font-weight:800}
+.pick.on{border-color:var(--purple);box-shadow:0 4px 0 var(--purple)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:380px){.prompt{font-size:20px}.bigeq{font-size:26px}.scene img{width:84px;height:84px}.opt{font-size:19px}}
 
@@ -412,11 +417,33 @@ const W={
  five:['five','faɪv','пять, «пятёрка»',''],
  oh:['oh','əʊ','ох!',''],
  whatasight:['what a sight','wɒt ə saɪt','вот это да!','Дословно «какое зрелище!» — так говорят, когда видят что-то очень приятное.'],
- sight:['sight','saɪt','зрелище, вид','gh не читается: [saɪt].']
+ sight:['sight','saɪt','зрелище, вид','gh не читается: [saɪt].'],
+ // стих 2 «Bye-bye, Two!»
+ hello:['hello','həˈləʊ','привет',''],
+ im:["I'm",'aɪm','я (есть)',"I'm = I am. I'm eleven — мне одиннадцать (дословно «я одиннадцать»)."],
+ eleven:['eleven','ɪˈlevn','одиннадцать','Рифма: eleven — heaven.'],
+ english:['English','ˈɪŋɡlɪʃ','английский язык','Пишется с большой буквы.'],
+ isnt:["isn't",'ˈɪznt','не (есть)',"isn't = is not. English isn't hard — английский не трудный."],
+ hard:['hard','hɑːd','трудный',''],
+ its:["it's",'ɪts','это (есть)',"it's = it is."],
+ heaven:['heaven','ˈhevn','рай, небеса',"It's heaven! — Это рай! То есть: это здорово!"],
+ ivegot:["I've got",'aɪv ɡɒt','у меня есть',"I've got = I have got."],
+ ruler:['ruler','ˈruːlə','линейка',''],
+ can:['can','kæn','умею, могу','I can count — я умею считать.'],
+ count:['count','kaʊnt','считать',''],
+ from:['from','frɒm','от, из','from one to ten — от одного до десяти.'],
+ one:['one','wʌn','один','Читается [wʌn], как будто в начале «w».'],
+ to:['to','tuː','до',''],
+ ten:['ten','ten','десять','Рифма: pen — ten.'],
+ red:['red','red','красный',''],
+ yellow:['yellow','ˈjeləʊ','жёлтый',''],
+ green:['green','ɡriːn','зелёный',''],
+ byebye:['bye-bye','ˌbaɪ ˈbaɪ','пока-пока',''],
+ little:['little','ˈlɪtl','маленький','Рифма: blue — two.']
 };
 const wsay=k=>'audio/w-'+k+'.mp3';
 // строчки: t — слова [как написано, ключ слова] (без ключа — просто знак); b — плитки; x — лишняя плитка
-const POEM=[
+const POEM_A=[
  {t:[['I','i'],['have got','havegot'],['a','a'],['pencil case','pencilcase'],[',']],ru:'У меня есть пенал,',
   b:['I','have got','a pencil case'],x:'has got',d:['У меня нет пенала.','У неё есть пенал.','У меня есть линейка.'],
   g:[['have got',['has got','got','am']],['pencil case',['pencil','pen','school bag']]]},
@@ -442,9 +469,29 @@ const POEM=[
   b:['Get','a five','Oh','what a sight'],x:'right',d:['Получить «двойку»! Вот это да!','Пять книг! Какой вид!','Получить ручку! Ох!'],
   g:[['five',['two','four','fine']],['what a sight',['what a night','what a right','what a bite']]]}
 ];
-POEM.forEach((l,i)=>{l.n=i+1;l.audio='audio/l'+(i+1)+'.mp3';l.slow='audio/l'+(i+1)+'s.mp3';
-  l.en=l.t.map(x=>x[0]).join(' ').replace(/ ([,!:])/g,'$1').replace(/ !/g,'!');});
-const plain=s=>s.replace(/[“”]/g,'').replace(/[,!:—]/g,'').replace(/\s+/g,' ').trim();
+const POEM_B=[
+ {t:[['Hello','hello'],[','],['hello','hello'],['!'],["I'm",'im'],['eleven','eleven'],[',']],ru:'Привет, привет! Мне одиннадцать,',
+  b:['Hello hello',"I'm",'eleven'],g:[['eleven',['seven','ten']],['Hello',['Help','Yellow']]]},
+ {t:[['English','english'],["isn't",'isnt'],['hard','hard'],['—'],["it's",'its'],['heaven','heaven'],['!']],ru:'Английский не трудный — это здорово!',
+  b:['English',"isn't hard","it's",'heaven'],g:[['hard',['big','red']],['heaven',['seven','eleven']]]},
+ {t:[["I've got",'ivegot'],['a','a'],['ruler','ruler'],[','],["I've got",'ivegot'],['a','a'],['pen','pen'],[',']],ru:'У меня есть линейка, у меня есть ручка,',
+  b:["I've got",'a ruler',"I've got",'a pen'],g:[['ruler',['rubber','pencil']],['pen',['hen','book']]]},
+ {t:[['I','i'],['can','can'],['count','count'],['from','from'],['one','one'],['to','to'],['ten','ten'],['.']],ru:'Я умею считать от одного до десяти.',
+  b:['I can','count','from one','to ten'],g:[['count',['read','draw']],['ten',['two','five']]]},
+ {t:[['Red','red'],['and','and'],['yellow','yellow'],[','],['green','green'],['and','and'],['blue','blue'],['—']],ru:'Красный и жёлтый, зелёный и синий —',
+  b:['Red and','yellow','green and','blue'],g:[['yellow',['pink','black']],['green',['grey','pink']]]},
+ {t:[['Bye-bye','byebye'],[','],['bye-bye','byebye'],[','],['little','little'],['“two”','two'],['!']],ru:'Пока-пока, маленькая «двойка»!',
+  b:['Bye-bye','bye-bye','little','two'],g:[['little',['big','five']],['two',['five','ten']]]}
+];
+// выбор стиха: ?p=a / ?p=b в ссылке или то, что выбрал ребёнок (хранится на телефоне)
+const POEMS={a:{title:'I Know What to Do',lines:POEM_A,pre:'l',key:'poem5'},b:{title:'Bye-bye, Two!',lines:POEM_B,pre:'b',key:'poem5b'}};
+let PICK=null;try{PICK=localStorage.getItem('poem5-pick')}catch(e){}
+{const m=location.search.match(/[?&]p=([ab])\b/);if(m){PICK=m[1];try{localStorage.setItem('poem5-pick',PICK)}catch(e){}}}
+if(!POEMS[PICK])PICK=null;
+const POEM=POEMS[PICK||'a'].lines,TITLE=POEMS[PICK||'a'].title;
+Object.values(POEMS).forEach(P=>P.lines.forEach((l,i)=>{l.n=i+1;l.audio='audio/'+P.pre+(i+1)+'.mp3';l.slow='audio/'+P.pre+(i+1)+'s.mp3';
+  l.en=l.t.map(x=>x[0]).join(' ').replace(/ ([,!:.])/g,'$1');}));
+const plain=s=>s.replace(/[“”]/g,'').replace(/[,!:.—]/g,'').replace(/\s+/g,' ').trim();
 const lineKeys=l=>[...new Set(l.t.filter(x=>x[1]).map(x=>x[1]))];
 // рифмы: [строчка, где слово спрятано, строчка-подсказка, слово, неверные]
 const RHYMES=[[2,1,'face',['book','pen','blue']],[1,2,'case',['bag','pen','book']],[4,3,'too',['pen','book','five']],[3,4,'blue',['red','pen','five']],
@@ -486,7 +533,9 @@ function gapQ(l,j){
     why:lineWhy(l)+(W[Object.keys(W).find(k=>W[k][0].toLowerCase()===a.toLowerCase())]?.[3]?'<br>'+esc(W[Object.keys(W).find(k=>W[k][0].toLowerCase()===a.toLowerCase())][3]):''),
     hint:'Нажми ▶ и слушай, какое слово звучит на месте пропуска.'});
 }
-const half=h=>h===1?POEM.slice(0,4):POEM.slice(4);
+const HK=Math.ceil(POEM.length/2),half=h=>h===1?POEM.slice(0,HK):POEM.slice(HK);
+const rng=h=>h===1?'1–'+HK:(HK+1)+'–'+POEM.length;
+const rulesOf=h=>half(h).map(l=>[String(l.n),l.en]);
 const keysOf=h=>[...new Set(half(h).flatMap(lineKeys))].filter(k=>!['a','i','and','it'].includes(k));
 function lvlWords(h){const ks=keysOf(h);return [wordQ(ks[0]),...take(ks.slice(1),7).map(wordQ)]}
 function lvlLines(h){const L4=half(h);
@@ -501,30 +550,30 @@ function lvlOrder(){return [...shuf(POEM.slice(0,7)).slice(0,5).map(nextQ),...ta
 // 20.10 его слово «слишком сложно» → 5 уровней вместо 10, без лишних плиток, 3 варианта ответа.
 const UNITS=[
  {id:'read',name:'Читай и слушай',sub:'стих с переводом',ic:'ear',c:'#8b5cf6',cd:'#6d3fe0',screen:1},
- {id:'b1',name:'Строчки 1–4',sub:'собери из плиток',ic:'tiles',c:'#3fbf2a',cd:'#2e9a1c',
-  title:'Строчки 1–4',lead:'Нажми ▶, послушай строчку и собери её из плиток.',
-  rules:[['1','I have got a pencil case,'],['2','I have got a happy face!'],['3',"I have got a book that's blue,"],['4','And a pen, and homework too!']],
-  make:()=>half(1).map(l=>buildQ(l))},
- {id:'b2',name:'Строчки 5–8',sub:'собери из плиток',ic:'tiles',c:'#14b8a6',cd:'#0e8f81',
-  title:'Строчки 5–8',lead:'Нажми ▶, послушай строчку и собери её из плиток.',
-  rules:[['5','Yesterday I got a “two”,'],['6','Now I know what I must do:'],['7','Read and learn and say it right,'],['8','Get a “five”! Oh, what a sight!']],
-  make:()=>half(2).map(l=>buildQ(l))},
+ {id:'b1',name:'Строчки '+rng(1),sub:'собери из плиток',ic:'tiles',c:'#3fbf2a',cd:'#2e9a1c',
+  title:'Строчки '+rng(1),lead:'Нажми ▶, послушай строчку и собери её из плиток.',
+  rules:rulesOf(1),make:()=>half(1).map(l=>buildQ(l))},
+ {id:'b2',name:'Строчки '+rng(2),sub:'собери из плиток',ic:'tiles',c:'#14b8a6',cd:'#0e8f81',
+  title:'Строчки '+rng(2),lead:'Нажми ▶, послушай строчку и собери её из плиток.',
+  rules:rulesOf(2),make:()=>half(2).map(l=>buildQ(l))},
  {id:'gaps',name:'Пропуски',sub:'какое слово пропало?',ic:'gap',c:'#6366f1',cd:'#4349c9',
   title:'Что пропало?',lead:'Нажми ▶ и послушай строчку. Одно слово спряталось — найди его.',
   rules:[['▶','слушай строчку'],['___','выбери слово']],
   make:lvlGaps},
- {id:'boss',name:'Весь стих',sub:'8 строчек по порядку',ic:'web',c:'#e23636',cd:'#b81f1f',boss:1,
-  title:'Весь стих',lead:'Собери все 8 строчек по порядку. Ошибёшься 3 раза — начнёшь заново. Потом расскажи стих вслух!',
-  rules:[['1–4','пенал, лицо, книга, ручка'],['5–8','вчера двойка — завтра пятёрка!']],
+ {id:'boss',name:'Весь стих',sub:POEM.length+' строчек по порядку',ic:'web',c:'#e23636',cd:'#b81f1f',boss:1,
+  title:'Весь стих',lead:'Собери все '+POEM.length+' строчек по порядку. Ошибёшься 3 раза — начнёшь заново. Потом расскажи стих вслух!',
+  rules:[['Первая строчка',POEM[0].en],['Рифма','подскажет следующую строчку']],
   make:()=>POEM.map((l,i)=>buildQ(l,i?POEM[i-1]:null,true))}
 ];
 
 // ====== сохранение (только в этом браузере) ======
 const TEST=/[?&]test\b/.test(location.search);
 // Результатов на сервер нет: имя живёт только на этом телефоне, учителю — скриншот.
-const KEY=TEST?'poem5-test':'poem5-v1';
+const KEY=POEMS[PICK||'a'].key+(TEST?'-test':'-v1');
 let save={xp:0,u:{},t:{},name:'',hide:0,tr:1};
 try{save=Object.assign(save,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+// имя одно на оба стиха
+if(!save.name)try{Object.values(POEMS).forEach(P=>{const o=JSON.parse(localStorage.getItem(P.key+(TEST?'-test':'-v1'))||'{}');if(o.name&&!save.name)save.name=o.name})}catch(e){}
 const store=()=>{try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}};
 let muted=false;try{muted=localStorage.getItem(KEY+'-mute')==='1'}catch(e){}
 const queueResult=()=>{},flush=()=>{};
@@ -595,7 +644,7 @@ function home(){
     <button class="iconbtn" id="snd" aria-label="${muted?'Включить звук':'Выключить звук'}">${muted?IC.mute:IC.sound}</button>
   </div></header>
   <main class="wrap">
-    <div class="hello">${pic('hi')}<div class="bubble">Привет! Я <b>Кот Икс</b>. Выучим стих — всего <b>8 строчек</b>. Иди по кружкам сверху вниз.</div></div>
+    <div class="hello">${pic('hi')}<div class="bubble">Привет! Я <b>Кот Икс</b>. Стих <b>${esc(TITLE)}</b> — всего <b>${POEM.length} строчек</b>. Иди по кружкам сверху вниз.</div></div>
     <div class="path">${UNITS.map((u,i)=>{
       const st=save.u[u.id]||0;
       return `<div class="unit" style="transform:translateX(${offs[i]}px);--c:${u.c};--cd:${u.cd}">
@@ -604,12 +653,13 @@ function home(){
         <div class="stars">${st?[1,2,3].map(k=>`<span style="color:${k<=st?'var(--gold)':'var(--line)'}">${IC.star}</span>`).join(''):''}</div>
         <div class="name">${u.name}</div><div class="sub">${esc(u.sub)}</div>
       </div>`}).join('')}
-      <div class="homebtns"><button class="btn" id="poem" style="background:var(--purple);box-shadow:0 4px 0 var(--purple-d)">📖 Стих целиком</button><button class="btn blue" id="mine">Мой результат для учителя</button></div>
+      <div class="homebtns"><button class="btn ghost" id="pick">🔄 Выбрать другой стих</button><button class="btn" id="poem" style="background:var(--purple);box-shadow:0 4px 0 var(--purple-d)">📖 Стих целиком</button><button class="btn blue" id="mine">Мой результат для учителя</button></div>
       <button class="reset" id="reset">Начать всё заново</button>
     </div>
   </main>`;
   app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{sTap();const i=+b.dataset.u;UNITS[i].screen?poemScreen(false):intro(i)});
-  document.getElementById('poem').onclick=()=>{sTap();poemScreen(false)};
+  document.getElementById('poem').onclick=()=>{sTap();poemScreen(false)}
+  document.getElementById('pick').onclick=()=>{sTap();choose()};
   document.getElementById('mine').onclick=()=>{sTap();save.name?mine():askName(mine)};
   document.getElementById('snd').onclick=()=>{muted=!muted;try{localStorage.setItem(KEY+'-mute',muted?'1':'0')}catch(e){}home()};
   document.getElementById('reset').onclick=()=>yesNo('Стереть звёзды и очки?','Стереть',()=>{save={xp:0,u:{},t:{},name:save.name,hide:0,tr:1};store();home()});
@@ -803,6 +853,19 @@ function confetti(){
     if(++f<160)requestAnimationFrame(tick);else c.remove()})();
 }
 
+// ====== выбор стиха ======
+function choose(){
+  app.innerHTML=`<div class="wrap"><div class="namebox" style="padding-bottom:40px">${pic('hi')}<h1>Выбери стих</h1>
+    <p>Какой больше нравится? Потом можно поменять.</p>
+    ${Object.entries(POEMS).map(([k,P])=>`<button class="pick ${k===PICK?'on':''}" data-p="${k}"><b>${esc(P.title)}</b>
+      <span>${esc(P.lines[0].en)}<br>${esc(P.lines[1].en)}</span><small>${P.lines.length} строчек</small></button>`).join('')}
+  </div></div>`;
+  app.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{sTap();
+    try{localStorage.setItem('poem5-pick',b.dataset.p)}catch(e){}
+    location.href=location.pathname+(TEST?'?test':'')});
+  window.scrollTo(0,0);
+}
+
 // ====== имя (только на этом телефоне) ======
 function askName(next){
   app.innerHTML=`<div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
@@ -825,7 +888,7 @@ function mine(){
   app.innerHTML=`<div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="На карту">${IC.close}</button></div>
     <div class="shot">${IC.bulb}<span>Сделай скриншот этого экрана и отправь учителю.</span></div>
     <div class="cert">
-      <div class="who">${pic(boss?'win':'hi')}<div><div class="nm">${esc(save.name||'')}</div><div class="cl">Стих «I Know What to Do»</div>
+      <div class="who">${pic(boss?'win':'hi')}<div><div class="nm">${esc(save.name||'')}</div><div class="cl">Стих «${esc(TITLE)}»</div>
         <button class="hintbtn" id="cn" style="padding:2px 0;margin:0;font-size:14px">Изменить имя</button></div></div>
       <ul>${UNITS.map(u=>{const st=save.u[u.id]||0;return `<li><span class="nm2">${u.name}</span>
         ${st?`<span class="st">${[1,2,3].map(k=>`<span style="color:${k<=st?'var(--gold)':'var(--line)'}">${IC.star}</span>`).join('')}</span><span class="tm">${t[u.id]?d(t[u.id]):''}</span>`:'<span class="no">не пройден</span>'}</li>`}).join('')}</ul>
@@ -873,12 +936,12 @@ function poemScreen(recite,keep){
       if(!k)return `<span>${esc(txt)}</span>`;
       const m=maskWord(esc(txt),lvl,gi++,first);first=false;
       return m?`<span class="w m" data-k="${k}">${m}</span>`:`<span class="w" data-k="${k}">${esc(txt)}</span>`;
-    }).join(' ').replace(/ <span>([,!:])/g,'<span>$1');
+    }).join(' ').replace(/ <span>([,!:.])/g,'<span>$1');
     return `<div class="pl ${i===3?'gapafter':''}" id="pl${i}"><div><button class="lp" data-l="${i}" aria-label="Слушать строчку ${i+1}">${IC.playic}</button><div class="num">${i+1}</div></div>
       <div class="tx"><div class="en">${en}</div>${V.tr?`<p class="ru">${esc(l.ru)}</p>`:''}</div></div>`;
   }).join('');
   app.innerHTML=`<div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
-    <h1 class="ptitle">I Know What to Do</h1>
+    <h1 class="ptitle">${esc(TITLE)}</h1>
     <p class="psub">${recite?'Расскажи стих сам(а). Забыл(а) — нажми на слово.':'Нажми на слово — будет перевод.'}</p>
     <div class="pbar">
       <button class="chip big" id="all">▶ Весь стих</button>
@@ -961,7 +1024,7 @@ addEventListener('keydown',e=>{
 });
 
 flush();
-home();
+PICK?home():choose();
 </script>
 </body>
 </html>
