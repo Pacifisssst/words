@@ -1,0 +1,32 @@
+bicycle-p.mp3 → Bicycles
+bicycle.mp3 → bicycle
+bike-p.mp3 → Bikes!
+bike.mp3 → Bike
+camera-p.mp3 → Digital cameras
+camera.mp3 → digital camera
+child-p.mp3 → Children
+child.mp3 → Child
+foot-p.mp3 → feet
+foot.mp3 → foot
+handbag-p.mp3 → Handbags
+handbag.mp3 → Handbag
+helmet-p.mp3 → Helmets
+helmet.mp3 → Helmet
+knife-p.mp3 → knives
+knife.mp3 → knife
+man-p.mp3 → Men
+man.mp3 → Man
+mouse-p.mp3 → mice
+mouse.mp3 → Mouse
+present-p.mp3 → Presents
+present.mp3 → present
+scarf-p.mp3 → Scars
+scarf.mp3 → SCARF
+skateboard-p.mp3 → Skateboards
+skateboard.mp3 → skateboard
+tooth-p.mp3 → Teeth
+tooth.mp3 → Tooth
+trainers-p.mp3 → Trainers
+trainers.mp3 → trainer
+woman-p.mp3 → Women
+woman.mp3 → Woman

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Spidey — have got · 5Б</title>
-<meta name="description" content="Тренажёр английского, Module 2a: have got, I’m from, национальности, can. Много заданий на слух.">
+<title>Spidey — Module 2a + 2b · 5Б</title>
+<meta name="description" content="Тренажёр английского, 5Б. Глава 2a: have got, страны, can. Глава 2b: Spidey’s birthday — подарки и множественное число.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -268,6 +268,28 @@ body{background:var(--bg)}
 .whoami .btn{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-d);text-align:center}
 .sent{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--ink2);font-size:14px;margin-top:10px}
 .sent b{color:var(--green-d)} .sent.wait b{color:var(--orange)}
+/* глава 2b: картинки слов (файл или эмодзи) */
+.wshow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;background:var(--soft);border-radius:18px;padding:12px;margin:0 0 14px;min-height:96px}
+.wps{display:inline-flex;align-items:center;gap:2px}
+.wps .emj{font-size:52px;line-height:1.1}.wps img.w2{width:80px;height:80px;object-fit:contain}
+.wps.n2 .emj,.wps.n3 .emj{font-size:40px}.wps.n2 img.w2,.wps.n3 img.w2{width:56px;height:56px}
+.wshow.big .emj{font-size:84px}.wshow.big img.w2{width:150px;height:150px}
+.wshow .arr{font-size:30px;font-weight:900;color:var(--ink2)}
+.wbox{display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;background:var(--soft);border-radius:12px}
+.picopt .wbox{display:flex;padding:0}.picopt .wps{display:inline-flex;padding:0}.picopt .emj{display:inline;padding:0;color:inherit}
+.wbox .emj{font-size:60px}.wbox .n2 .emj{font-size:44px}.wbox img.w2{width:84%;height:auto;aspect-ratio:1}
+/* выбор главы */
+.chs{display:flex;flex-direction:column;gap:16px;margin:8px 0 22px}
+.chbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:18px 16px;border-radius:22px;color:#fff;
+  background:var(--c);box-shadow:0 6px 0 var(--cd);transition:transform .08s,box-shadow .08s}
+.chbtn:active{transform:translateY(5px);box-shadow:0 1px 0 var(--cd)}
+.chbtn .big{font-size:40px;font-weight:900;line-height:1;flex:none;width:68px;height:68px;border-radius:18px;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.chbtn .t{flex:1;min-width:0}.chbtn .t b{display:block;font-size:24px;line-height:1.15}
+.chbtn .t small{display:block;font-size:14px;opacity:.92;margin-top:4px;font-weight:700}
+.chbtn .pr{display:flex;align-items:center;gap:4px;font-size:15px;margin-top:8px;font-weight:900}.chbtn .pr .ic{width:18px;height:18px}
+.chback{display:inline-flex;align-items:center;gap:6px;color:var(--web);font-weight:900;font-size:16px;padding:12px 0 0}
+.cert li.chhead{display:block;font-size:13px;color:var(--ink2);font-weight:900;text-transform:uppercase;letter-spacing:.05em;padding:10px 2px 4px;border-bottom:2px solid var(--line)}
+@media (max-width:380px){.chbtn .t b{font-size:21px}.chbtn .big{width:56px;height:56px;font-size:32px}}
 @media (max-width:380px){.play{width:96px;height:96px}.picopt span{font-size:14px}.gapline{font-size:21px}}
 </style>
 </head>
@@ -299,6 +321,10 @@ const IC={
  pen:'<svg viewBox="0 0 40 40"><path d="M8 32l3-9L27 7l6 6-16 16z" fill="#fff"/><path d="M8 32l9-3-6-6z" fill="currentColor" opacity=".5"/><path d="M24 10l6 6" stroke="currentColor" stroke-width="2.5"/></svg>',
  pair:'<svg viewBox="0 0 40 40"><circle cx="14" cy="20" r="9" fill="#fff"/><circle cx="26" cy="20" r="9" fill="#fff" opacity=".75"/></svg>',
  gap:'<svg viewBox="0 0 40 40"><rect x="4" y="16" width="11" height="9" rx="2" fill="#fff"/><rect x="25" y="16" width="11" height="9" rx="2" fill="#fff"/><path d="M18 27h5" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg>',
+ gift:'<svg viewBox="0 0 40 40"><rect x="6" y="16" width="28" height="18" rx="2" fill="#fff"/><rect x="4" y="11" width="32" height="7" rx="2" fill="#fff"/><path d="M20 11v23" stroke="currentColor" stroke-width="3.5"/><path d="M20 11c-3-6-10-6-8-1 1 2 5 1 8 1zM20 11c3-6 10-6 8-1-1 2-5 1-8 1z" fill="#fff"/></svg>',
+ rule:'<svg viewBox="0 0 40 40"><rect x="4" y="15" width="9" height="10" rx="2" fill="#fff"/><path d="M15 20h4" stroke="#fff" stroke-width="3" stroke-linecap="round"/><rect x="21" y="9" width="7" height="8" rx="2" fill="#fff"/><rect x="30" y="9" width="7" height="8" rx="2" fill="#fff"/><rect x="21" y="23" width="7" height="8" rx="2" fill="#fff"/><rect x="30" y="23" width="7" height="8" rx="2" fill="#fff"/></svg>',
+ mouse:'<svg viewBox="0 0 40 40"><ellipse cx="21" cy="24" rx="12" ry="8" fill="#fff"/><circle cx="12" cy="15" r="5" fill="#fff"/><circle cx="12" cy="15" r="2.2" fill="currentColor" opacity=".45"/><circle cx="11" cy="23" r="1.6" fill="currentColor"/><path d="M33 25c4 0 4 6 0 7" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>',
+ pen2:'<svg viewBox="0 0 40 40"><path d="M6 30l3-8L23 8l5 5-14 14z" fill="#fff"/><path d="M27 26h9M27 31h9M31.5 21.5v14" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>',
  web:'<svg viewBox="0 0 40 40"><g fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M20 4v32M4 20h32M8 8l24 24M32 8 8 32"/><path d="M20 11c4 0 8 3 8 9M20 11c-4 0-8 3-8 9M12 20c0 6 4 9 8 9M28 20c0 6-4 9-8 9"/></g></svg>'
 };
 
@@ -315,11 +341,14 @@ const PICS={
  write:['img/w/cat-write.webp','img/codex/cat-write.png','img/w/cat-think.webp'],
  globe:['img/w/cat-globe.webp','img/codex/cat-globe.png','img/w/cat-hi.webp'],
  wall:['img/w/cat-wall.webp','img/codex/cat-wall.png','img/w/cat-win.webp'],
- scene:['img/w/scene-wall.webp','img/codex/scene-wall.png']
+ scene:['img/w/scene-wall.webp','img/codex/scene-wall.png'],
+ gift:['img/w/cat-gift.webp','img/codex/cat-gift.png','img/w/cat-yes.webp'],
+ party:['img/w/scene-party.webp','img/codex/scene-party.png','img/w/scene-wall.webp']
 };
 // Какая картинка кота на экране правила. Уровня нет в таблице — обычный Кот Икс.
 // Картинки ещё нет на диске — pic() сам сползает по запасным (см. PICS).
-const UPIC={bag:'bag',nat:'globe',spell:'write',hearpic:'listen',hearru:'listen',gap:'listen',boss:'wall'};
+const UPIC={bag:'bag',nat:'globe',spell:'write',hearpic:'listen',hearru:'listen',gap:'listen',boss:'wall',
+ 'b-words':'gift','b-hear':'listen','b-spell':'write','b-rule':'think','b-irr':'think','b-plw':'write','b-boss':'gift'};
 function pic(k,cls=''){
   const s=PICS[k]||PICS.hi;
   return `<img class="mascot ${cls}" src="${s[0]}" data-s="${s.join('|')}" data-i="0" alt="" onerror="nextPic(this)">`;
@@ -515,6 +544,125 @@ function gapQ(g){
 }
 function lvlGap(){return [gapQ(GAPS[0]),gapQ(GAPS[1]),...take(GAPS.slice(2),8).map(gapQ)]}
 
+// ====== глава 2b: Spidey's birthday (урок 20.10, учебник с. 38–39) ======
+// 15 слов урока, у каждого — множественное число. Звук: audio/2b/<k>.mp3 и <k>-p.mp3
+// (Sonia −8%, сверено Whisper small, см. whisper-2b.txt). Картинки: img/w/2b/<k>.webp,
+// пока их нет — эмодзи (e). wr — неверные формы (подобраны руками: ни одна не должна быть
+// правильной!). alt — тоже верно: «scarfs» словари допускают наравне со «scarves».
+const W2=[
+ {k:'bicycle',en:'bicycle',pl:'bicycles',ru:'велосипед',e:'🚲',r:'s',alt:['bike'],altpl:['bikes'],wr:['bicycle','bicyclees','bicyclies']},
+ {k:'camera',en:'digital camera',pl:'digital cameras',ru:'цифровой фотоаппарат',e:'📷',r:'s',wr:['digitals cameras','digital camera','digital cameraes']},
+ {k:'handbag',en:'handbag',pl:'handbags',ru:'сумочка',e:'👜',r:'s',wr:['handbag','handbages','handsbags']},
+ {k:'helmet',en:'helmet',pl:'helmets',ru:'шлем',e:'⛑️',r:'s',wr:['helmet','helmetes','helmeties']},
+ {k:'present',en:'present',pl:'presents',ru:'подарок',e:'🎁',r:'s',wr:['present','presentes','presenties']},
+ {k:'scarf',en:'scarf',pl:'scarves',ru:'шарф',e:'🧣',r:'ves',altpl:['scarfs'],wr:['scarf','scarfes','scarvs']},
+ {k:'skateboard',en:'skateboard',pl:'skateboards',ru:'скейтборд',e:'🛹',r:'s',wr:['skateboard','skateboardes','skatesboards']},
+ {k:'trainers',en:'trainers',pl:'trainers',ru:'кроссовки',e:'👟',r:'s',np:1},   // всегда во множественном
+ {k:'child',en:'child',pl:'children',ru:'ребёнок',e:'🧒',r:'irr',wr:['childs','childrens','child']},
+ {k:'foot',en:'foot',pl:'feet',ru:'ступня',e:'🦶',r:'irr',wr:['foots','feets','foot']},
+ {k:'man',en:'man',pl:'men',ru:'мужчина',e:'👨',r:'irr',wr:['mans','mens','man']},
+ {k:'mouse',en:'mouse',pl:'mice',ru:'мышь',e:'🐭',r:'irr',wr:['mouses','mices','mouse']},
+ {k:'tooth',en:'tooth',pl:'teeth',ru:'зуб',e:'🦷',r:'irr',wr:['tooths','teeths','tooth']},
+ {k:'woman',en:'woman',pl:'women',ru:'женщина',e:'👩',r:'irr',wr:['womans','womens','woman'],note:'women читается /ˈwɪmɪn/.'},
+ {k:'knife',en:'knife',pl:'knives',ru:'нож',e:'🔪',r:'ves',wr:['knifes','knife','knivs']}
+];
+// слова для правила (без звука и картинок — только эмодзи); упр. 5 с. 39: parties, men, boxes, balls, boys, knives, watches
+const WX=[
+ {k:'box',en:'box',pl:'boxes',ru:'коробка',e:'📦',r:'es',wr:['boxs','boxies','box']},
+ {k:'watch',en:'watch',pl:'watches',ru:'часы (на руку)',e:'⌚',r:'es',wr:['watchs','watchies','watch']},
+ {k:'bus',en:'bus',pl:'buses',ru:'автобус',e:'🚌',r:'es',wr:['buss','busies','bus']},
+ {k:'dish',en:'dish',pl:'dishes',ru:'тарелка',e:'🍽️',r:'es',wr:['dishs','dishies','dish']},
+ {k:'glass',en:'glass',pl:'glasses',ru:'стакан',e:'🥛',r:'es',wr:['glasss','glassies','glass']},
+ {k:'party',en:'party',pl:'parties',ru:'праздник',e:'🎉',r:'ies',wr:['partys','partyes','party']},
+ {k:'baby',en:'baby',pl:'babies',ru:'малыш',e:'👶',r:'ies',wr:['babys','babyes','baby']},
+ {k:'city',en:'city',pl:'cities',ru:'город',e:'🏙️',r:'ies',wr:['citys','cityes','city']},
+ {k:'boy',en:'boy',pl:'boys',ru:'мальчик',e:'👦',r:'s',vy:1,wr:['boies','boyes','boy']},
+ {k:'toy',en:'toy',pl:'toys',ru:'игрушка',e:'🧸',r:'s',vy:1,wr:['toies','toyes','toy']},
+ {k:'key',en:'key',pl:'keys',ru:'ключ',e:'🔑',r:'s',vy:1,wr:['keies','keyes','key']},
+ {k:'ball',en:'ball',pl:'balls',ru:'мяч',e:'⚽',r:'s',wr:['balles','ballies','ball']},
+ {k:'leaf',en:'leaf',pl:'leaves',ru:'лист (дерева)',e:'🍃',r:'ves',wr:['leafs','leafes','leaf']},
+ {k:'wolf',en:'wolf',pl:'wolves',ru:'волк',e:'🐺',r:'ves',wr:['wolfs','wolfes','wolf']}
+];
+WX.forEach(w=>w.x=1);
+const W2K={};[...W2,...WX].forEach(w=>W2K[w.k]=w);
+const W2KEYS=W2.map(w=>w.k), IRR=W2.filter(w=>w.r==='irr').map(w=>w.k).concat(['knife']);
+const PLPOOL=[...W2,...WX].filter(w=>!w.np).map(w=>w.k);
+const REGPOOL=PLPOOL.filter(k=>W2K[k].r!=='irr');
+const BOOK5=['party','man','box','ball','boy','knife','watch'];
+const say2=(k,p)=>'audio/2b/'+k+(p||k==='trainers'?'-p':'')+'.mp3';
+// картинка слова: файл, если есть, иначе эмодзи (emo). n — сколько штук нарисовать.
+// Картинок 2b ещё может не быть: проверяем один файл при запуске, без него — сразу эмодзи
+// (иначе каждая плитка ждёт 404 и полсекунды пустая).
+const IMG2B={ok:false};
+if(typeof Image!=='undefined'){const t=new Image();t.onload=()=>{IMG2B.ok=true};t.src='img/w/2b/present.webp'}
+function wp(k,n=1){
+  const w=W2K[k],one=w.x||!IMG2B.ok?`<span class="emj">${w.e}</span>`
+    :`<img class="w2" src="img/w/2b/${k}.webp" alt="" data-e="${w.e}" onerror="emo(this)">`;
+  return `<span class="wps n${n}">${one.repeat(n)}</span>`;
+}
+function emo(el){const s=document.createElement('span');s.className='emj';s.textContent=el.dataset.e;el.replaceWith(s)}
+const many=(k,n=3)=>`<div class="wshow">${wp(k,1)}<span class="arr">→</span>${wp(k,n)}</div>`;
+// Правило (Spotlight 5, с. 39; Cambridge Grammar «Nouns: singular and plural»)
+const RULES={s:'+s',es:'+es',ies:'y → ies',ves:'f → ves',irr:'особое слово'};
+function plWhy(w){
+  const a=`${w.en} → <b>${w.pl}</b>`;
+  if(w.r==='irr')return `${a}. Особое слово — его просто запоминают.${w.note?' '+w.note:''}`;
+  if(w.r==='es')return `${a}. Слово кончается на ${w.en.match(/(ss|sh|ch|s|x)$/)[0]} → <b>+es</b>, иначе не выговорить.`;
+  if(w.r==='ies')return `${a}. Перед y согласная → y меняем на i и <b>+es</b>.`;
+  if(w.r==='ves')return `${a}. f / fe → <b>ves</b>.${w.k==='scarf'?' Можно и scarfs, но в учебнике — scarves.':''}`;
+  return w.vy?`${a}. Перед y гласная (${w.en.slice(-2,-1)}) — y не трогаем, просто <b>+s</b>.`:`${a}. Обычное слово — просто <b>+s</b>.`;
+}
+const PLHINT={s:'Обычное слово — что добавляем в конце?',es:'Кончается на s, sh, ch, x? Тогда +es.',
+  ies:'Перед y согласная? Тогда y → i + es.',ves:'f или fe в конце → ves.',irr:'Это особое слово: mouse → mice, man → men…'};
+
+function wordQ(k,book){
+  const w=W2K[k];
+  return choice({qid:'слово 2b: '+w.en,book,show:`<div class="wshow big">${wp(k,k==='trainers'?2:1)}</div>`,
+    prompt:'Что подарили Спайди? Выбери слово.',opts:[w.en,...take(W2KEYS.filter(x=>x!==k),3).map(x=>W2K[x].en)],
+    why:`<b>${w.en}</b> — ${w.ru}.`,hint:`Это ${w.ru}. Первая буква: ${w.en[0]}`});
+}
+function hearWQ(k){
+  const w=W2K[k];
+  return choice({qid:'на слух 2b: '+w.en,audio:say2(k),emo:1,prompt:'Нажми ▶ и выбери картинку.',
+    opts:[k,...take(W2KEYS.filter(x=>x!==k),3)],why:`Это <b>${w.en}</b> — ${w.ru}.`,hint:'Послушай ещё раз. Какой первый звук?'});
+}
+function spellWQ(k){
+  const w=W2K[k];
+  return {type:'text',qid:'написать 2b: '+w.en,audio:say2(k),show:`<div class="wshow">${wp(k,k==='trainers'?2:1)}</div>`,
+    prompt:'Нажми ▶ и напиши это слово по-английски.',ru:w.ru,accept:[w.en,...(w.alt||[])],
+    why:`<b>${w.en}</b> — ${w.ru}.`,hint:`${w.ru}. Первая буква: ${w.en[0]}, букв: ${w.en.replace(/ /g,'').length}`};
+}
+function plQ(k,book,n=2){
+  const w=W2K[k],num=n===2?'two':'three';
+  return choice({qid:'множественное: '+w.en,book:book||undefined,show:many(k,n),prompt:`one ${w.en} → ${num} ___`,ru:w.ru,
+    opts:[w.pl,...w.wr],alts:w.altpl||[],why:plWhy(w),hint:PLHINT[w.r]});
+}
+function ruleQ(k){
+  const w=W2K[k];
+  return choice({qid:'какое правило: '+w.en,show:many(k),prompt:`${w.en} → ${w.pl}. Какое правило?`,ru:w.ru,
+    opts:[RULES[w.r],...take(Object.keys(RULES).filter(r=>r!==w.r),3).map(r=>RULES[r])],why:plWhy(w),hint:PLHINT[w.r]});
+}
+function hearNQ(k){   // слышишь одну штуку или много?
+  const w=W2K[k],p=Math.random()<.5,heard=p?w.pl:w.en;
+  return choice({qid:'на слух один/много: '+w.en+' / '+w.pl,audio:say2(k,p),prompt:'Нажми ▶. Одна штука или много? Что звучит?',
+    opts:[heard,p?w.en:w.pl,...w.wr.filter(x=>x!==w.en).slice(0,2)],
+    why:`Звучит <b>${heard}</b> — ${p?'много':'одна штука'}. ${w.en} → ${w.pl}.`,hint:'Слушай середину слова: mouse — mice, man — men.'});
+}
+function plTextQ(k){
+  const w=W2K[k];
+  return {type:'text',qid:'написать множественное: '+w.en,show:many(k,2),prompt:`one ${w.en} → two ___. Напиши.`,ru:w.ru,
+    accept:[w.pl,...(w.altpl||[])],why:plWhy(w),hint:PLHINT[w.r]};
+}
+// повторение 2a: в каждом уровне 2b возвращаются 2 задания из первой главы
+const OBJ2B=[['two new helmets','два новых шлема'],['a digital camera','цифровой фотоаппарат'],['three mice','три мыши'],
+  ['new trainers','новые кроссовки'],['a red scarf','красный шарф'],['five presents','пять подарков']];
+const REV={
+  have:()=>haveQ(pick(SUBJ),pick(OBJ2B),Math.random()<.4),
+  nat:()=>natQ(pick(PAIRS)),pic:()=>hearPicQ(pick(PICWORDS)),ru:()=>hearRuQ(pick(Object.keys(WK))),
+  spell:()=>spellQ(pick(SPELL)),pair:()=>pairQ(pick(PAIRS)),gap:()=>gapQ(pick(GAPS))};
+const rev=(...ks)=>ks.map(k=>({...REV[k](),rev:1}));
+const lvl2=(main,...r)=>[main[0],...shuf([...main.slice(1),...rev(...r)])];   // первое — из учебника, остальное вперемешку
+
 // ====== уровни ======
 const UNITS=[
  {id:'bag',name:'Мой рюкзак',sub:'have got / has got',ic:'bag',c:'#8b5cf6',cd:'#6d3fe0',
@@ -562,8 +710,45 @@ const UNITS=[
       hearPicQ(pick(PICWORDS)),hearRuQ(pick(Object.keys(WK))),spellQ(pick(SPELL)),
       pairQ(pick(PAIRS)),gapQ(pick(GAPS)),gapQ(pick(GAPS))];
     return out;
-  }}
+  }},
+ // ---- глава 2b. id с «b-»: в журнале учителя не пересекаются с 2a ----
+ {id:'b-words',ch:'2b',name:'Подарки',sub:'картинка → слово',ic:'gift',c:'#ff9233',cd:'#d96d10',
+  title:'Что подарили Спайди',lead:'У Спайди день рождения! Смотри на подарок и выбирай слово. В каждом уровне вернутся и слова из 2a.',
+  rules:[['bicycle (bike)','велосипед'],['digital camera','цифровой фотоаппарат'],['helmet · scarf · trainers','шлем · шарф · кроссовки'],['🔁 повторяем 2a','2 задания из первой главы']],
+  make:()=>lvl2([wordQ('present','с. 38'),...take(W2KEYS.filter(k=>k!=='present'),7).map(k=>wordQ(k))],'ru','have')},
+ {id:'b-hear',ch:'2b',name:'Слушай',sub:'▶ и покажи подарок',ic:'ear',c:'#14b8a6',cd:'#0e8f81',
+  title:'Слушай и покажи',lead:'Нажми ▶ и выбери картинку. Слушать можно сколько угодно раз.',
+  rules:[['▶','слушай слово'],['Картинки','выбери одну'],['digital camera','два слова — одна вещь']],
+  make:()=>lvl2(take(W2KEYS,8).map(hearWQ),'pic','pair')},
+ {id:'b-spell',ch:'2b',name:'Напиши',sub:'▶ и набери слово',ic:'pen',c:'#eab308',cd:'#b58900',
+  title:'Слушай и пиши',lead:'Услышь слово и напиши его. Большие буквы не важны.',
+  rules:[['bicycle','не «bisikl»: c, y, c, le'],['trainers','всегда с s: это пара'],['knife','k не читается, но пишется']],
+  make:()=>lvl2(take(W2KEYS,7).map(spellWQ),'spell','nat')},
+ {id:'b-rule',ch:'2b',name:'Одна — много',sub:'+s · +es · y → ies · f → ves',ic:'rule',c:'#8b5cf6',cd:'#6d3fe0',
+  title:'Одна вещь — много вещей',lead:'Пять коробок с правилами. Смотри, как кончается слово.',
+  rules:[['+s','bike → bikes · boy → boys'],['+es после s, sh, ch, x','box → boxes · watch → watches'],['согласная + y → ies','party → parties (но boy → boys)'],
+    ['f / fe → ves','knife → knives · scarf → scarves'],['особые','child → children · mouse → mice']],
+  make:()=>lvl2([plQ('party','упр. 5 с. 39'),...shuf([...BOOK5.slice(1).map(k=>plQ(k,'упр. 5 с. 39')),...take(REGPOOL.filter(k=>!BOOK5.includes(k)),3).map(k=>plQ(k))]).slice(0,6),
+    ...take(REGPOOL,2).map(ruleQ)],'have','nat')},
+ {id:'b-irr',ch:'2b',name:'Особые',sub:'mouse → mice',ic:'mouse',c:'#ff5a8a',cd:'#d93468',
+  title:'Особые слова',lead:'Эти слова не слушаются правила. Их просто запоминают — как стишок: one mouse — two mice.',
+  rules:[['child → children','man → men · woman → women'],['foot → feet','tooth → teeth'],['mouse → mice','knife → knives']],
+  make:()=>lvl2([plQ('child','с. 38',3),...take(IRR.filter(k=>k!=='child'),5).map(k=>plQ(k,null,3)),...take(IRR,2).map(hearNQ)],'ru','gap')},
+ {id:'b-plw',ch:'2b',name:'Напиши много',sub:'one tooth → two teeth',ic:'pen2',c:'#06b6d4',cd:'#0689a1',
+  title:'Напиши множественное',lead:'Самое трудное: написать форму «много» самому. Вспомни пять коробок.',
+  rules:[['box','boxes'],['party','parties'],['knife','knives'],['tooth','teeth']],
+  make:()=>lvl2([plTextQ('present'),...take(IRR,3).map(plTextQ),...take(REGPOOL.filter(k=>k!=='present'),4).map(plTextQ)],'spell','pic')},
+ {id:'b-boss',ch:'2b',name:'Босс: Микс',sub:'2a + 2b · 3 сердечка',ic:'web',c:'#e23636',cd:'#b81f1f',boss:1,
+  fly:'Бомбардиро Крокодило принёс Спайди подарок: не two mouses, а two mice!',
+  title:'Микс: обе главы',lead:'Всё вместе: подарки, «много», have got и страны из 2a. 3 сердечка — ошибёшься 3 раза, бой начнётся заново.',
+  rules:[['2b','подарки и «много»'],['2a','have got · страны · ▶'],['Сердечки','3']],
+  make:()=>[wordQ(pick(W2KEYS)),hearWQ(pick(W2KEYS)),spellWQ(pick(W2KEYS)),plQ(pick(REGPOOL)),plQ(pick(IRR),null,3),hearNQ(pick(IRR)),plTextQ(pick(PLPOOL)),
+    haveQ(SUBJ[8],pick(OBJ2B),false),natQ(pick(PAIRS)),hearPicQ(pick(PICWORDS)),spellQ(pick(SPELL)),gapQ(pick(GAPS)),buildQ(pick(BUILDS))]}
 ];
+UNITS.forEach(u=>u.ch=u.ch||'2a');
+const CHS=[
+ {id:'2a',title:'I’m from',sub:'Учебник с. 36–37 · have got · страны · can',c:'#1f3a93',cd:'#15297a',ic:'globe'},
+ {id:'2b',title:'Spidey’s birthday',sub:'Учебник с. 38–39 · подарки · одна — много',c:'#e23636',cd:'#b81f1f',ic:'gift'}];
 
 // ====== сохранение (только в этом браузере) ======
 const TEST=/[?&]test\b/.test(location.search);
@@ -674,35 +859,66 @@ function yesNo(text,yes,go){
   d.querySelector('#dn').onclick=()=>d.remove();
   d.onclick=e=>{if(e.target===d)d.remove()};
 }
-function home(){
-  const total=UNITS.length,doneN=UNITS.filter(u=>save.u[u.id]).length;
-  const nextI=UNITS.findIndex(u=>!save.u[u.id]);
-  const offs=[0,-40,-60,-30,10,45,30,-10,-45,0];
-  app.innerHTML=`
-  <header class="top"><div class="wrap">
-    <div class="logo">Spidey <i>5Б</i>${TEST?' <span class="testtag">ТЕСТ</span>':''}</div>
-    <div class="pill st" title="Пройдено уровней">${IC.star}${doneN}/${total}</div>
+// Стартовый экран — две главы (его решение 19.10: сразу видно, какой урок какой).
+// CH — открытая глава; пусто — экран выбора. Уровни остаются в одном UNITS (индексы общие).
+let CH=null;
+const chUnits=c=>UNITS.map((u,i)=>[u,i]).filter(([u])=>u.ch===c);
+const topbar=(n,total)=>`<header class="top"><div class="wrap">
+    <div class="logo" id="lg" style="cursor:pointer">Spidey <i>5Б</i>${TEST?' <span class="testtag">ТЕСТ</span>':''}</div>
+    <div class="pill st" title="Пройдено уровней">${IC.star}${n}/${total}</div>
     <div class="pill xp" title="Очки">${IC.bolt}${save.xp}</div>
     <button class="iconbtn" id="snd" aria-label="${muted?'Включить звук':'Выключить звук'}">${muted?IC.mute:IC.sound}</button>
-  </div></header>
+  </div></header>`;
+function topEvents(){
+  document.getElementById('snd').onclick=()=>{muted=!muted;try{localStorage.setItem(KEY+'-mute',muted?'1':'0')}catch(e){}home()};
+  document.getElementById('lg').onclick=()=>{CH=null;home()};
+}
+function home(){
+  if(!CH)return chapters();
+  const list=chUnits(CH),ch=CHS.find(c=>c.id===CH);
+  const total=list.length,doneN=list.filter(([u])=>save.u[u.id]).length;
+  const nextI=(list.find(([u])=>!save.u[u.id])||[])[1];
+  const offs=[0,-40,-60,-30,10,45,30,-10,-45,0];
+  app.innerHTML=`${topbar(doneN,total)}
   <main class="wrap">
-    <div class="hello">${pic('hi')}<div class="bubble">Привет! Я <b>Кот Икс</b>, сегодня у нас английский. Пройди уровни — и домашку по <b>Module 2a</b> напишешь сам. Половина заданий — <b>на слух</b>, нажимай ▶.</div></div>
-    <div class="path">${UNITS.map((u,i)=>{
+    <button class="chback" id="back">← Все главы</button>
+    <div class="hello">${pic(CH==='2b'?'gift':'hi')}<div class="bubble">${CH==='2b'
+      ?'Глава <b>2b — Spidey’s birthday</b>. У Спайди день рождения и куча подарков! Назови их по-английски и научись говорить «много»: one mouse — two <b>mice</b>. В каждом уровне вернутся слова из 2a.'
+      :'Глава <b>2a — I’m from</b>. Привет! Я <b>Кот Икс</b>. Пройди уровни — и домашку по <b>Module 2a</b> напишешь сам. Половина заданий — <b>на слух</b>, нажимай ▶.'}</div></div>
+    <div class="path">${list.map(([u,i],j)=>{
       const st=save.u[u.id]||0;
-      return `<div class="unit" style="transform:translateX(${offs[i]}px);--c:${u.c};--cd:${u.cd}">
-        ${i===nextI?'<div class="start-tag">'+(i===0?'Начать':'Дальше')+'</div>':''}
+      return `<div class="unit" style="transform:translateX(${offs[j%offs.length]}px);--c:${u.c};--cd:${u.cd}">
+        ${i===nextI?'<div class="start-tag">'+(j===0?'Начать':'Дальше')+'</div>':''}
         <button class="node ${st?'done':''} ${i===nextI?'next':''}" data-u="${i}" aria-label="${u.name}">${IC[u.ic]}</button>
         <div class="stars">${st?[1,2,3].map(k=>`<span style="color:${k<=st?'var(--gold)':'var(--line)'}">${IC.star}</span>`).join(''):''}</div>
         <div class="name">${u.name}</div><div class="sub">${esc(u.sub)}</div>
       </div>`}).join('')}
       <div class="homebtns"><button class="btn blue" id="mine">Мой результат для учителя</button></div>
-      <button class="reset" id="reset">Начать всё заново</button>
+      <button class="reset" id="reset">Начать главу ${ch.id} заново</button>
     </div>
   </main>`;
+  topEvents();
+  document.getElementById('back').onclick=()=>{sTap();CH=null;home()};
   app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{sTap();const i=+b.dataset.u;save.pupil?intro(i):askName(()=>intro(i))});
   document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
-  document.getElementById('snd').onclick=()=>{muted=!muted;try{localStorage.setItem(KEY+'-mute',muted?'1':'0')}catch(e){}home()};
-  document.getElementById('reset').onclick=()=>yesNo('Стереть звёзды и очки?','Стереть',()=>{save={xp:0,u:{},t:{},pupil:save.pupil,roster:save.roster,queue:save.queue};store();home()});
+  // стирает только эту главу: звёзды другой главы и очки остаются
+  document.getElementById('reset').onclick=()=>yesNo(`Стереть звёзды главы ${ch.id}?`,'Стереть',()=>{list.forEach(([u])=>{delete save.u[u.id];if(save.t)delete save.t[u.id]});store();home()});
+  flush();window.scrollTo(0,0);
+}
+function chapters(){
+  app.innerHTML=`${topbar(UNITS.filter(u=>save.u[u.id]).length,UNITS.length)}
+  <main class="wrap">
+    <div class="hello">${pic('hi')}<div class="bubble">Привет! Я <b>Кот Икс</b>. Выбери <b>главу</b> — каждая глава это один урок по учебнику.</div></div>
+    <div class="chs">${CHS.map(c=>{const l=chUnits(c.id),n=l.filter(([u])=>save.u[u.id]).length;
+      return `<button class="chbtn" data-c="${c.id}" style="--c:${c.c};--cd:${c.cd}"><span class="big">${c.id}</span>
+        <span class="t"><b>${c.title}</b><small>${esc(c.sub)}</small>
+        <span class="pr">${IC.star}${n} из ${l.length}${n===l.length?' · пройдено!':''}</span></span></button>`}).join('')}</div>
+    <div class="homebtns"><button class="btn blue" id="mine">Мой результат для учителя</button></div>
+    <div style="height:40px"></div>
+  </main>`;
+  topEvents();
+  app.querySelectorAll('.chbtn').forEach(b=>b.onclick=()=>{sTap();CH=b.dataset.c;home()});
+  document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
   flush();window.scrollTo(0,0);
 }
 
@@ -711,7 +927,7 @@ function intro(i){
   app.innerHTML=`
   <div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
   <div class="intro">
-    ${u.boss?`<div class="introscene"><img src="${PICS.scene[0]}" data-s="${PICS.scene.join('|')}" data-i="0" alt="" onerror="nextPic(this)"></div>`:''}
+    ${u.boss?(s=>`<div class="introscene"><img src="${s[0]}" data-s="${s.join('|')}" data-i="0" alt="" onerror="nextPic(this)"></div>`)(PICS[u.ch==='2b'?'party':'scene']):''}
     <h1>${u.title}</h1><p class="lead">${u.lead}</p>
     <div class="robo">${pic(UPIC[u.id]||'hi')}<div class="rules">${u.rules.map(r=>`<div class="rule"><span class="eq">${esc(r[0])}</span><small>${esc(r[1])}</small></div>`).join('')}</div></div>
   </div></div>
@@ -723,11 +939,11 @@ function intro(i){
 
 let L;
 function lesson(i){
-  const u=UNITS[i],qs=u.make();
+  const u=UNITS[i],qs=u.make();CH=u.ch;
   L={u,i,queue:qs,total:qs.length,ok:0,mist:0,hearts:u.boss?3:null,combo:0,best:0,bad:0,t0:Date.now(),wrong:[],seen:new Set()};
   ask();
   if(u.boss)setTimeout(()=>{if(L&&L.u.boss&&document.getElementById('chk'))
-    flyer('Бомбардиро Крокодило летел мимо, увидел твой have got — и испугался!')},700);
+    flyer(u.fly||'Бомбардиро Крокодило летел мимо, увидел твой have got — и испугался!')},700);
 }
 function ask(){
   if(!L.queue.length)return finish();
@@ -735,15 +951,18 @@ function ask(){
   const pct=Math.round(L.ok/L.total*100);
   let body='';
   const tag=(q.book?`<span class="tag">из учебника · ${esc(q.book)}</span> `:'')
-    +(q.pol?`<span class="tag ${q.pol==='no'?'bonus':''}">${q.pol==='no'?'❌ НЕТ':'✅ ЕСТЬ'}</span>`:'');
+    +(q.rev?'<span class="tag bonus">🔁 повторяем 2a</span> ':'')+(q.pol?`<span class="tag ${q.pol==='no'?'bonus':''}">${q.pol==='no'?'❌ НЕТ':'✅ ЕСТЬ'}</span>`:'');
   if(q.audio)body+=`<div class="listen"><button class="play" id="pl" aria-label="Слушать">${IC.playic}</button>
     <button class="again" id="ag">${IC.waveic} послушать ещё раз</button></div>`;
   if(q.gap)body+=`<p class="gapline">${fmt(q.gap)}</p>`;
   else body+=`<p class="prompt">${fmt(q.prompt)}</p>`;
+  if(q.show)body+=q.show;
   if(q.img)body+=`<div class="introscene"><img src="${q.img}" alt="" style="aspect-ratio:16/9" onerror="this.style.display='none'"></div>`;
   if(q.ru)body+=`<p class="ru">${esc(q.ru)}</p>`;
   if(q.type==='choice'&&q.pics){
     body+=`<div class="picopts">${q.opts.map((k,i)=>`<button class="picopt" data-o="${i}"><img src="${wimg(k)}" alt="" onerror="this.style.visibility='hidden'"><span>${i+1}</span></button>`).join('')}</div>`;
+  }else if(q.type==='choice'&&q.emo){
+    body+=`<div class="picopts">${q.opts.map((k,i)=>`<button class="picopt" data-o="${i}"><span class="wbox">${wp(k,k==='trainers'?2:1)}</span><span>${i+1}</span></button>`).join('')}</div>`;
   }else if(q.type==='choice'){
     body+=`<div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-o="${k}"><span class="n">${k+1}</span><span>${esc(o)}</span></button>`).join('')}</div>`;
   }else if(q.type==='build'){
@@ -780,7 +999,7 @@ function ask(){
     if(audioOk)setTimeout(go,350);
   }
   if(q.type==='choice'){
-    const sel=q.pics?'.picopt':'.opt';
+    const sel=q.pics||q.emo?'.picopt':'.opt';
     app.querySelectorAll(sel).forEach(b=>b.onclick=()=>{sTap();L.ans=+b.dataset.o;app.querySelectorAll(sel).forEach(o=>o.classList.toggle('sel',o===b));ready()});
   }else if(q.type==='build'){
     app.querySelectorAll('.bank .tile').forEach(b=>b.onclick=()=>{sTap();L.ans.push(+b.dataset.t);b.classList.add('used');drawLine()});
@@ -808,7 +1027,7 @@ function isRight(){
   if(q.type==='build')return q.accept.some(a=>norm(a)===norm(L.ans.map(k=>q.tiles[k]).join(' ')));
   return q.accept.some(a=>norm(a)===norm(L.ans));
 }
-function rightText(){const q=L.q;return esc(q.type==='choice'?(q.pics?WK[q.opts[q.correct]].en:q.opts[q.correct]):q.accept[0])}
+function rightText(){const q=L.q;return esc(q.type==='choice'?(q.pics?WK[q.opts[q.correct]].en:q.emo?W2K[q.opts[q.correct]].en:q.opts[q.correct]):q.accept[0])}
 function testAnswer(right){
   if(L.locked)return;const q=L.q;
   if(q.type==='choice')L.ans=right?q.correct:(q.correct+1)%q.opts.length;
@@ -852,7 +1071,7 @@ function check(){
 }
 function lost(){
   app.innerHTML=`<div class="wrap"><div class="done-screen">${pic('oops')}
-    <h1 style="color:var(--red)">Сердечки кончились</h1><p>Стена в этот раз победила. Кот Икс не расстроился — повтори правило и попробуй снова!</p></div></div>
+    <h1 style="color:var(--red)">Сердечки кончились</h1><p>${L.u.ch==='2b'?'Микс':'Стена'} в этот раз победил${L.u.ch==='2b'?'':'а'}. Кот Икс не расстроился — повтори правило и попробуй снова!</p></div></div>
     <div class="bottom"><div class="wrap" style="display:flex;flex-direction:column;gap:12px">
     <button class="btn red" id="again">Ещё раз</button><button class="btn ghost" id="hm">На карту</button></div></div>`;
   document.getElementById('again').onclick=()=>lesson(L.i);
@@ -864,19 +1083,19 @@ function finish(){
   const xp=10+first+(L.u.boss?20:0)+(stars===3?5:0);
   const sec=Math.round((Date.now()-L.t0)/1000);
   save.xp+=xp;save.u[L.u.id]=Math.max(save.u[L.u.id]||0,stars);save.t=save.t||{};save.t[L.u.id]=Date.now();store();
-  queueResult({pupil:save.pupil,level:L.u.id,levelName:L.u.name,stars,sec,mist:L.mist,wrong:L.wrong,at:new Date().toISOString()});
+  queueResult({pupil:save.pupil,level:L.u.id,levelName:(L.u.ch==='2b'?'2b · ':'')+L.u.name,stars,sec,mist:L.mist,wrong:L.wrong,at:new Date().toISOString()});
   app.innerHTML=`<div class="wrap"><div class="done-screen">${pic('win')}
-    <h1>${L.u.boss?'Стена взята!':'Уровень пройден!'}</h1>
+    <h1>${L.u.boss?(L.u.ch==='2b'?'Микс пройден!':'Стена взята!'):'Уровень пройден!'}</h1>
     <p>${stars===3?'Ни одной ошибки — отлично.':L.mist?`Ошибок: ${L.mist}. Эти задания вернулись в конце и сделаны верно.`:''}</p>
     <div class="bigstars">${[1,2,3].map(k=>`<span class="pop" style="color:${k<=stars?'var(--gold)':'var(--line)'};animation-delay:${k*.15}s">${IC.star.replace('class="ic"','')}</span>`).join('')}</div>
     <div class="res"><div style="--c:var(--gold)"><b>Очки</b><span>${IC.bolt}+${xp}</span></div>
       <div style="--c:var(--green)"><b>Точность</b><span>${acc}%</span></div>
       <div style="--c:var(--blue)"><b>Время</b><span>${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}</span></div></div>
     ${L.best>=3?`<p>Лучшая серия: ${L.best} подряд!</p>`:''}
-    ${L.u.boss?'<div class="cher">'+pic('cherLunch','ph')+'<span>Черемша довольна. Теперь — песня!</span></div>':''}
+    ${L.u.boss?'<div class="cher">'+pic('cherLunch','ph')+`<span>${L.u.ch==='2b'?'Черемша довольна. Happy birthday, Spidey!':'Черемша довольна. Теперь — песня!'}</span></div>`:''}
   </div></div>
   <div class="bottom"><div class="wrap" style="display:flex;flex-direction:column;gap:12px">
-    ${L.u.boss?'<a class="btn songbtn" href="../5m2a/5b/" style="text-align:center;text-decoration:none">🎵 Слушать песню Spidey</a><button class="btn blue" id="mn">Мой результат для учителя</button>':''}
+    ${L.u.boss?(L.u.id==='boss'?'<a class="btn songbtn" href="../5m2a/5b/" style="text-align:center;text-decoration:none">🎵 Слушать песню Spidey</a>':'')+'<button class="btn blue" id="mn">Мой результат для учителя</button>':''}
     <button class="btn" id="hm">Продолжить</button></div></div>`;
   document.getElementById('hm').onclick=home;
   const mn=document.getElementById('mn');if(mn)mn.onclick=mine;
@@ -926,17 +1145,17 @@ async function askName(next){
 }
 
 function mine(){
-  const t=save.t||{},doneN=UNITS.filter(u=>save.u[u.id]).length,boss=!!save.u.boss;
+  const t=save.t||{},doneN=UNITS.filter(u=>save.u[u.id]).length,boss=!!save.u.boss,boss2=!!save.u['b-boss'];
   const waiting=(save.queue||[]).length;
   const d=ms=>{const x=new Date(ms);return x.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+x.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})};
   app.innerHTML=`<div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="На карту">${IC.close}</button></div>
     <div class="shot">${IC.bulb}<span>Результат уходит учителю сам. Можно ещё сделать скриншот этого экрана.</span></div>
     <div class="cert">
-      <div class="who">${pic(boss?'win':'hi')}<div><div class="nm">${esc((save.pupil||{}).name||'')}</div><div class="cl">5Б · Spidey · Module 2a</div>
+      <div class="who">${pic(boss?'win':'hi')}<div><div class="nm">${esc((save.pupil||{}).name||'')}</div><div class="cl">5Б · Spidey · Module 2a + 2b</div>
         <button class="hintbtn" id="cn" style="padding:2px 0;margin:0;font-size:14px">Это не я</button></div></div>
-      <ul>${UNITS.map(u=>{const st=save.u[u.id]||0;return `<li><span class="nm2">${u.name}</span>
+      <ul>${UNITS.map((u,i)=>{const st=save.u[u.id]||0;return `${!i||UNITS[i-1].ch!==u.ch?`<li class="chhead">Глава ${u.ch} · ${CHS.find(c=>c.id===u.ch).title}</li>`:''}<li><span class="nm2">${u.name}</span>
         ${st?`<span class="st">${[1,2,3].map(k=>`<span style="color:${k<=st?'var(--gold)':'var(--line)'}">${IC.star}</span>`).join('')}</span><span class="tm">${t[u.id]?d(t[u.id]):''}</span>`:'<span class="no">не пройден</span>'}</li>`}).join('')}</ul>
-      <div class="sum"><span>Пройдено: ${doneN} из ${UNITS.length}</span><span class="big ${boss?'':'not'}">${boss?'Стена взята':'Стена ждёт'}</span></div>
+      <div class="sum"><span>Пройдено: ${doneN} из ${UNITS.length}</span><span class="big ${boss?'':'not'}">${boss?'Стена взята':'Стена ждёт'}</span><span class="big ${boss2?'':'not'}">${boss2?'Микс пройден':'Микс ждёт'}</span></div>
       <div class="sum" style="margin-top:6px"><span>Очки</span><span style="color:var(--gold-d);display:flex;align-items:center;gap:4px">${IC.bolt}${save.xp}</span></div>
       <div class="now">Экран открыт: ${d(Date.now())}</div>
     </div>
