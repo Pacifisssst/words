@@ -35,6 +35,9 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .btn.red{background:var(--red);box-shadow:0 4px 0 var(--red-d)}
 .btn.blue{background:var(--blue);box-shadow:0 4px 0 var(--blue-d)}
 .btn.ghost{background:#fff;color:var(--blue);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.dlg{position:fixed;inset:0;z-index:50;background:rgba(20,24,40,.45);display:grid;place-items:center;padding:16px}
+.dlgbox{background:#fff;border-radius:22px;padding:20px 16px 16px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;text-align:center}
+.dlgbox p{margin:0 0 6px;font-size:20px;font-weight:900}
 
 /* ---------- главная ---------- */
 .top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:2px solid var(--line)}
@@ -662,6 +665,15 @@ function speak(src,btn){
 
 // ====== экраны ======
 const app=document.getElementById('app');
+// своё окно «да/нет»: стандартное окно браузера во встроенных браузерах (MAX, Telegram) молча отвечает «нет»
+function yesNo(text,yes,go){
+  const d=document.createElement('div');d.className='dlg';
+  d.innerHTML=`<div class="dlgbox"><p>${text}</p><button class="btn red" id="dy">${yes}</button><button class="btn ghost" id="dn">Остаться</button></div>`;
+  document.body.appendChild(d);
+  d.querySelector('#dy').onclick=()=>{d.remove();go()};
+  d.querySelector('#dn').onclick=()=>d.remove();
+  d.onclick=e=>{if(e.target===d)d.remove()};
+}
 function home(){
   const total=UNITS.length,doneN=UNITS.filter(u=>save.u[u.id]).length;
   const nextI=UNITS.findIndex(u=>!save.u[u.id]);
@@ -690,7 +702,7 @@ function home(){
   app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{sTap();const i=+b.dataset.u;save.pupil?intro(i):askName(()=>intro(i))});
   document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
   document.getElementById('snd').onclick=()=>{muted=!muted;try{localStorage.setItem(KEY+'-mute',muted?'1':'0')}catch(e){}home()};
-  document.getElementById('reset').onclick=()=>{if(confirm('Стереть звёзды и очки?')){save={xp:0,u:{},t:{},pupil:save.pupil,roster:save.roster,queue:save.queue};store();home()}};
+  document.getElementById('reset').onclick=()=>yesNo('Стереть звёзды и очки?','Стереть',()=>{save={xp:0,u:{},t:{},pupil:save.pupil,roster:save.roster,queue:save.queue};store();home()});
   flush();window.scrollTo(0,0);
 }
 
@@ -752,7 +764,7 @@ function ask(){
   </div>
   <div class="bottom" id="bt"><div class="wrap"><button class="btn" id="chk" disabled>Проверить</button></div></div>
   <div class="sheet" id="sh"></div>`;
-  document.getElementById('x').onclick=()=>{if(confirm('Выйти? Прогресс этого уровня пропадёт.'))home()};
+  document.getElementById('x').onclick=()=>yesNo('Выйти из уровня?','Выйти',home);
   document.getElementById('chk').onclick=check;
   if(TEST){
     document.getElementById('tOk').onclick=()=>testAnswer(true);
