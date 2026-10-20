@@ -271,13 +271,17 @@ body{background:var(--bg)}
 /* глава 2b: картинки слов (файл или эмодзи) */
 .wshow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;background:var(--soft);border-radius:18px;padding:12px;margin:0 0 14px;min-height:96px}
 .wps{display:inline-flex;align-items:center;gap:2px}
-.wps .emj{font-size:52px;line-height:1.1}.wps img.w2{width:80px;height:80px;object-fit:contain}
-.wps.n2 .emj,.wps.n3 .emj{font-size:40px}.wps.n2 img.w2,.wps.n3 img.w2{width:56px;height:56px}
-.wshow.big .emj{font-size:84px}.wshow.big img.w2{width:150px;height:150px}
+.wps .emj{font-size:52px;line-height:1.1}
+.wps.n2 .emj,.wps.n3 .emj{font-size:40px}
+.wshow.big .emj{font-size:84px}
+/* картинки урока 20.10 — 3:2 с праздничным фоном; «много» — одна картинка, где их ровно столько */
+.wps img.w2{display:block;width:100%;aspect-ratio:3/2;height:auto;object-fit:cover;border-radius:12px}
+.wshow .wps.im{flex:1 1 0;min-width:0;max-width:300px}.wshow.big .wps.im{max-width:360px}
+.wps.im{display:flex}.wps.im img.w2{flex:1 1 0;min-width:0}.wshow .wps.n2.im,.wshow .wps.n3.im{flex-grow:1.6;max-width:420px;gap:4px}
 .wshow .arr{font-size:30px;font-weight:900;color:var(--ink2)}
 .wbox{display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;background:var(--soft);border-radius:12px}
 .picopt .wbox{display:flex;padding:0}.picopt .wps{display:inline-flex;padding:0}.picopt .emj{display:inline;padding:0;color:inherit}
-.wbox .emj{font-size:60px}.wbox .n2 .emj{font-size:44px}.wbox img.w2{width:84%;height:auto;aspect-ratio:1}
+.wbox .emj{font-size:60px}.wbox .n2 .emj{font-size:44px}.wbox.im{aspect-ratio:3/2;overflow:hidden}.wbox .wps.im{width:100%}.wbox img.w2{border-radius:0}
 /* выбор главы */
 .chs{display:flex;flex-direction:column;gap:16px;margin:8px 0 22px}
 .chbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:18px 16px;border-radius:22px;color:#fff;
@@ -291,11 +295,52 @@ body{background:var(--bg)}
 .cert li.chhead{display:block;font-size:13px;color:var(--ink2);font-weight:900;text-transform:uppercase;letter-spacing:.05em;padding:10px 2px 4px;border-bottom:2px solid var(--line)}
 @media (max-width:380px){.chbtn .t b{font-size:21px}.chbtn .big{width:56px;height:56px;font-size:32px}}
 @media (max-width:380px){.play{width:96px;height:96px}.picopt span{font-size:14px}.gapline{font-size:21px}}
+/* глава 2b: «Учим песню» — как экран стиха в poem5 */
+.songbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 14px;margin:4px 0 18px;border-radius:20px;color:#fff;
+  background:var(--purple);box-shadow:0 5px 0 var(--purple-d);transition:transform .08s,box-shadow .08s}
+.songbtn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--purple-d)}
+.songbtn .sic{font-size:30px;flex:none;width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.2);display:grid;place-items:center}
+.songbtn .t{flex:1;min-width:0}.songbtn b{display:block;font-size:20px}.songbtn small{display:block;font-size:14px;font-weight:700;opacity:.95}
+.stop{position:sticky;top:0;z-index:6;background:var(--bg);padding:0 0 8px;margin:0 -2px}
+.simg{position:relative;width:100%;aspect-ratio:3/2;max-height:28vh;border-radius:18px;overflow:hidden;background:var(--soft)}
+.simg img{width:100%;height:100%;object-fit:cover;display:block}
+.ptitle{font-size:24px;font-weight:900;margin:8px 0 6px;text-align:center}
+.pbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 10px}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:15px;font-weight:900;color:var(--ink);box-shadow:0 3px 0 var(--line)}
+.chip.on{border-color:var(--purple);background:var(--purple-bg);color:var(--purple-d);box-shadow:0 3px 0 var(--purple)}
+.chip.big{background:var(--web);border-color:var(--web);color:#fff;box-shadow:0 3px 0 var(--web-d)}
+.chip.big.on{background:var(--spidey);border-color:var(--spidey);box-shadow:0 3px 0 var(--spidey-d)}
+.steps{display:flex;gap:4px;margin:0 0 4px}
+.steps button{flex:1;min-width:0;border:2px solid var(--line);border-radius:12px;padding:6px 2px;font-size:12px;font-weight:900;color:var(--ink2);background:#fff;line-height:1.15}
+.steps button.on{border-color:var(--orange);background:#fff3e6;color:#b35400}
+.stepsl{font-size:13px;color:var(--ink2);text-align:center;margin:0 0 6px}
+.ssec{font-size:12px;font-weight:900;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 2px 8px}
+.pl{display:flex;gap:10px;align-items:flex-start;padding:10px 8px;border-radius:16px;transition:background .2s}
+.pl.cur{background:#fff6d6;box-shadow:inset 0 0 0 2px var(--gold)}
+.pl .lp{flex:none;width:40px;height:40px;border-radius:50%;background:var(--web);color:#fff;display:grid;place-items:center;box-shadow:0 3px 0 var(--web-d)}
+.pl .lp svg{width:20px;height:20px}
+.pl .tx{flex:1;min-width:0}
+.pl .en{font-size:20px;font-weight:900;line-height:1.4;overflow-wrap:anywhere}
+.pl .en .w{border-radius:6px;transition:color .15s}
+.pl.cur .en .w.sung{color:var(--spidey)}
+.pl .en .w.n{text-decoration:underline 3px var(--gold);text-underline-offset:4px}
+.pl .en .m{cursor:pointer}.pl .en .m i{font-style:normal;color:transparent;border-bottom:3px solid #b9bed4}
+.pl .en .m.peek i{color:var(--purple-d);border-color:transparent}
+.pl .ru{color:var(--ink2);font-size:15px;font-weight:700;margin:2px 0 0;text-align:left}
+.pl .thumb{display:block;width:100%;max-width:260px;aspect-ratio:3/2;object-fit:cover;border-radius:12px;cursor:pointer}
+.pl .en.hid{display:none}.pl .en.hid.peek{display:block}
+.tips{background:var(--blue-bg);border-radius:18px;padding:12px 14px;margin:14px 0 0;font-size:15px;line-height:1.4}
+.tips h3{margin:0 0 6px;font-size:17px;color:var(--blue-d)}.tips ol{margin:0;padding-left:20px}.tips li{margin:3px 0}
+.echo{background:var(--spidey);color:#fff;border-radius:14px;padding:8px 12px;margin:0 0 4px;font-weight:900;display:flex;align-items:center;gap:10px}
+.echo .eb{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.35);overflow:hidden}
+.echo .eb i{display:block;height:100%;width:0;background:#fff}
+.echo button{color:#fff;font-weight:900;border:2px solid #fff;border-radius:10px;padding:2px 8px}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script src="../5m2a/words.js"></script>
+<script src="song2b.js"></script>
 <script>
 'use strict';
 // ====== значки ======
@@ -343,7 +388,7 @@ const PICS={
  wall:['img/w/cat-wall.webp','img/codex/cat-wall.png','img/w/cat-win.webp'],
  scene:['img/w/scene-wall.webp','img/codex/scene-wall.png'],
  gift:['img/w/cat-gift.webp','img/codex/cat-gift.png','img/w/cat-yes.webp'],
- party:['img/w/scene-party.webp','img/codex/scene-party.png','img/w/scene-wall.webp']
+ party:['img/w/2b/s01-party.webp','img/w/scene-wall.webp']
 };
 // Какая картинка кота на экране правила. Уровня нет в таблице — обычный Кот Икс.
 // Картинки ещё нет на диске — pic() сам сползает по запасным (см. PICS).
@@ -580,6 +625,7 @@ const WX=[
  {k:'toy',en:'toy',pl:'toys',ru:'игрушка',e:'🧸',r:'s',vy:1,wr:['toies','toyes','toy']},
  {k:'key',en:'key',pl:'keys',ru:'ключ',e:'🔑',r:'s',vy:1,wr:['keies','keyes','key']},
  {k:'ball',en:'ball',pl:'balls',ru:'мяч',e:'⚽',r:'s',wr:['balles','ballies','ball']},
+ {k:'lady',en:'lady',pl:'ladies',ru:'дама, леди',e:'👒',r:'ies',wr:['ladys','ladyes','lady']},
  {k:'leaf',en:'leaf',pl:'leaves',ru:'лист (дерева)',e:'🍃',r:'ves',wr:['leafs','leafes','leaf']},
  {k:'wolf',en:'wolf',pl:'wolves',ru:'волк',e:'🐺',r:'ves',wr:['wolfs','wolfes','wolf']}
 ];
@@ -595,13 +641,24 @@ const say2=(k,p)=>'audio/2b/'+k+(p||k==='trainers'?'-p':'')+'.mp3';
 // (иначе каждая плитка ждёт 404 и полсекунды пустая).
 const IMG2B={ok:false};
 if(typeof Image!=='undefined'){const t=new Image();t.onload=()=>{IMG2B.ok=true};t.src='img/w/2b/present.webp'}
+// Его правило 20.10: что сказано — то и нарисовано. «two» — картинка, где ровно две штуки (img/w/2b/n/two-*),
+// «three» — только mice и presents (есть three-*). Картинки «много» нет (skateboard) — одна картинка n раз.
+// Слов без картинки (dish, ball…) — эмодзи n раз. trainers — всегда пара: одна картинка, two-trainers не берём (там 3 кроссовки).
+const ONEPIC={box:'n/box',watch:'n/watch',bus:'n/bus',party:'n/party',toy:'n/toy',leaf:'n/leaf',lady:'n/lady'};
+const MANYPIC={bicycle:'two-bikes',camera:'two-cameras',handbag:'two-handbags',helmet:'two-helmets',scarf:'two-scarves',
+  child:'two-children',foot:'two-feet',man:'two-men',tooth:'two-teeth',woman:'two-women',knife:'two-knives',
+  box:'two-boxes',watch:'two-watches',bus:'two-buses',party:'two-parties',toy:'two-toys',leaf:'two-leaves',lady:'two-ladies',
+  mouse:'three-mice',present:'three-presents'};
+const howMany=k=>/^three/.test(MANYPIC[k]||'')?3:2, numWord=n=>n===3?'three':'two';
+const wimg2=(s,e)=>`<img class="w2" src="img/w/2b/${s}.webp" alt="" data-e="${e}" onerror="emo(this)">`;
 function wp(k,n=1){
-  const w=W2K[k],one=w.x||!IMG2B.ok?`<span class="emj">${w.e}</span>`
-    :`<img class="w2" src="img/w/2b/${k}.webp" alt="" data-e="${w.e}" onerror="emo(this)">`;
-  return `<span class="wps n${n}">${one.repeat(n)}</span>`;
+  const w=W2K[k],one=ONEPIC[k]||(w.x?null:k);
+  if(IMG2B.ok&&n>1&&MANYPIC[k])return `<span class="wps n1 im">${wimg2('n/'+MANYPIC[k],w.e.repeat(n))}</span>`;
+  const el=IMG2B.ok&&one?wimg2(one,w.e):`<span class="emj">${w.e}</span>`;
+  return `<span class="wps n${n}${IMG2B.ok&&one?' im':''}">${el.repeat(n)}</span>`;
 }
 function emo(el){const s=document.createElement('span');s.className='emj';s.textContent=el.dataset.e;el.replaceWith(s)}
-const many=(k,n=3)=>`<div class="wshow">${wp(k,1)}<span class="arr">→</span>${wp(k,n)}</div>`;
+const many=(k,n=howMany(k))=>`<div class="wshow">${wp(k,1)}<span class="arr">→</span>${wp(k,n)}</div>`;
 // Правило (Spotlight 5, с. 39; Cambridge Grammar «Nouns: singular and plural»)
 const RULES={s:'+s',es:'+es',ies:'y → ies',ves:'f → ves',irr:'особое слово'};
 function plWhy(w){
@@ -617,7 +674,7 @@ const PLHINT={s:'Обычное слово — что добавляем в ко
 
 function wordQ(k,book){
   const w=W2K[k];
-  return choice({qid:'слово 2b: '+w.en,book,show:`<div class="wshow big">${wp(k,k==='trainers'?2:1)}</div>`,
+  return choice({qid:'слово 2b: '+w.en,book,show:`<div class="wshow big">${wp(k)}</div>`,
     prompt:'Что подарили Спайди? Выбери слово.',opts:[w.en,...take(W2KEYS.filter(x=>x!==k),3).map(x=>W2K[x].en)],
     why:`<b>${w.en}</b> — ${w.ru}.`,hint:`Это ${w.ru}. Первая буква: ${w.en[0]}`});
 }
@@ -628,12 +685,12 @@ function hearWQ(k){
 }
 function spellWQ(k){
   const w=W2K[k];
-  return {type:'text',qid:'написать 2b: '+w.en,audio:say2(k),show:`<div class="wshow">${wp(k,k==='trainers'?2:1)}</div>`,
+  return {type:'text',qid:'написать 2b: '+w.en,audio:say2(k),show:`<div class="wshow">${wp(k)}</div>`,
     prompt:'Нажми ▶ и напиши это слово по-английски.',ru:w.ru,accept:[w.en,...(w.alt||[])],
     why:`<b>${w.en}</b> — ${w.ru}.`,hint:`${w.ru}. Первая буква: ${w.en[0]}, букв: ${w.en.replace(/ /g,'').length}`};
 }
-function plQ(k,book,n=2){
-  const w=W2K[k],num=n===2?'two':'three';
+function plQ(k,book){
+  const w=W2K[k],n=howMany(k),num=numWord(n);
   return choice({qid:'множественное: '+w.en,book:book||undefined,show:many(k,n),prompt:`one ${w.en} → ${num} ___`,ru:w.ru,
     opts:[w.pl,...w.wr],alts:w.altpl||[],why:plWhy(w),hint:PLHINT[w.r]});
 }
@@ -650,7 +707,7 @@ function hearNQ(k){   // слышишь одну штуку или много?
 }
 function plTextQ(k){
   const w=W2K[k];
-  return {type:'text',qid:'написать множественное: '+w.en,show:many(k,2),prompt:`one ${w.en} → two ___. Напиши.`,ru:w.ru,
+  return {type:'text',qid:'написать множественное: '+w.en,show:many(k),prompt:`one ${w.en} → ${numWord(howMany(k))} ___. Напиши.`,ru:w.ru,
     accept:[w.pl,...(w.altpl||[])],why:plWhy(w),hint:PLHINT[w.r]};
 }
 // повторение 2a: в каждом уровне 2b возвращаются 2 задания из первой главы
@@ -733,7 +790,7 @@ const UNITS=[
  {id:'b-irr',ch:'2b',name:'Особые',sub:'mouse → mice',ic:'mouse',c:'#ff5a8a',cd:'#d93468',
   title:'Особые слова',lead:'Эти слова не слушаются правила. Их просто запоминают — как стишок: one mouse — two mice.',
   rules:[['child → children','man → men · woman → women'],['foot → feet','tooth → teeth'],['mouse → mice','knife → knives']],
-  make:()=>lvl2([plQ('child','с. 38',3),...take(IRR.filter(k=>k!=='child'),5).map(k=>plQ(k,null,3)),...take(IRR,2).map(hearNQ)],'ru','gap')},
+  make:()=>lvl2([plQ('child','с. 38'),...take(IRR.filter(k=>k!=='child'),5).map(k=>plQ(k)),...take(IRR,2).map(hearNQ)],'ru','gap')},
  {id:'b-plw',ch:'2b',name:'Напиши много',sub:'one tooth → two teeth',ic:'pen2',c:'#06b6d4',cd:'#0689a1',
   title:'Напиши множественное',lead:'Самое трудное: написать форму «много» самому. Вспомни пять коробок.',
   rules:[['box','boxes'],['party','parties'],['knife','knives'],['tooth','teeth']],
@@ -742,7 +799,7 @@ const UNITS=[
   fly:'Бомбардиро Крокодило принёс Спайди подарок: не two mouses, а two mice!',
   title:'Микс: обе главы',lead:'Всё вместе: подарки, «много», have got и страны из 2a. 3 сердечка — ошибёшься 3 раза, бой начнётся заново.',
   rules:[['2b','подарки и «много»'],['2a','have got · страны · ▶'],['Сердечки','3']],
-  make:()=>[wordQ(pick(W2KEYS)),hearWQ(pick(W2KEYS)),spellWQ(pick(W2KEYS)),plQ(pick(REGPOOL)),plQ(pick(IRR),null,3),hearNQ(pick(IRR)),plTextQ(pick(PLPOOL)),
+  make:()=>[wordQ(pick(W2KEYS)),hearWQ(pick(W2KEYS)),spellWQ(pick(W2KEYS)),plQ(pick(REGPOOL)),plQ(pick(IRR)),hearNQ(pick(IRR)),plTextQ(pick(PLPOOL)),
     haveQ(SUBJ[8],pick(OBJ2B),false),natQ(pick(PAIRS)),hearPicQ(pick(PICWORDS)),spellQ(pick(SPELL)),gapQ(pick(GAPS)),buildQ(pick(BUILDS))]}
 ];
 UNITS.forEach(u=>u.ch=u.ch||'2a');
@@ -885,6 +942,8 @@ function home(){
     <div class="hello">${pic(CH==='2b'?'gift':'hi')}<div class="bubble">${CH==='2b'
       ?'Глава <b>2b — Spidey’s birthday</b>. У Спайди день рождения и куча подарков! Назови их по-английски и научись говорить «много»: one mouse — two <b>mice</b>. В каждом уровне вернутся слова из 2a.'
       :'Глава <b>2a — I’m from</b>. Привет! Я <b>Кот Икс</b>. Пройди уровни — и домашку по <b>Module 2a</b> напишешь сам. Половина заданий — <b>на слух</b>, нажимай ▶.'}</div></div>
+    ${CH==='2b'&&typeof SONG2B!=='undefined'?`<button class="songbtn" id="song"><span class="sic">🎵</span><span class="t"><b>Учим песню</b>
+      <small>Happy Birthday, Spidey! · ${save.song?'✓ выучена — спой ещё раз':'слушай, пой, прячь слова'}</small></span></button>`:''}
     <div class="path">${list.map(([u,i],j)=>{
       const st=save.u[u.id]||0;
       return `<div class="unit" style="transform:translateX(${offs[j%offs.length]}px);--c:${u.c};--cd:${u.cd}">
@@ -899,6 +958,7 @@ function home(){
   </main>`;
   topEvents();
   document.getElementById('back').onclick=()=>{sTap();CH=null;home()};
+  const sb=document.getElementById('song');if(sb)sb.onclick=()=>{sTap();songScreen()};
   app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{sTap();const i=+b.dataset.u;save.pupil?intro(i):askName(()=>intro(i))});
   document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
   // стирает только эту главу: звёзды другой главы и очки остаются
@@ -920,6 +980,115 @@ function chapters(){
   app.querySelectorAll('.chbtn').forEach(b=>b.onclick=()=>{sTap();CH=b.dataset.c;home()});
   document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
   flush();window.scrollTo(0,0);
+}
+
+// ====== глава 2b: «Учим песню» — подход экрана стиха из «Get a Five!» (poem5) ======
+// Одна mp3 на всю песню (SONG2B, song2b.js): строчка = кусок [t, t1]. Картинка сверху меняется
+// на считаемом слове (ph), как караоке урока 20.10: «One bike —» одна, «two bikes!» — две.
+const SHIDE=['Все слова','Прячем половину','Первые буквы','Только картинки'];
+const SSEC={'Intro':'Вступление','Verse 1':'Куплет 1','Verse 2':'Куплет 2','Chorus':'Припев','Bridge':'Мостик','Outro':'Конец'};
+let SA=null,SP=null,SV={hide:0,tr:1};
+// конец строчки: после последнего слова бывает проигрыш — режем через 1,8 с (последнее слово тянут)
+const songEnd=l=>Math.min(l.t1,l.w[l.w.length-1][1]+1.8);
+function songImg(l,t){let s=l.img;(l.ph||[]).forEach(([pt,p])=>{if(t>=pt-0.05)s=p});return s}
+function songMask(x,lvl,gi,first,n){
+  if(lvl===0||lvl===3||first)return null;
+  if(lvl===1&&!n&&gi%2!==1)return null;          // половина: каждое второе + все «много»
+  const fl=lvl===2;
+  return esc(x).replace(/[A-Za-z’']+/g,m=>`${fl?m[0]:''}<i>${fl?m.slice(1):m}</i>`);
+}
+function songStop(){
+  if(SP){clearTimeout(SP.tm);cancelAnimationFrame(SP.raf);SP=null}
+  if(SA)SA.pause();
+  app.querySelectorAll('.pl').forEach(p=>p.classList.remove('cur'));
+  app.querySelectorAll('.w.sung').forEach(w=>w.classList.remove('sung'));
+  ['sall','secho'].forEach(id=>{const b=document.getElementById(id);if(b)b.classList.remove('on')});
+  const bar=document.getElementById('echobar');if(bar)bar.innerHTML='';
+}
+function songScreen(keep){
+  songStop();if(!keep)SV={hide:0,tr:1};
+  const S=SONG2B,lvl=SV.hide;
+  if(!SA){SA=new Audio(S.src);SA.preload='auto'}
+  [...new Set(S.lines.flatMap(l=>[l.img,...(l.ph||[]).map(p=>p[1])]))].forEach(src=>{const im=new Image();im.src=src});
+  let sec='',html='';
+  S.lines.forEach((l,i)=>{
+    if(l.sec!==sec){sec=l.sec;html+=`<div class="ssec">${SSEC[sec]||esc(sec)}</div>`}
+    let gi=0,first=true;
+    const en=l.w.map(([x,t,n],j)=>{
+      if(/^[—–-]$/.test(x))return `<span>${x}</span>`;
+      const m=songMask(x,lvl,gi++,first,n);first=false;
+      return `<span class="w${n?' n':''}${m?' m':''}" data-j="${j}">${m||esc(x)}</span>`;
+    }).join(' ');
+    html+=`<div class="pl" id="sl${i}"><div><button class="lp" data-l="${i}" aria-label="Слушать строчку ${i+1}">${IC.playic}</button></div>
+      <div class="tx">${lvl===3?`<img class="thumb" src="${l.img}" alt="" data-l="${i}">`:''}
+      <div class="en${lvl===3?' hid':''}">${en}</div>${SV.tr?`<p class="ru">${esc(l.ru)}</p>`:''}</div></div>`;
+  });
+  app.innerHTML=`<div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
+    <div class="stop"><div class="simg"><img id="simg" src="${S.cover}" alt=""></div><div id="echobar"></div></div>
+    <h1 class="ptitle">🎵 ${esc(S.title)}</h1>
+    <div class="pbar">
+      <button class="chip big" id="sall">▶ Вся песня</button>
+      <button class="chip big" id="secho">🎤 Пой за мной</button>
+      <button class="chip ${SV.tr?'on':''}" id="str">Перевод</button>
+    </div>
+    <div class="steps">${SHIDE.map((h,i)=>`<button class="${i===lvl?'on':''}" data-h="${i}">${i}<br>${h}</button>`).join('')}</div>
+    <p class="stepsl">${lvl===3?'Смотри на картинку и пой. Забыл(а) — нажми на картинку.':'Выучил(а)? Спрячь слова. Забыл(а) — нажми на слово.'}</p>
+    ${html}
+    <div class="tips"><h3>Как выучить</h3><ol>
+      <li>Нажми «▶ Вся песня» и читай перевод.</li>
+      <li>Нажми «🎤 Пой за мной» и пой <b>вслух</b> в паузах.</li>
+      <li>Спрячь слова (1 → 2 → 3) и пой сам(а). <b>Подчёркнутые</b> слова — «много»: two bikes, three mice.</li></ol></div>
+    <div style="height:140px"></div></div>
+    <div class="bottom"><div class="wrap"><button class="btn" id="done" style="background:var(--green);box-shadow:0 4px 0 var(--green-d)">Я выучил(а) песню!</button></div></div>`;
+  const pic0=document.getElementById('simg');
+  const show=(i,t)=>{
+    const l=S.lines[i];if(!l)return;
+    const src=songImg(l,t);if(pic0.getAttribute('src')!==src)pic0.setAttribute('src',src);
+    const el=document.getElementById('sl'+i);
+    if(!el.classList.contains('cur')){app.querySelectorAll('.pl.cur').forEach(p=>{p.classList.remove('cur');p.querySelectorAll('.sung').forEach(w=>w.classList.remove('sung'))});
+      el.classList.add('cur');if(SP&&SP.mode!=='one')el.scrollIntoView({block:'center',behavior:'smooth'})}
+    el.querySelectorAll('.w').forEach(w=>w.classList.toggle('sung',t>=l.w[+w.dataset.j][1]-0.05));
+  };
+  // ⚠️ пока песня не загрузилась, currentTime сбрасывается в 0 — тогда перематываем по loadedmetadata (как в poem5)
+  const seek=x=>{if(SA.readyState>=1)SA.currentTime=x;else SA.addEventListener('loadedmetadata',()=>{SA.currentTime=x},{once:true})};
+  const start=(mode,i)=>{
+    const st=SP={mode,i,tm:0,raf:0,go:0};
+    seek(Math.max(0,S.lines[i].t-0.1));
+    SA.play().catch(()=>{});
+    const tick=()=>{
+      if(SP!==st)return;
+      const t=SA.currentTime;
+      if(t<S.lines[st.i].t-0.6&&!st.go){st.raf=requestAnimationFrame(tick);return}   // ещё не перемотали
+      st.go=1;
+      if(mode==='all'){let k=0;S.lines.forEach((l,j)=>{if(t>=l.t-0.15)k=j});st.i=k}
+      show(st.i,t);
+      const l=S.lines[st.i];
+      if(mode==='all'&&(SA.ended||t>=S.end)){songStop();confetti();return}
+      if(mode!=='all'&&t>=songEnd(l)-0.05){SA.pause();
+        if(mode==='one')return songStop();
+        // «Пой за мной»: пауза = длина строчки × 1,3 + 1 с
+        const ms=Math.round((songEnd(l)-l.t)*1300+1000),bar=document.getElementById('echobar');
+        bar.innerHTML=`<div class="echo">🎤 Твоя очередь!<span class="eb"><i style="transition:width ${ms}ms linear"></i></span><button id="es">Стоп</button></div>`;
+        document.getElementById('es').onclick=()=>songStop();
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=bar.querySelector('.eb i');if(b)b.style.width='100%'}));
+        st.tm=setTimeout(()=>{if(SP!==st)return;bar.innerHTML='';
+          if(st.i+1>=S.lines.length)return songStop();
+          st.i++;st.go=0;seek(Math.max(0,S.lines[st.i].t-0.1));SA.play().catch(()=>{});st.raf=requestAnimationFrame(tick)},ms);
+        return}
+      st.raf=requestAnimationFrame(tick);
+    };
+    st.raf=requestAnimationFrame(tick);
+  };
+  document.getElementById('x').onclick=()=>{songStop();home()};
+  document.getElementById('str').onclick=()=>{sTap();SV.tr=SV.tr?0:1;songScreen(true)};
+  app.querySelectorAll('.steps button').forEach(b=>b.onclick=()=>{sTap();SV.hide=+b.dataset.h;songScreen(true)});
+  app.querySelectorAll('.lp').forEach(b=>b.onclick=()=>{songStop();start('one',+b.dataset.l)});
+  document.getElementById('sall').onclick=e=>{const on=SP&&SP.mode==='all';songStop();if(!on){e.currentTarget.classList.add('on');start('all',0)}};
+  document.getElementById('secho').onclick=e=>{const on=SP&&SP.mode==='echo';songStop();if(!on){e.currentTarget.classList.add('on');start('echo',0)}};
+  app.querySelectorAll('.w.m').forEach(w=>w.onclick=()=>{w.classList.add('peek');setTimeout(()=>w.classList.remove('peek'),2500)});
+  app.querySelectorAll('.thumb').forEach(im=>im.onclick=()=>{const e=im.parentNode.querySelector('.en');e.classList.add('peek');setTimeout(()=>e.classList.remove('peek'),3000)});
+  document.getElementById('done').onclick=()=>{songStop();const first=!save.song;save.song=Date.now();if(first)save.xp+=10;store();sWin();confetti();home()};
+  if(!keep)window.scrollTo(0,0);
 }
 
 function intro(i){
@@ -962,7 +1131,7 @@ function ask(){
   if(q.type==='choice'&&q.pics){
     body+=`<div class="picopts">${q.opts.map((k,i)=>`<button class="picopt" data-o="${i}"><img src="${wimg(k)}" alt="" onerror="this.style.visibility='hidden'"><span>${i+1}</span></button>`).join('')}</div>`;
   }else if(q.type==='choice'&&q.emo){
-    body+=`<div class="picopts">${q.opts.map((k,i)=>`<button class="picopt" data-o="${i}"><span class="wbox">${wp(k,k==='trainers'?2:1)}</span><span>${i+1}</span></button>`).join('')}</div>`;
+    body+=`<div class="picopts">${q.opts.map((k,i)=>`<button class="picopt" data-o="${i}"><span class="wbox${IMG2B.ok?' im':''}">${wp(k)}</span><span>${i+1}</span></button>`).join('')}</div>`;
   }else if(q.type==='choice'){
     body+=`<div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-o="${k}"><span class="n">${k+1}</span><span>${esc(o)}</span></button>`).join('')}</div>`;
   }else if(q.type==='build'){

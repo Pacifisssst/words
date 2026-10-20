@@ -7,7 +7,7 @@ const from = html.indexOf('// ====== помощники ======');
 const to = html.indexOf('// ====== сохранение');
 if (from < 0 || to < 0) { console.error('не нашёл границы кода'); process.exit(1) }
 const src = words + ';globalThis.WORDS=WORDS;' + html.slice(from, to);
-const { UNITS, WK, GAPS, PICWORDS, SPELL, W2, WX, W2K, CHS } = new Function(src + ';return {UNITS,WK,GAPS,PICWORDS,SPELL,W2,WX,W2K,CHS}')();
+const { UNITS, WK, GAPS, PICWORDS, SPELL, W2, WX, W2K, CHS, ONEPIC, MANYPIC, howMany, numWord } = new Function(src + ';return {UNITS,WK,GAPS,PICWORDS,SPELL,W2,WX,W2K,CHS,ONEPIC,MANYPIC,howMany,numWord}')();
 
 let n = 0, bad = [];
 const файл = p => fs.existsSync(p.startsWith('../') ? p.replace('../', '../') : p);
@@ -54,6 +54,31 @@ W2.forEach(x => ['', '-p'].forEach(p => { if (!fs.existsSync(`audio/2b/${x.k}${p
   if (!x.wr || x.wr.length < 3) bad.push(x.k + ' — меньше трёх неверных форм');
   else if (x.wr.some(f => f === x.pl || (x.altpl || []).includes(f))) bad.push(x.k + ' — среди неверных форм есть верная');
   if (new Set(x.wr).size !== x.wr.length) bad.push(x.k + ' — неверные формы повторяются');
+});
+// картинки 2b (урок 20.10): у каждого слова урока своя, «много» — ровно столько, сколько сказано
+W2.forEach(x => { if (!fs.existsSync(`img/w/2b/${x.k}.webp`)) bad.push('нет картинки 2b: ' + x.k) });
+Object.values(ONEPIC).forEach(f => { if (!fs.existsSync(`img/w/2b/${f}.webp`)) bad.push('нет картинки: ' + f) });
+Object.entries(MANYPIC).forEach(([k, f]) => {
+  if (!W2K[k]) bad.push('MANYPIC: нет слова ' + k);
+  if (!fs.existsSync(`img/w/2b/n/${f}.webp`)) bad.push('нет картинки «много»: ' + f);
+  if (!f.startsWith(numWord(howMany(k)) + '-')) bad.push(`${k}: в задании «${numWord(howMany(k))}», а на картинке ${f}`);
+});
+if (MANYPIC.trainers) bad.push('two-trainers не берём: на картинке 3 кроссовки (его решение 20.10)');
+for (let r = 0; r < 200; r++) UNITS.filter(u => u.ch === '2b').forEach(u => u.make().forEach(q => {
+  const m = /→ (two|three) ___/.exec(q.prompt || ''); if (!m) return;
+  const k = (q.qid.split(': ')[1] || ''), w = W2.concat(WX).find(x => x.en === k);
+  if (w && MANYPIC[w.k] && !MANYPIC[w.k].startsWith(m[1] + '-')) bad.push(`${q.qid}: сказано ${m[1]}, нарисовано ${MANYPIC[w.k]}`);
+}));
+// песня «Учим песню»
+const song = new Function(fs.readFileSync('song2b.js', 'utf8') + ';return SONG2B')();
+if (!fs.existsSync(song.src)) bad.push('нет mp3 песни ' + song.src);
+if (!fs.existsSync(song.cover)) bad.push('нет обложки песни ' + song.cover);
+song.lines.forEach((l, i) => {
+  [l.img, ...(l.ph || []).map(p => p[1])].forEach(f => { if (!fs.existsSync(f)) bad.push(`песня, строчка ${i + 1}: нет ${f}`) });
+  if (!(l.t1 > l.t)) bad.push(`песня, строчка ${i + 1}: конец раньше начала`);
+  if (i && l.t < song.lines[i - 1].t) bad.push(`песня, строчка ${i + 1}: время назад`);
+  l.w.forEach(([x, t]) => { if (t < l.t - 0.6 || t > l.t1) bad.push(`песня, строчка ${i + 1}: слово ${x} вне строчки`) });
+  if (!l.ru) bad.push(`песня, строчка ${i + 1}: нет перевода`);
 });
 const ids = UNITS.map(u => u.id);
 if (new Set(ids).size !== ids.length) bad.push('повторяются id уровней');
