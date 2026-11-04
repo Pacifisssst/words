@@ -274,6 +274,9 @@ body{background:var(--bg)}
 .unit.hot .node{box-shadow:0 6px 0 var(--cd),0 0 0 6px var(--gold)}
 .hot-tag{margin-top:6px;background:var(--gold);color:#3b2a00;border-radius:10px;padding:3px 9px;font-size:13px;font-weight:900;text-align:center;max-width:220px}
 .vcard{display:flex;justify-content:center;margin:4px 0 8px}.vcard img{width:min(56vw,220px);aspect-ratio:1;object-fit:cover;border-radius:18px;border:2px solid var(--line)}
+.review-card{margin:20px 0;padding:18px;background:#eef7ff;border:2px solid #c6e5fa;border-radius:18px}
+.review-card h2{font-size:22px;margin:0 0 8px}.review-card p{font-size:17px;margin:8px 0;line-height:1.4}
+.review-card .review-small{font-size:14px;color:var(--ink2)}.review-card .btn{width:100%;margin-top:10px}
 </style>
 </head>
 <body>
@@ -387,34 +390,34 @@ const formsAudio=v=>`../irr${v.set}/audio/${v.set===2?'trainer/':''}${v.v1}${v.s
 // --- виды заданий для одного глагола ---
 function meetQ(v){
   const others=take(SETS[v.set].filter(x=>x.v1!==v.v1),3).map(x=>x.v1);
-  return choice({answerAudio:formsAudio(v),qid:'значение: '+v.v1,card:card(v),prompt:'Какой это глагол?',ru:v.ru,opts:[v.v1,...others],
+  return choice({verb:v.v1,answerAudio:formsAudio(v),qid:'значение: '+v.v1,card:card(v),prompt:'Какой это глагол?',ru:v.ru,opts:[v.v1,...others],
     why:`<b>${forms(v)}</b> — ${esc(v.ru)}.${tip(v)}`,hint:'Посмотри на картинку и на перевод. Вспомни карточки набора '+v.set+'.'});
 }
 function v2Q(v){
-  return choice({answerAudio:formsAudio(v),qid:'V2: '+v.v1,prompt:`Вчера (Past Simple, V2): ${v.v1} → ?`,ru:v.ru,opts:[v.v2,...take(wrongs(v,v.v2),3)],
+  return choice({verb:v.v1,answerAudio:formsAudio(v),qid:'V2: '+v.v1,prompt:`Вчера (Past Simple, V2): ${v.v1} → ?`,ru:v.ru,opts:[v.v2,...take(wrongs(v,v.v2),3)],
     why:`<b>${forms(v)}</b>.${tip(v)}`,hint:`Вспомни: ${v.v1} – ? – ${v.v3}`});
 }
 function v3Q(v){
-  return choice({answerAudio:formsAudio(v),qid:'V3: '+v.v1,prompt:`Третья форма (V3): ${v.v1} – ${v.v2} – ?`,ru:v.ru,
+  return choice({verb:v.v1,answerAudio:formsAudio(v),qid:'V3: '+v.v1,prompt:`Третья форма (V3): ${v.v1} – ${v.v2} – ?`,ru:v.ru,
     opts:[v.v3,...take(wrongs(v,v.v3,[v.v1+'en',v.v2+'en']),3)],
     why:`<b>${forms(v)}</b>.${tip(v)}`,hint:v.v2===v.v3?'Здесь V3 такая же, как V2.':'Здесь V3 не такая, как V2.'});
 }
 function bothQ(v,book){
   const r=`${v.v2} – ${v.v3}`,w=reg(v.v1),t=(TRAP[v.v1]||[])[0]||w;
   const bad=uniq([`${w} – ${w}`,`${v.v2} – ${w}`,`${t} – ${v.v3}`,v.v2!==v.v3?`${v.v3} – ${v.v2}`:`${v.v1} – ${v.v2}`,`${v.v2} – ${v.v1}`,`${v.v1} – ${v.v1}`]).filter(x=>x!==r);
-  return choice({answerAudio:formsAudio(v),qid:`набор ${v.set}: ${v.v1}`,book,prompt:`${v.v1} → V2 – V3`,ru:v.ru,opts:[r,...take(bad,3)],
+  return choice({verb:v.v1,answerAudio:formsAudio(v),qid:`набор ${v.set}: ${v.v1}`,book,prompt:`${v.v1} → V2 – V3`,ru:v.ru,opts:[r,...take(bad,3)],
     why:`<b>${forms(v)}</b>. На тесте засчитано, только если верны обе формы.${tip(v)}`,hint:`Скажи вслух: ${v.v1} – … – …`});
 }
 function formsQ(v){
   // три настоящие формы (kept, kept — две плитки) + две ловушки, которых нет среди форм
   const real=[v.v1,v.v2,v.v3],trap=take(uniq([reg(v.v1),...(TRAP[v.v1]||[])]).filter(x=>!real.includes(x)),2);
-  return {answerAudio:formsAudio(v),type:'build',qid:'три формы: '+v.v1,prompt:`Собери три формы: ${v.ru}`,ru:'V1 – V2 – V3',tiles:shuf([...real,...trap]),
+  return {verb:v.v1,answerAudio:formsAudio(v),type:'build',qid:'три формы: '+v.v1,prompt:`Собери три формы: ${v.ru}`,ru:'V1 – V2 – V3',tiles:shuf([...real,...trap]),
     right:real,accept:[real.join(' ')],
     why:`<b>${forms(v)}</b>.${tip(v)}`,hint:`Начни с ${v.v1}.`};
 }
 function hearQ(v){
   const re=new RegExp(`\\b${v.v2}\\b`);
-  return {answerAudio:formsAudio(v),type:'text',qid:'на слух: '+v.v2,audio:`../irr${v.set}/audio/${v.v1}-x.mp3`,
+  return {verb:v.v1,answerAudio:formsAudio(v),type:'text',qid:'на слух: '+v.v2,audio:`../irr${v.set}/audio/${v.v1}-x.mp3`,
     prompt:'Нажми ▶ и напиши пропущенный глагол.',gap:v.ex.replace(re,'___'),ru:v.exru,accept:[v.v2],
     why:`<b>${esc(v.ex)}</b><br>${forms(v)}.`,hint:`Это ${v.v1} во второй форме. Первая буква: ${v.v2[0]}`};
 }
@@ -455,7 +458,8 @@ const FIX=[
  ['The vase breaked when it fell.','breaked','broke','break — broke — broken.'],
  ['I forgeted my homework.','forgeted','forgot','forget — forgot — forgotten.']];
 function fixQ(f,book){
-  return {type:'text',qid:'ошибка: '+f[1],book,gap:f[0],prompt:'Найди ошибку и напиши правильное слово.',
+  const verb=ALL.find(v=>[v.v1,v.v2,v.v3].includes(f[2]));
+  return {verb:verb?.v1,type:'text',qid:'ошибка: '+f[1],book,gap:f[0],prompt:'Найди ошибку и напиши правильное слово.',
     ru:'Найди неверное слово и напиши, как правильно.',accept:[f[2]],
     why:`<s>${esc(f[1])}</s> → <b>${esc(f[2])}</b>. ${esc(f[3])}`,hint:`Неверное слово: ${f[1]}`};
 }
@@ -472,7 +476,7 @@ const DID=[['Did you ___ the match?','win','Ты выиграл матч?'],['Di
  ["They didn’t ___ the cake.",'eat','Они не съели торт.'],["Our team didn’t ___ the match.",'lose','Наша команда не проиграла матч.']];
 function didQ(d){
   const v=VK[d[1]];
-  return choice({qid:'did + V1: '+v.v1,gap:d[0],prompt:'Какое слово на месте пропуска?',ru:d[2],
+  return choice({verb:v.v1,qid:'did + V1: '+v.v1,gap:d[0],prompt:'Какое слово на месте пропуска?',ru:d[2],
     opts:[v.v1,...take(wrongs(v,v.v1).filter(x=>x!==v.v1+'s'),2),v.v1+'s'],
     why:`<b>${esc(d[0].replace('___',v.v1))}</b> После did / didn’t — всегда V1: прошедшее время уже в did.`,
     hint:'Видишь did или didn’t? Тогда глагол в первой форме.'});
@@ -491,7 +495,7 @@ const PAST=[['Last week we ___ (sell) our old bike.','sell'],['Yesterday I ___ (
  ['Yesterday I ___ (eat) a big pizza.','eat'],['Two days ago my brother ___ (break) his phone.','break']];
 function pastQ(p){
   const v=VK[p[1]];
-  return {type:'text',qid:'Past Simple: '+v.v1,gap:p[0],prompt:'Напиши глагол в Past Simple (V2).',
+  return {verb:v.v1,type:'text',qid:'Past Simple: '+v.v1,gap:p[0],prompt:'Напиши глагол в Past Simple (V2).',
     ru:'Yesterday, last week, ago → Past Simple, вторая форма.',accept:[v.v2],
     why:`<b>${esc(p[0].replace(` (${v.v1})`,'').replace('___',v.v2))}</b><br>${forms(v)}.`,hint:`${v.v1} – ? – ${v.v3}`};
 }
@@ -506,7 +510,7 @@ const USED=[['When Whiskers was small, he ___ all day.','sleep','Когда Ви
  ['I ___ my friends after school.','meet','Раньше я встречался с друзьями после школы.']];
 function usedQ(u){
   const v=VK[u[1]];
-  return choice({qid:'used to + V1',gap:u[0],prompt:'Раньше, а теперь нет. Что на месте пропуска?',ru:u[2],
+  return choice({verb:v.v1,qid:'used to + V1',gap:u[0],prompt:'Раньше, а теперь нет. Что на месте пропуска?',ru:u[2],
     opts:[`used to ${v.v1}`,`used to ${v.v2===v.v1?reg(v.v1):v.v2}`,`use to ${v.v1}`,`used ${v.v1}`],
     why:`<b>${esc(u[0].replace('___','used to '+v.v1))}</b> used to + V1 = раньше (часто или долго), а теперь — нет.`,
     hint:'После used to — первая форма, как в словаре.'});
@@ -524,7 +528,8 @@ const USEDN=[
  ['Did Whiskers ___ fish?','use to eat',['used to eat','use to ate','used to ate'],'Вискерс раньше ел рыбу?'],
  ['He ___ speak English.',"didn’t use to",["didn’t used to","not use to","didn’t used"],'Раньше он не говорил по-английски.']];
 function usedNQ(u){
-  return choice({qid:u[1]==='Did'?'Did … use to?':(u[1].startsWith('use')?'Did … use to + V1':"didn’t use to"),gap:u[0],
+  const text=u[0]+' '+u[1], verb=ALL.find(v=>new RegExp('\\b'+v.v1+'\\b').test(text));
+  return choice({verb:verb?.v1,qid:u[1]==='Did'?'Did … use to?':(u[1].startsWith('use')?'Did … use to + V1':"didn’t use to"),gap:u[0],
     prompt:'Отрицание или вопрос. Что на месте пропуска?',ru:u[3],opts:[u[1],...u[2]],
     why:`<b>${esc(u[0].replace('___',u[1]))}</b> После did / didn’t — <b>use to без d</b>: прошедшее время уже в did.`,
     hint:'Есть did или didn’t? Тогда use to — без d, и глагол в первой форме.'});
@@ -547,7 +552,7 @@ function upsQ(u){
   const v=VK[u[1]];
   const opts=u[2]==='once'?[v.v2,`used to ${v.v1}`,reg(v.v1),v.v2===v.v1?v.v1+'s':v.v1]
     :[`used to ${v.v1}`,`used to ${v.v2===v.v1?reg(v.v1):v.v2}`,`use to ${v.v1}`,`uses to ${v.v1}`];
-  return choice({qid:u[2]==='once'?'один раз → Past Simple':'раньше, теперь нет → used to',gap:u[0],
+  return choice({verb:v.v1,qid:u[2]==='once'?'один раз → Past Simple':'раньше, теперь нет → used to',gap:u[0],
     prompt:'Один раз — или раньше часто, а теперь нет?',ru:u[3],opts:uniq(opts),
     why:`<b>${esc(u[0].replace(/ \(.*\)$/,'').replace('___',opts[0]))}</b> Один раз (yesterday, last week, ago) → Past Simple, V2. Раньше часто, а теперь нет → used to + V1.`,
     hint:u[2]==='once'?'Yesterday / last / ago — это один раз.':'«Not now» — значит раньше было, а теперь нет.'});
@@ -652,16 +657,22 @@ let muted=false;try{muted=localStorage.getItem(KEY+'-mute')==='1'}catch(e){}
 // ====== отправка результатов (очередь: без сети ничего не теряется) ======
 function queueResult(rec){
   if(TEST)return;                       // тестовая ссылка никогда не пишет в журнал учителя
-  save.queue=(save.queue||[]).concat([rec]).slice(-40);store();flush();
+  const key=r=>r.at+'|'+r.level+'|'+r.pupil?.id;
+  save.queue=(save.queue||[]).filter(r=>key(r)!==key(rec)).concat([rec]).slice(-200);store();flush();
 }
 let flushing=false;
 async function flush(){
   if(TEST||flushing||!save.queue||!save.queue.length||!navigator.onLine)return;
   flushing=true;
   try{
-    const r=await fetch(API+'/log',{method:'POST',headers:{'content-type':'application/json','x-key':SEND_KEY},
-      body:JSON.stringify({game:GAME,items:save.queue})});
-    if(r.ok){save.queue=[];store()}
+    while(save.queue.length){
+      const batch=save.queue.slice(0,20), sent=new Set(batch);
+      const r=await fetch(API+'/log',{method:'POST',headers:{'content-type':'application/json','x-key':SEND_KEY},
+        body:JSON.stringify({game:GAME,items:batch})});
+      if(!r.ok || (await r.json()).saved!==batch.length)break;
+      // Keep snapshots created while this request was in flight.
+      save.queue=save.queue.filter(rec=>!sent.has(rec));store();
+    }
   }catch(e){}
   flushing=false;
 }
@@ -739,6 +750,7 @@ function speak(src,btn){
 // ====== экраны ======
 const app=document.getElementById('app');
 function home(){
+  window.Review7?.leave();
   const total=UNITS.length,doneN=UNITS.filter(u=>save.u[u.id]).length;
   const T=nextTest();
   const hot=u=>T&&u.set===T.set;
@@ -757,6 +769,7 @@ function home(){
   <main class="wrap">
     <div class="hello">${pic('hi')}<div class="bubble">Привет! Я <b>Кот Икс</b>. Здесь <b>все наборы</b> неправильных глаголов (1–6) и <b>used to</b>. Выбирай любой уровень.</div></div>
     ${T?`<button class="hotcard" id="hot"><span class="hc1">⭐ Тест ${esc(T.label)} — набор ${T.set}</span><span class="hc2">Повтори его <b>в первую очередь</b>. Нажми — и начнём.</span></button>`:''}
+    ${window.Review7?.panel()||''}
     <div class="path">${UNITS.map((u,i)=>{
       const st=save.u[u.id]||0;
       const head=u.sec!==lastSec?(lastSec=u.sec,k=0,`<h2 class="sechead">${esc(SECS[u.sec])}</h2>`):'';
@@ -774,6 +787,7 @@ function home(){
   </main>`;
   const open=i=>{sTap();save.pupil?intro(i):askName(()=>intro(i))};
   app.querySelectorAll('.node').forEach(b=>b.onclick=()=>open(+b.dataset.u));
+  const daily=document.getElementById('daily-review');if(daily)daily.onclick=()=>window.Review7.start();
   const hb=document.getElementById('hot');
   if(hb)hb.onclick=()=>{let i=UNITS.findIndex(u=>hot(u)&&!save.u[u.id]);if(i<0)i=UNITS.findIndex(hot);open(i)};
   document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
@@ -783,7 +797,7 @@ function home(){
 }
 
 function intro(i){
-  const u=UNITS[i];
+  const u=typeof i==='object'?i:UNITS[i];
   app.innerHTML=`
   <div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
   <div class="intro">
@@ -798,14 +812,16 @@ function intro(i){
 
 let L;
 function lesson(i){
-  const u=UNITS[i],qs=u.make();
+  const u=typeof i==='object'?i:UNITS[i],qs=u.make();
   L={u,i,queue:qs,total:qs.length,ok:0,mist:0,hearts:u.boss?3:null,combo:0,best:0,bad:0,t0:Date.now(),wrong:[],seen:new Set()};
+  window.Review7?.begin(u);
   ask();
 }
 function ask(){
   player?.pause();
   if(!L.queue.length)return finish();
   const q=L.q=L.queue[0];L.ans=q.type==='build'?[]:null;L.hintShown=false;L.locked=false;
+  window.Review7?.question(q);
   const pct=Math.round(L.ok/L.total*100);
   let body='';
   const tag=(q.book?`<span class="tag">${esc(q.book)}</span> `:'')
@@ -894,6 +910,7 @@ function testAnswer(right){
 }
 function check(){
   const q=L.q,good=isRight(), feedbackAudio=q.answerAudio||q.audio;L.locked=true;
+  window.Review7?.answer(q,good);
   const sh=document.getElementById('sh');
   L.queue.shift();
   if(!L.seen.has(q)){L.seen.add(q);if(!good&&q.qid)L.wrong.push(q.qid)}
@@ -935,10 +952,11 @@ function lost(){
 function finish(){
   const first=L.total,acc=Math.round(first/(first+L.mist)*100);
   const stars=L.mist===0?3:L.mist<=2?2:1;
-  const xp=10+first+(L.u.boss?20:0)+(stars===3?5:0);
-  const sec=Math.round((Date.now()-L.t0)/1000);
-  save.xp+=xp;save.u[L.u.id]=Math.max(save.u[L.u.id]||0,stars);save.t=save.t||{};save.t[L.u.id]=Date.now();store();
-  queueResult({pupil:save.pupil,level:L.u.id,levelName:L.u.name,stars,sec,mist:L.mist,wrong:L.wrong,at:new Date().toISOString()});
+  const xp=L.u.review?(window.Review7?.points()||0):10+first+(L.u.boss?20:0)+(stars===3?5:0);
+  const sec=window.Review7?window.Review7.seconds():Math.round((Date.now()-L.t0)/1000);
+  window.Review7?.finish(stars,xp);
+  if(!L.u.review){save.xp+=xp;save.u[L.u.id]=Math.max(save.u[L.u.id]||0,stars);save.t=save.t||{};save.t[L.u.id]=Date.now();store()}
+  if(!window.Review7)queueResult({pupil:save.pupil,level:L.u.id,levelName:L.u.name,stars,sec,mist:L.mist,wrong:L.wrong,at:new Date().toISOString()});
   app.innerHTML=`<div class="wrap"><div class="done-screen">${pic('win')}
     <h1>${L.u.boss?'Босс побеждён!':'Уровень пройден!'}</h1>
     <p>${stars===3?'Ни одной ошибки — отлично.':L.mist?`Ошибок: ${L.mist}. Эти задания вернулись в конце и сделаны верно.`:''}</p>
@@ -1033,5 +1051,6 @@ addEventListener('keydown',e=>{
 flush();
 home();
 </script>
+<script src="review.js"></script>
 </body>
 </html>
