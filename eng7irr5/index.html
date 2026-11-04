@@ -850,7 +850,7 @@ function ask(){
     document.getElementById('hint').innerHTML=`<div class="hint pop">${pic('think')}<span>${esc(q.hint||'Послушай ещё раз.')}</span></div>`};
   if(q.audio){
     const pl=document.getElementById('pl');
-    const go=()=>{sTap();speak(q.audio,pl)};
+    const go=()=>{if(L.q!==q||L.locked)return;sTap();speak(q.audio,pl)};
     pl.onclick=go;document.getElementById('ag').onclick=go;
     if(audioOk)setTimeout(go,350);
   }
