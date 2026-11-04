@@ -18,6 +18,8 @@ for (let r = 0; r < 300; r++) UNITS.forEach(u => u.make().forEach((q, i) => {
   if (!q.hint) bad.add(w + ' — нет подсказки');
   if (q.audio) { files.add(q.audio); if (!q.prompt.includes('▶')) bad.add(w + ' — звук есть, а ▶ в тексте нет') }
   if (q.card) files.add(q.card);
+  if (q.answerAudio) files.add(q.answerAudio);
+  if ((q.qid.startsWith('значение:') || /^V[23]:/.test(q.qid) || q.qid.startsWith('три формы:')) && !q.answerAudio) bad.add(w + ' — нет озвучки ответа');
   if (q.gap !== undefined && !q.gap) bad.add(w + ' — пустая строка задания');
   if (q.type === 'choice') {
     if (new Set(q.opts).size !== q.opts.length) bad.add(w + ' — повторяются варианты: ' + q.opts.join(' / '));

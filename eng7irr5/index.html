@@ -382,37 +382,39 @@ function wrongs(v,right,extra=[]){
   return uniq([...(TRAP[v.v1]||[]),reg(v.v1),v.v1,v.v2,v.v3,v.v1+'s',...extra].filter(x=>x&&x!==right&&!right.split(' / ').includes(x)));
 }
 
+const formsAudio=v=>`../irr${v.set}/audio/${v.set===2?'trainer/':''}${v.v1}${v.set===1?'-w':''}.mp3`;
+
 // --- виды заданий для одного глагола ---
 function meetQ(v){
   const others=take(SETS[v.set].filter(x=>x.v1!==v.v1),3).map(x=>x.v1);
-  return choice({qid:'значение: '+v.v1,card:card(v),prompt:'Какой это глагол?',ru:v.ru,opts:[v.v1,...others],
+  return choice({answerAudio:formsAudio(v),qid:'значение: '+v.v1,card:card(v),prompt:'Какой это глагол?',ru:v.ru,opts:[v.v1,...others],
     why:`<b>${forms(v)}</b> — ${esc(v.ru)}.${tip(v)}`,hint:'Посмотри на картинку и на перевод. Вспомни карточки набора '+v.set+'.'});
 }
 function v2Q(v){
-  return choice({qid:'V2: '+v.v1,prompt:`Вчера (Past Simple, V2): ${v.v1} → ?`,ru:v.ru,opts:[v.v2,...take(wrongs(v,v.v2),3)],
+  return choice({answerAudio:formsAudio(v),qid:'V2: '+v.v1,prompt:`Вчера (Past Simple, V2): ${v.v1} → ?`,ru:v.ru,opts:[v.v2,...take(wrongs(v,v.v2),3)],
     why:`<b>${forms(v)}</b>.${tip(v)}`,hint:`Вспомни: ${v.v1} – ? – ${v.v3}`});
 }
 function v3Q(v){
-  return choice({qid:'V3: '+v.v1,prompt:`Третья форма (V3): ${v.v1} – ${v.v2} – ?`,ru:v.ru,
+  return choice({answerAudio:formsAudio(v),qid:'V3: '+v.v1,prompt:`Третья форма (V3): ${v.v1} – ${v.v2} – ?`,ru:v.ru,
     opts:[v.v3,...take(wrongs(v,v.v3,[v.v1+'en',v.v2+'en']),3)],
     why:`<b>${forms(v)}</b>.${tip(v)}`,hint:v.v2===v.v3?'Здесь V3 такая же, как V2.':'Здесь V3 не такая, как V2.'});
 }
 function bothQ(v,book){
   const r=`${v.v2} – ${v.v3}`,w=reg(v.v1),t=(TRAP[v.v1]||[])[0]||w;
   const bad=uniq([`${w} – ${w}`,`${v.v2} – ${w}`,`${t} – ${v.v3}`,v.v2!==v.v3?`${v.v3} – ${v.v2}`:`${v.v1} – ${v.v2}`,`${v.v2} – ${v.v1}`,`${v.v1} – ${v.v1}`]).filter(x=>x!==r);
-  return choice({qid:`набор ${v.set}: ${v.v1}`,book,prompt:`${v.v1} → V2 – V3`,ru:v.ru,opts:[r,...take(bad,3)],
+  return choice({answerAudio:formsAudio(v),qid:`набор ${v.set}: ${v.v1}`,book,prompt:`${v.v1} → V2 – V3`,ru:v.ru,opts:[r,...take(bad,3)],
     why:`<b>${forms(v)}</b>. На тесте засчитано, только если верны обе формы.${tip(v)}`,hint:`Скажи вслух: ${v.v1} – … – …`});
 }
 function formsQ(v){
   // три настоящие формы (kept, kept — две плитки) + две ловушки, которых нет среди форм
   const real=[v.v1,v.v2,v.v3],trap=take(uniq([reg(v.v1),...(TRAP[v.v1]||[])]).filter(x=>!real.includes(x)),2);
-  return {type:'build',qid:'три формы: '+v.v1,prompt:`Собери три формы: ${v.ru}`,ru:'V1 – V2 – V3',tiles:shuf([...real,...trap]),
+  return {answerAudio:formsAudio(v),type:'build',qid:'три формы: '+v.v1,prompt:`Собери три формы: ${v.ru}`,ru:'V1 – V2 – V3',tiles:shuf([...real,...trap]),
     right:real,accept:[real.join(' ')],
     why:`<b>${forms(v)}</b>.${tip(v)}`,hint:`Начни с ${v.v1}.`};
 }
 function hearQ(v){
   const re=new RegExp(`\\b${v.v2}\\b`);
-  return {type:'text',qid:'на слух: '+v.v2,audio:`../irr${v.set}/audio/${v.v1}-x.mp3`,
+  return {answerAudio:formsAudio(v),type:'text',qid:'на слух: '+v.v2,audio:`../irr${v.set}/audio/${v.v1}-x.mp3`,
     prompt:'Нажми ▶ и напиши пропущенный глагол.',gap:v.ex.replace(re,'___'),ru:v.exru,accept:[v.v2],
     why:`<b>${esc(v.ex)}</b><br>${forms(v)}.`,hint:`Это ${v.v1} во второй форме. Первая буква: ${v.v2[0]}`};
 }
@@ -801,6 +803,7 @@ function lesson(i){
   ask();
 }
 function ask(){
+  player?.pause();
   if(!L.queue.length)return finish();
   const q=L.q=L.queue[0];L.ans=q.type==='build'?[]:null;L.hintShown=false;L.locked=false;
   const pct=Math.round(L.ok/L.total*100);
@@ -890,7 +893,7 @@ function testAnswer(right){
   check();
 }
 function check(){
-  const q=L.q,good=isRight();L.locked=true;
+  const q=L.q,good=isRight(), feedbackAudio=q.answerAudio||q.audio;L.locked=true;
   const sh=document.getElementById('sh');
   L.queue.shift();
   if(!L.seen.has(q)){L.seen.add(q);if(!good&&q.qid)L.wrong.push(q.qid)}
@@ -910,13 +913,14 @@ function check(){
     <h3>${good?IC.check+praise:IC.cross+'Почти!'}</h3>
     ${joke?`<p class="joke">${joke}</p>`:''}
     <p class="why">${good?q.why:`Правильно: <b>${rightText()}</b>.<br>${q.why}`}</p>
-    ${q.audio?`<button class="again" id="ag2">${IC.waveic} послушать ещё раз</button>`:''}</div></div>
+    ${feedbackAudio?`<button class="again" id="ag2">${IC.waveic} послушать ещё раз</button>`:''}</div></div>
     <button class="btn" id="nx">${!good&&L.hearts===0?'Ой…':'Дальше'}</button></div>`;
   document.getElementById('bt').style.visibility='hidden';
   requestAnimationFrame(()=>sh.classList.add('show'));
   const p=app.querySelector('.prog i');if(p)p.style.width=Math.max(Math.round(L.ok/L.total*100),3)+'%';
   const h=app.querySelector('.hearts');if(h)h.innerHTML=IC.heart+L.hearts;
-  const a2=document.getElementById('ag2');if(a2)a2.onclick=()=>speak(q.audio);
+  const a2=document.getElementById('ag2');if(a2)a2.onclick=()=>speak(feedbackAudio);
+  if(q.answerAudio&&!muted)speak(q.answerAudio);
   document.getElementById('nx').onclick=()=>{L.locked=false;if(L.hearts===0)return lost();ask()};
   document.getElementById('nx').focus({preventScroll:true});
 }
