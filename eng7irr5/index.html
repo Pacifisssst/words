@@ -121,7 +121,7 @@ button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .lineup{min-height:66px;border-bottom:2px solid var(--line);display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 0;margin-bottom:18px}
 .lineup.empty:before{content:"Нажимай на плитки по порядку";color:#a3a8bf;font-size:15px}
 .bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.tile{min-width:48px;height:50px;padding:0 14px;border-radius:12px;border:2px solid var(--line);box-shadow:0 3px 0 var(--line);background:#fff;font-size:24px;font-weight:900}
+.tile{min-width:48px;min-height:50px;height:auto;max-width:100%;padding:8px 14px;line-height:1.25;border-radius:12px;border:2px solid var(--line);box-shadow:0 3px 0 var(--line);background:#fff;font-size:24px;font-weight:900}
 .tile.used{visibility:hidden}
 .hintbtn{display:inline-flex;align-items:center;gap:6px;color:var(--blue-d);font-weight:900;font-size:15px;padding:8px 0;margin-top:6px}
 .hint{display:flex;gap:10px;align-items:center;background:var(--blue-bg);border-radius:16px;padding:10px 12px;margin-top:6px;font-size:16px;line-height:1.35}
@@ -559,9 +559,42 @@ function upsQ(u){
 }
 function lvlUps(){return [upsQ(UPS[0]),upsQ(UPS[5]),...take(UPS.filter((x,i)=>i&&i!==5),7).map(upsQ)]}
 
+// Two complete clauses and the given linker; reuse the existing tile engine.
+const LINKERS=[
+ ['Otto and Axel found a message. They decided to go on a dangerous journey.', 'as soon as',
+  ['They decided to go on a dangerous journey','as soon as','Otto and Axel found a message.'],
+  'Как только нашли послание, сразу решили отправиться в путешествие.','Ex.6 · p.19'],
+ ['They looked around. They heard a noise.', 'until',
+  ['They looked around','until','they heard a noise.'], 'Осматривались всё время до того момента, когда услышали шум.'],
+ ['They hid behind some bushes. They heard the noise.', 'when',
+  ['They hid behind some bushes','when','they heard the noise.'], 'Спрятались в тот момент, когда услышали шум.'],
+ ['They went to meet Hans. Axel found an old knife.', 'after',
+  ['They went to meet Hans','after','Axel found an old knife.'], 'Сначала Аксель нашёл нож, потом они пошли к Хансу.'],
+ ['I drew a cat. I drew a dog.', 'then',
+  ['I drew a cat,','and then','I drew a dog.'], 'Сначала нарисовал кота, а потом собаку.'],
+ ['I got home. I ate dinner.', 'as soon as',
+  ['I ate dinner','as soon as','I got home.'], 'Поел сразу, как только пришёл домой.'],
+ ['I saw my friend. I smiled.', 'when',
+  ['I smiled','when','I saw my friend.'], 'Улыбнулся, когда увидел друга.'],
+ ['We had dinner. We watched a film.', 'after',
+  ['We watched a film','after','we had dinner.'], 'Сначала поужинали, потом посмотрели фильм.'],
+ ['We played football. It got dark.', 'until',
+  ['We played football','until','it got dark.'], 'Играли всё время до наступления темноты.'],
+ ['I lost my keys. I found them in my bag.', 'then',
+  ['I lost my keys,','and then','I found them in my bag.'], 'Сначала потерял ключи, а потом нашёл их в сумке.']
+];
+function linkerQ(d,i){
+ const [source,linker,right,reason,book]=d;
+ const distractor=linker==='until'?'as soon as':linker==='after'?'until':'after';
+ return {type:'build',qid:'linker: '+i,book,prompt:'Соедини два предложения. Используй '+linker+'.',
+  ru:source,tiles:shuf([...right,distractor]),right,accept:[right.join(' ')],
+  why:esc(right.join(' '))+'<br>'+esc(reason),
+  hint:'Сохрани порядок событий. Собери из частей: действие → связка → действие. Then можно использовать как and then.'};
+}
+
 // ====== уровни ======
 // sec — раздел на карте; set — номер набора (для отметки «тест — повторить первым»)
-const SECS={new6:'Набор 6 — новый',new:'Повторить набор 5',rev:'Повторить наборы 1–4',gram:'Грамматика: Past Simple и used to',boss:'Финал'};
+const SECS={new6:'Набор 6 — новый',new:'Повторить набор 5',rev:'Повторить наборы 1–4',gram:'Грамматика: Past Simple и used to',link:'Слова-связки: порядок событий',boss:'Финал'};
 const UNITS=[
  {id:'meet6',sec:'new6',set:6,name:'Знакомство',sub:'картинка → глагол',ic:'flag',c:'#8b5cf6',cd:'#6d3fe0',
   title:'Набор 6: знакомство',lead:'Десять новых глаголов. Смотри на картинку и перевод — выбери глагол.',
@@ -632,13 +665,17 @@ const UNITS=[
   title:'Used to или Past Simple',lead:'Один раз (yesterday, last week) → V2. Раньше часто, а теперь нет → used to + V1.',
   rules:[['Yesterday I ate pizza.','один раз → V2'],['I used to make sandcastles.','раньше, теперь нет'],['Yesterday I used to…','✗ так нельзя']],
   make:lvlUps},
+ {id:'linkers',sec:'link',name:'Соедини предложения',sub:'as soon as · when · after · until · then',ic:'pair',c:'#14b8a6',cd:'#0e8f81',
+  title:'Два предложения → одно',lead:'Прочитай два предложения и данную связку. Соедини части по смыслу. Лишняя связка — ловушка.',
+  rules:[['as soon as / when','как только / когда'],['after / until','после того как / до тех пор пока'],['then (and then)','затем (а потом)'],['I ate dinner after I got home.','Два действия в прошлом → Past Simple.']],
+  make:()=>[linkerQ(LINKERS[0],0),...shuf(LINKERS.slice(1).map((d,i)=>linkerQ(d,i+1)))]},
  {id:'boss',sec:'boss',name:'Босс',sub:'всё вместе · 3 сердечка',ic:'web',c:'#e23636',cd:'#b81f1f',boss:1,
   title:'Финальный бой',lead:'Все виды заданий сразу. У тебя 3 сердечка. Ошибёшься 3 раза — бой начнётся заново.',
   rules:[['Наборы 1–6','три формы'],['did / didn’t','+ V1'],['used to','+ V1']],
   make:()=>{
     const s5=take(S6,4);
     return [v2Q(s5[0]),v3Q(s5[1]),formsQ(s5[2]),hearQ(pick(S6.filter(hearOK))),bothQ(pick(setVerbs(4))),
-      bothQ(pick(setVerbs(R(1,3)))),fixQ(pick(FIX)),didQ(pick(DID)),pastQ(pick(PAST)),usedQ(pick(USED)),usedNQ(pick(USEDN)),upsQ(pick(UPS))];
+      bothQ(pick(setVerbs(R(1,3)))),fixQ(pick(FIX)),didQ(pick(DID)),pastQ(pick(PAST)),usedQ(pick(USED)),usedNQ(pick(USEDN)),upsQ(pick(UPS)),linkerQ(pick(LINKERS),"boss")];
   }}
 ];
 
@@ -767,7 +804,7 @@ function home(){
     <button class="iconbtn" id="snd" aria-label="${muted?'Включить звук':'Выключить звук'}">${muted?IC.mute:IC.sound}</button>
   </div></header>
   <main class="wrap">
-    <div class="hello">${pic('hi')}<div class="bubble">Привет! Я <b>Кот Икс</b>. Здесь <b>все наборы</b> неправильных глаголов (1–6) и <b>used to</b>. Выбирай любой уровень.</div></div>
+    <div class="hello">${pic('hi')}<div class="bubble">Привет! Я <b>Кот Икс</b>. Здесь <b>все наборы</b> неправильных глаголов (1–6), <b>used to</b> и <b>слова-связки</b>. Выбирай любой уровень.</div></div>
     ${T?`<button class="hotcard" id="hot"><span class="hc1">⭐ Тест ${esc(T.label)} — набор ${T.set}</span><span class="hc2">Повтори его <b>в первую очередь</b>. Нажми — и начнём.</span></button>`:''}
     ${window.Review7?.panel()||''}
     <div class="path">${UNITS.map((u,i)=>{
