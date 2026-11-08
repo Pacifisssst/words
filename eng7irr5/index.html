@@ -277,7 +277,7 @@ body{background:var(--bg)}
 .review-card{margin:20px 0;padding:18px;background:#eef7ff;border:2px solid #c6e5fa;border-radius:18px}
 .review-card h2{font-size:22px;margin:0 0 8px}.review-card p{font-size:17px;margin:8px 0;line-height:1.4}
 .review-card .review-small{font-size:14px;color:var(--ink2)}.review-card .btn{width:100%;margin-top:10px}
-</style>
+.vcard-v2c img{width:min(90vw,340px);aspect-ratio:16/9;object-fit:contain}</style>
 </head>
 <body>
 <div id="app"></div>
@@ -356,6 +356,8 @@ const tip=v=>v.tip?` <i>${esc(v.tip)}</i>`:'';
 // end — конец урока с тестом (время телефона, Москва): после него звезда переходит на следующий тест.
 // g: 1 = 7А, 2 = 7Б; без g — для обоих классов.
 const TESTS=[
+ {end:'2026-11-09T11:40',set:6,g:1,label:'пн 09.11 · наборы 1–6, главное — 6'},
+ {end:'2026-11-09T15:20',set:6,g:2,label:'пн 09.11 · наборы 1–6, главное — 6'},
  {end:'2026-10-19T11:20',set:4,g:1,label:'пн 19.10'},{end:'2026-10-19T15:00',set:4,g:2,label:'пн 19.10'},   // ends right after the test (he shows the game later in the lesson)
  {end:'2026-10-20T11:45',set:5,g:2,label:'вт 20.10'},{end:'2026-10-22T13:45',set:5,g:1,label:'чт 22.10'}];
 function nextTest(){
@@ -592,6 +594,19 @@ function linkerQ(d,i){
   hint:'Сохрани порядок событий. Собери из частей: действие → связка → действие. Then можно использовать как and then.'};
 }
 
+// Module 2c vocabulary reuses the existing question, retry and progress engine.
+const VANISHED_DATA = [{"id": "chat", "en": "chat", "ipa": "tʃæt", "ru": "разговаривать; беседа", "ex": "We chat after school.", "exru": "Мы разговариваем после школы.", "art": "Two fluffy cats chat over tea. Secondary visual cue: a smartphone chat window with blank bubbles. Familiar Russian «чат». No readable text.", "core": false, "audio": "../7m2c/audio/chat.mp3", "img": "../7m2c/img/chat.jpg"}, {"id": "confused", "en": "confused", "ipa": "kənˈfjuːzd", "ru": "смущённый; растерянный", "ex": "The cat looked confused.", "exru": "Кот выглядел растерянным.", "art": "Cheremsha holds a map upside down at a junction with contradictory blank arrows. Clearly puzzled, not sad.", "core": true, "audio": "../7m2c/audio/confused.mp3", "img": "../7m2c/img/confused.jpg"}, {"id": "cosy", "en": "cosy", "ipa": "ˈkəʊzi", "ru": "уютный; удобный", "ex": "The room was warm and cosy.", "exru": "В комнате было тепло и уютно.", "art": "Two cats and two small goats relax under soft blankets in a warm room. Optional Russian memory association козы; show comfort unmistakably.", "core": true, "audio": "../7m2c/audio/cosy.mp3", "img": "../7m2c/img/cosy.jpg"}, {"id": "crawl", "en": "crawl", "ipa": "krɔːl", "ru": "ползать", "ex": "The kitten crawled under the table.", "exru": "Котёнок прополз под столом.", "art": "Cheremsha crawls on all fours under a very low table; its mane brushes the underside. Side-on view makes crawling clear.", "core": true, "audio": "../7m2c/audio/crawl.mp3", "img": "../7m2c/img/crawl.jpg"}, {"id": "cry", "en": "cry", "ipa": "kraɪ", "ru": "кричать; крик", "ex": "Help! she cried.", "exru": "Помогите! — закричала она.", "art": "A cat loudly calls across a room, paw cupped beside mouth, friends far away turn towards it. No tears: the target sense is shout/call.", "core": false, "audio": "../7m2c/audio/cry.mp3", "img": "../7m2c/img/cry.jpg"}, {"id": "gasp", "en": "gasp", "ipa": "ɡɑːsp", "ru": "ахнуть; тяжёлое дыхание", "ex": "They gasped in surprise.", "exru": "Они ахнули от удивления.", "art": "A surprised cat inhales sharply with a small round open mouth and lifted paws. Harmless surprise: a tiny bunny pops from a hat. Not laughing or yawning.", "core": true, "audio": "../7m2c/audio/gasp.mp3", "img": "../7m2c/img/gasp.jpg"}, {"id": "laugh", "en": "laugh", "ipa": "lɑːf", "ru": "смеяться; смех", "ex": "We laughed at the funny picture.", "exru": "Мы смеялись над смешной картинкой.", "art": "Two cats clearly laugh with delighted eyes at Cheremsha wearing a harmless upside-down hat. Warm inclusive humour.", "core": false, "audio": "../7m2c/audio/laugh.mp3", "img": "../7m2c/img/laugh.jpg"}, {"id": "power-cut", "en": "power cut", "ipa": "ˈpaʊə kʌt", "ru": "отключение электричества", "ex": "There was a power cut.", "exru": "Отключилось электричество.", "art": "A cat is about to win a video game when both room lights and monitor suddenly go dark. Show whole room blackout, not merely an unplugged screen.", "core": true, "audio": "../7m2c/audio/power-cut.mp3", "img": "../7m2c/img/power-cut.jpg"}, {"id": "powerful", "en": "powerful", "ipa": "ˈpaʊəfəl", "ru": "мощный", "ex": "A powerful wind shook the windows.", "exru": "Мощный ветер сотрясал окна.", "art": "Small Cheremsha pushes an enormous heavy sofa with surprising strength. A normal cat watches in admiration. Clear physical power, no violence.", "core": false, "audio": "../7m2c/audio/powerful.mp3", "img": "../7m2c/img/powerful.jpg"}, {"id": "relieved", "en": "relieved", "ipa": "rɪˈliːvd", "ru": "испытывающий облегчение", "ex": "We felt relieved when we found him.", "exru": "Мы почувствовали облегчение, когда нашли его.", "art": "Two-part single scene: worried cat searches for a favourite toy, then finds it under a cushion and visibly relaxes with one paw on chest. Emphasis on relief.", "core": true, "audio": "../7m2c/audio/relieved.mp3", "img": "../7m2c/img/relieved.jpg"}, {"id": "reply", "en": "reply", "ipa": "rɪˈplaɪ", "ru": "ответ", "ex": "There was no reply.", "exru": "Ответа не было.", "art": "One cat asks another a question using an empty question bubble; the second cat clearly answers in another empty bubble. Question/response relationship, no letters.", "core": false, "audio": "../7m2c/audio/reply.mp3", "img": "../7m2c/img/reply.jpg"}, {"id": "sigh", "en": "sigh", "ipa": "saɪ", "ru": "вздыхать; вздох", "ex": "He gave a long sigh.", "exru": "Он глубоко вздохнул.", "art": "Cat releases a slow long breath beside a comically tall pile of notebooks, shoulders dropping. Gentle school humour. Mouth only slightly open; not a sharp gasp.", "core": false, "audio": "../7m2c/audio/sigh.mp3", "img": "../7m2c/img/sigh.jpg"}, {"id": "sleepy", "en": "sleepy", "ipa": "ˈsliːpi", "ru": "сонный", "ex": "I felt sleepy after lunch.", "exru": "После обеда мне хотелось спать.", "art": "Cheremsha is awake but struggles to keep its eyes open, head drooping over a cushion. Do not show it already asleep.", "core": false, "audio": "../7m2c/audio/sleepy.mp3", "img": "../7m2c/img/sleepy.jpg"}, {"id": "snooze", "en": "snooze", "ipa": "snuːz", "ru": "дремать; короткий сон", "ex": "He had a short snooze.", "exru": "Он немного вздремнул.", "art": "Cat takes a short daytime nap in a sunny chair beside a clearly visible short kitchen timer. Peaceful light nap, not deep overnight sleep.", "core": false, "audio": "../7m2c/audio/snooze.mp3", "img": "../7m2c/img/snooze.jpg"}, {"id": "snore", "en": "snore", "ipa": "snɔː", "ru": "храпеть; храп", "ex": "The cat began to snore.", "exru": "Кот начал храпеть.", "art": "Sleeping cat with vibrating cheeks snores so loudly that a nearby teacup gently rattles. No letters, no Z symbols. Clear sleep plus noise.", "core": true, "audio": "../7m2c/audio/snore.mp3", "img": "../7m2c/img/snore.jpg"}, {"id": "storm", "en": "storm", "ipa": "stɔːm", "ru": "буря; гроза", "ex": "A storm began at night.", "exru": "Ночью началась гроза.", "art": "Cats safely indoors watch a complete storm through a large window: rain, bent trees, dark clouds, lightning. Emphasise the weather event.", "core": false, "audio": "../7m2c/audio/storm.mp3", "img": "../7m2c/img/storm.jpg"}, {"id": "stormy", "en": "stormy", "ipa": "ˈstɔːmi", "ru": "бурный; ненастный", "ex": "It was a stormy evening.", "exru": "Вечер был ненастным.", "art": "Cheremsha safely inside a doorway looks out at a stormy evening: wind-blown rain and trees. Make weather adjective easy to describe in a phrase.", "core": false, "audio": "../7m2c/audio/stormy.mp3", "img": "../7m2c/img/stormy.jpg"}, {"id": "trip", "en": "trip", "ipa": "trɪp", "ru": "спотыкаться", "ex": "Be careful! Do not trip over the toy.", "exru": "Осторожно! Не споткнись об игрушку.", "art": "Cat catches one foot on a toy and visibly stumbles towards a soft cushion. Show foot-toy contact. Harmless stumble, not a holiday trip.", "core": true, "audio": "../7m2c/audio/trip.mp3", "img": "../7m2c/img/trip.jpg"}, {"id": "velvet", "en": "velvet", "ipa": "ˈvelvɪt", "ru": "бархатный; бархат", "ex": "He slept on a velvet sofa.", "exru": "Он спал на бархатном диване.", "art": "Cheremsha strokes a rich burgundy velvet sofa with an inset close-up of the soft smooth pile. No corduroy ribs: velvet means бархат, not вельвет.", "core": true, "audio": "../7m2c/audio/velvet.mp3", "img": "../7m2c/img/velvet.jpg"}, {"id": "whisper", "en": "whisper", "ipa": "ˈwɪspə", "ru": "шептать; шёпот", "ex": "Please whisper. The baby is asleep.", "exru": "Говори шёпотом. Малыш спит.", "art": "Two cats whisper quietly, speaker paw near mouth, listener leaning close, a sleeping kitten in the background. Clearly quiet, not shouting.", "core": false, "audio": "../7m2c/audio/whisper.mp3", "img": "../7m2c/img/whisper.jpg"}, {"id": "yawn", "en": "yawn", "ipa": "jɔːn", "ru": "зевать; зевота", "ex": "Cheremsha began to yawn.", "exru": "Черемша начал зевать.", "art": "Cheremsha yawns with a huge relaxed open mouth and half-closed eyes while a nearby cat copies the yawn. Not sharp surprise.", "core": false, "audio": "../7m2c/audio/yawn.mp3", "img": "../7m2c/img/yawn.jpg"}, {"id": "gust-of-wind", "en": "a gust of wind", "ipa": "ə ɡʌst əv wɪnd", "ru": "порыв ветра", "ex": "A gust of wind blew the door open.", "exru": "Порыв ветра распахнул дверь.", "art": "One sudden gust turns a cat’s umbrella inside out and blows a hat sideways. Dynamic bent tree and clothing make a short forceful burst clear.", "core": true, "audio": "../7m2c/audio/gust-of-wind.mp3", "img": "../7m2c/img/gust-of-wind.jpg"}, {"id": "flash-of-lightning", "en": "a flash of lightning", "ipa": "ə flæʃ əv ˈlaɪtnɪŋ", "ru": "вспышка молнии", "ex": "A flash of lightning lit up the room.", "exru": "Вспышка молнии осветила комнату.", "art": "A single bright lightning bolt outside briefly illuminates a dark room and startled cats. Distinguish the flash from a whole storm. No injury.", "core": true, "audio": "../7m2c/audio/flash-of-lightning.mp3", "img": "../7m2c/img/flash-of-lightning.jpg"}, {"id": "fast-asleep", "en": "be fast asleep", "ipa": "biː fɑːst əˈsliːp", "ru": "крепко спать", "ex": "Andy was fast asleep on the sofa.", "exru": "Энди крепко спал на диване.", "art": "Cat sleeps very deeply on a sofa through harmless household commotion, toys rolling and cats searching. Do not show speed, running or a short daytime timer.", "core": true, "audio": "../7m2c/audio/fast-asleep.mp3", "img": "../7m2c/img/fast-asleep.jpg"}];
+function vanishedQ(w, mode) {
+ const base={qid:'2c:'+mode+':'+w.id,...(w.audio?{answerAudio:w.audio}:{}),...(w.img?{card:w.img}:{}),
+  why:esc(w.en)+' /'+esc(w.ipa)+'/ — '+esc(w.ru)+'<br>'+esc(w.ex)+'<br>'+esc(w.exru),
+  hint:'Вспомни ситуацию: '+w.exru};
+ if(mode==='write')return {...base,type:'text',prompt:'Напиши по-английски.',ru:w.ru,
+  accept:w.id==='fast-asleep'?['be fast asleep','fast asleep']:w.en.startsWith('a ')?[w.en,w.en.slice(2)]:[w.en]};
+ const others=take(VANISHED_DATA.filter(x=>x.id!==w.id),3);
+ return choice({...base,prompt:mode==='recognise'?w.en:'Выбери английское слово.',ru:mode==='recognise'?'Что это значит?':w.ru,
+  opts:mode==='recognise'?[w.ru,...others.map(x=>x.ru)]:[w.en,...others.map(x=>x.en)]});
+}
+
 // ====== уровни ======
 // sec — раздел на карте; set — номер набора (для отметки «тест — повторить первым»)
 const SECS={new6:'Набор 6 — новый',new:'Повторить набор 5',rev:'Повторить наборы 1–4',gram:'Грамматика: Past Simple и used to',link:'Слова-связки: порядок событий',boss:'Финал'};
@@ -678,6 +693,16 @@ const UNITS=[
       bothQ(pick(setVerbs(R(1,3)))),fixQ(pick(FIX)),didQ(pick(DID)),pastQ(pick(PAST)),usedQ(pick(USED)),usedNQ(pick(USEDN)),upsQ(pick(UPS)),linkerQ(pick(LINKERS),"boss")];
   }}
 ];
+
+SECS.vanished='2c · Vanished! — 24 слова';
+const vanishedRules=[['12 основных','Напиши по-английски без подсказок.'],['Ещё 12','Узнай слово и выбери перевод.'],['Карточки','Все слова: ссылка над картой.'],['Ошибка','Слово вернётся для повторения.']];
+UNITS.splice(5,0,...[
+ ['v2c-core','Основные 12','перевод → английское слово',()=>shuf(VANISHED_DATA.filter(w=>w.core)).map(w=>vanishedQ(w,'meaning'))],
+ ['v2c-write','Напиши 12 слов','без вариантов ответа',()=>shuf(VANISHED_DATA.filter(w=>w.core)).map(w=>vanishedQ(w,'write'))],
+ ['v2c-recognise','Ещё 12 слов','английское слово → перевод',()=>shuf(VANISHED_DATA.filter(w=>!w.core)).map(w=>vanishedQ(w,'recognise'))],
+ ['v2c-all','Все 24 слова','проверь себя',()=>shuf(VANISHED_DATA).map(w=>vanishedQ(w,w.core?'write':'recognise'))]
+].map(([id,name,sub,make])=>({id,sec:'vanished',name,sub,ic:'flag',c:'#8b5cf6',cd:'#6d3fe0',title:'Vanished! · '+name,
+ lead:'Слова истории: сначала потренируйся с карточками, затем проверь себя.',rules:vanishedRules,make})));
 
 // ====== сохранение (только в этом браузере) ======
 const TEST=/[?&]test\b/.test(location.search);
@@ -806,7 +831,7 @@ function home(){
   <main class="wrap">
     <div class="hello">${pic('hi')}<div class="bubble">Привет! Я <b>Кот Икс</b>. Здесь <b>все наборы</b> неправильных глаголов (1–6), <b>used to</b> и <b>слова-связки</b>. Выбирай любой уровень.</div></div>
     ${T?`<button class="hotcard" id="hot"><span class="hc1">⭐ Тест ${esc(T.label)} — набор ${T.set}</span><span class="hc2">Повтори его <b>в первую очередь</b>. Нажми — и начнём.</span></button>`:''}
-    ${window.Review7?.panel()||''}
+    ${window.Review7?.panel()||''}<p style="text-align:center"><a href="../7m2c/">2c · Vanished! — карточки всех 24 слов</a></p>
     <div class="path">${UNITS.map((u,i)=>{
       const st=save.u[u.id]||0;
       const head=u.sec!==lastSec?(lastSec=u.sec,k=0,`<h2 class="sechead">${esc(SECS[u.sec])}</h2>`):'';
@@ -867,7 +892,7 @@ function ask(){
     <button class="again" id="ag">${IC.waveic} послушать ещё раз</button></div>`;
   if(q.gap)body+=`<p class="gapline">${fmt(q.gap)}</p>`;
   else body+=`<p class="prompt">${fmt(q.prompt)}</p>`;
-  if(q.card)body+=`<div class="vcard"><img src="${q.card}" alt="" onerror="this.parentNode.style.display='none'"></div>`;
+  if(q.card)body+=`<div class="vcard ${q.qid?.startsWith('2c:')?'vcard-v2c':''}"><img src="${q.card}" alt="" onerror="this.parentNode.style.display='none'"></div>`;
   if(q.img)body+=`<div class="introscene"><img src="${q.img}" alt="" style="aspect-ratio:16/9" onerror="this.style.display='none'"></div>`;
   if(q.ru)body+=`<p class="ru">${esc(q.ru)}</p>`;
   if(q.type==='choice'&&q.pics){
@@ -993,7 +1018,7 @@ function finish(){
   const sec=window.Review7?window.Review7.seconds():Math.round((Date.now()-L.t0)/1000);
   window.Review7?.finish(stars,xp);
   if(!L.u.review){save.xp+=xp;save.u[L.u.id]=Math.max(save.u[L.u.id]||0,stars);save.t=save.t||{};save.t[L.u.id]=Date.now();store()}
-  if(!window.Review7)queueResult({pupil:save.pupil,level:L.u.id,levelName:L.u.name,stars,sec,mist:L.mist,wrong:L.wrong,at:new Date().toISOString()});
+  if(!window.Review7||L.u.sec==='vanished')queueResult({pupil:save.pupil,level:L.u.id,levelName:L.u.name,stars,sec,mist:L.mist,wrong:L.wrong,at:new Date().toISOString()});
   app.innerHTML=`<div class="wrap"><div class="done-screen">${pic('win')}
     <h1>${L.u.boss?'Босс побеждён!':'Уровень пройден!'}</h1>
     <p>${stars===3?'Ни одной ошибки — отлично.':L.mist?`Ошибок: ${L.mist}. Эти задания вернулись в конце и сделаны верно.`:''}</p>
