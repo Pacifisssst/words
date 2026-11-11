@@ -336,12 +336,29 @@ body{background:var(--bg)}
 .echo .eb{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.35);overflow:hidden}
 .echo .eb i{display:block;height:100%;width:0;background:#fff}
 .echo button{color:#fff;font-weight:900;border:2px solid #fff;border-radius:10px;padding:2px 8px}
+.lesson-picture{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:var(--soft);border-radius:18px}
+.space-player audio{display:block;width:100%;margin:12px 0}
+.space-captions{min-height:5.5em;padding:8px 4px 0;text-align:center;color:var(--ink2)}
+#space-en{font-size:21px;font-weight:900;color:var(--ink)}
+#space-en .sung{color:var(--spidey)}
+.space-player .chip{min-height:44px}
+.space-player .chip:disabled{opacity:.55;cursor:default}
+.lesson-practice .ptitle{margin-bottom:12px}
+.lesson-words{list-style:none;margin:0;padding:0}
+.lesson-word{display:grid;grid-template-columns:54px 1fr auto;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.lesson-word .wps{width:54px;height:54px;display:grid;place-items:center}
+.lesson-word .w2{width:54px;height:54px;object-fit:contain}
+.lesson-word small{display:block;color:var(--ink2)}
+.new-badge{display:inline-flex;align-items:center;vertical-align:middle;padding:3px 8px;border-radius:999px;background:var(--gold);color:var(--ink);font-size:13px;font-weight:900;line-height:1.2}
+.new-badge[hidden]{display:none}
+.lesson-tools{margin:0 0 22px}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script src="../5m2a/words.js"></script>
 <script src="song2b.js"></script>
+<script src="space-cats.js"></script>
 <script>
 'use strict';
 // ====== значки ======
@@ -805,13 +822,13 @@ const UNITS=[
 ];
 UNITS.forEach(u=>u.ch=u.ch||'2a');
 const CHS=[
- {id:'2a',title:'I’m from',sub:'Учебник с. 36–37 · have got · страны · can',c:'#1f3a93',cd:'#15297a',ic:'globe'},
- {id:'2b',title:'Spidey’s birthday',sub:'Учебник с. 38–39 · подарки · одна — много',c:'#e23636',cd:'#b81f1f',ic:'gift'}];
+ {id:'2b',title:'Spidey’s birthday',sub:'Учебник с. 38–39 · подарки · одна — много',c:'#e23636',cd:'#b81f1f',ic:'gift'},
+ {id:'2a',title:'I’m from',sub:'Учебник с. 36–37 · have got · страны · can',c:'#1f3a93',cd:'#15297a',ic:'globe'}];
 
 // ====== сохранение (только в этом браузере) ======
 const TEST=/[?&]test\b/.test(location.search);
 const GAME='eng5m2a';
-const API='https://igra5b.evdolex.workers.dev';   // Worker учителя
+const API=LOCAL_PREVIEW ? location.origin+'/igra-api' : 'https://igra5b.evdolex.workers.dev';   // Worker учителя
 const SEND_KEY='spidey5b-2026-open';              // не секрет: фильтр от ботов
 const KEY=TEST?'spidey-5b-test':'spidey-5b-v1';
 let save={xp:0,u:{},t:{},pupil:null,roster:null,queue:[]};
@@ -851,7 +868,7 @@ async function whoIs(code){
   if(r.status===429)return 'много';
   if(!r.ok)return null;
   const d=await r.json();
-  return (d.pupil&&d.pupil.id)?d.pupil:null;
+  return (d.pupil&&d.pupil.id)?{...d.pupil,lessonToken:d.lessonToken}:null;
 }
 
 // ====== звук ======
@@ -934,17 +951,22 @@ function topEvents(){
 function home(){
   if(!CH)return chapters();
   const list=chUnits(CH),ch=CHS.find(c=>c.id===CH);
+  const newChapter=CH===LESSON_RELEASE.chapter;
   const total=list.length,doneN=list.filter(([u])=>save.u[u.id]).length;
   const nextI=(list.find(([u])=>!save.u[u.id])||[])[1];
   const offs=[0,-40,-60,-30,10,45,30,-10,-45,0];
   app.innerHTML=`${topbar(doneN,total)}
   <main class="wrap">
     <button class="chback" id="back">← Все главы</button>
-    <div class="hello">${pic(CH==='2b'?'gift':'hi')}<div class="bubble">${CH==='2b'
+    <div class="hello">${pic(CH==='2a'?'hi':'gift')}<div class="bubble">${newChapter
+      ?'Урок <b>12 ноября</b>. Четыре новых уровня: слушай слова, выбирай this, these, that или those, составляй предложения и пиши множественное число.'
+      :CH==='2b'
       ?'Глава <b>2b — Spidey’s birthday</b>. У Спайди день рождения и куча подарков! Назови их по-английски и научись говорить «много»: one mouse — two <b>mice</b>. В каждом уровне вернутся слова из 2a.'
       :'Глава <b>2a — I’m from</b>. Привет! Я <b>Кот Икс</b>. Пройди уровни — и домашку по <b>Module 2a</b> напишешь сам. Половина заданий — <b>на слух</b>, нажимай ▶.'}</div></div>
     ${CH==='2b'&&typeof SONG2B!=='undefined'?`<button class="learnsong" id="song"><span class="sic">🎵</span><span class="t"><b>Учим песню</b>
-      <small>Happy Birthday, Spidey! · ${save.song?'✓ выучена — спой ещё раз':'слушай, пой, прячь слова'}</small></span></button>`:''}
+      <small>Happy Birthday, Spidey! · Space Cats</small></span></button>`:''}
+    ${newChapter?`<div class="homebtns lesson-tools"><button class="btn blue" id="lesson-words">Слова урока</button>
+      <button class="btn ghost" id="song">🎵 Space Cats</button><p id="space-error" role="status" hidden></p></div>`:''}
     <div class="path">${list.map(([u,i],j)=>{
       const st=save.u[u.id]||0;
       return `<div class="unit" style="transform:translateX(${offs[j%offs.length]}px);--c:${u.c};--cd:${u.cd}">
@@ -954,33 +976,36 @@ function home(){
         <div class="name">${u.name}</div><div class="sub">${esc(u.sub)}</div>
       </div>`}).join('')}
       <div class="homebtns"><button class="btn blue" id="mine">Мой результат для учителя</button></div>
-      <button class="reset" id="reset">Начать главу ${ch.id} заново</button>
+      <button class="reset" id="reset">Начать главу ${ch.label||ch.id} заново</button>
     </div>
   </main>`;
   topEvents();
   document.getElementById('back').onclick=()=>{sTap();CH=null;home()};
-  const sb=document.getElementById('song');if(sb)sb.onclick=()=>{sTap();songScreen()};
+  const sb=document.getElementById('song');if(sb)sb.onclick=()=>{sTap();newChapter?openSpaceCats(sb):songPicker()};
+  const words=document.getElementById('lesson-words');if(words)words.onclick=lessonVocabulary;
   app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{sTap();const i=+b.dataset.u;save.pupil?intro(i):askName(()=>intro(i))});
   document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
   // стирает только эту главу: звёзды другой главы и очки остаются
-  document.getElementById('reset').onclick=()=>yesNo(`Стереть звёзды главы ${ch.id}?`,'Стереть',()=>{list.forEach(([u])=>{delete save.u[u.id];if(save.t)delete save.t[u.id]});store();home()});
-  flush();window.scrollTo(0,0);
+  document.getElementById('reset').onclick=()=>yesNo(`Стереть звёзды главы ${ch.label||ch.id}?`,'Стереть',()=>{list.forEach(([u])=>{delete save.u[u.id];if(save.t)delete save.t[u.id]});store();home()});
+  flush();syncLessonState();window.scrollTo(0,0);
 }
 function chapters(){
   app.innerHTML=`${topbar(UNITS.filter(u=>save.u[u.id]).length,UNITS.length)}
   <main class="wrap">
-    <div class="hello">${pic('hi')}<div class="bubble">Привет! Я <b>Кот Икс</b>. Выбери <b>главу</b> — каждая глава это один урок по учебнику.</div></div>
+    <div class="hello">${pic('hi')}<div class="bubble">Новые уроки — <b>сверху</b>. Выбирай нужную тему.</div></div>
     <div class="chs">${CHS.map(c=>{const l=chUnits(c.id),n=l.filter(([u])=>save.u[u.id]).length;
-      return `<button class="chbtn" data-c="${c.id}" style="--c:${c.c};--cd:${c.cd}"><span class="big">${c.id}</span>
-        <span class="t"><b>${c.title}</b><small>${esc(c.sub)}</small>
-        <span class="pr">${IC.star}${n} из ${l.length}${n===l.length?' · пройдено!':''}</span></span></button>`}).join('')}</div>
+      return `<button class="chbtn" data-c="${c.id}" style="--c:${c.c};--cd:${c.cd}"><span class="big">${c.label||c.id}</span>
+        <span class="t"><b>${c.title}${c.release?' '+newLessonBadge(c.release):''}</b><small>${esc(c.sub)}</small>
+        <span class="pr">${IC.star}${n} из ${l.length} · ${n===l.length?'Повторить':n?'Продолжить':'Начать'}</span></span></button>`}).join('')}</div>
     <div class="homebtns"><button class="btn blue" id="mine">Мой результат для учителя</button></div>
     <div style="height:40px"></div>
   </main>`;
   topEvents();
-  app.querySelectorAll('.chbtn').forEach(b=>b.onclick=()=>{sTap();CH=b.dataset.c;home()});
+  app.querySelectorAll('.chbtn').forEach(b=>b.onclick=()=>{sTap();
+    if(b.dataset.c===LESSON_RELEASE.chapter)return openLessonChapter();
+    CH=b.dataset.c;home()});
   document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
-  flush();window.scrollTo(0,0);
+  flush();syncLessonState();window.scrollTo(0,0);
 }
 
 // ====== глава 2b: «Учим песню» — подход экрана стиха из «Get a Five!» (poem5) ======
@@ -1080,7 +1105,7 @@ function songScreen(keep){
     };
     st.raf=requestAnimationFrame(tick);
   };
-  document.getElementById('x').onclick=()=>{songStop();home()};
+  document.getElementById('x').onclick=()=>{songStop();songPicker()};
   document.getElementById('str').onclick=()=>{sTap();SV.tr=SV.tr?0:1;songScreen(true)};
   app.querySelectorAll('.steps button').forEach(b=>b.onclick=()=>{sTap();SV.hide=+b.dataset.h;songScreen(true)});
   app.querySelectorAll('.lp').forEach(b=>b.onclick=()=>{songStop();start('one',+b.dataset.l)});
@@ -1253,7 +1278,7 @@ function finish(){
   const xp=10+first+(L.u.boss?20:0)+(stars===3?5:0);
   const sec=Math.round((Date.now()-L.t0)/1000);
   save.xp+=xp;save.u[L.u.id]=Math.max(save.u[L.u.id]||0,stars);save.t=save.t||{};save.t[L.u.id]=Date.now();store();
-  queueResult({pupil:save.pupil,level:L.u.id,levelName:(L.u.ch==='2b'?'2b · ':'')+L.u.name,stars,sec,mist:L.mist,wrong:L.wrong,at:new Date().toISOString()});
+  queueResult({pupil:save.pupil,level:L.u.id,levelName:(L.u.reportPrefix||(L.u.ch==='2b'?'2b · ':''))+L.u.name,stars,sec,mist:L.mist,wrong:L.wrong,at:new Date().toISOString()});
   app.innerHTML=`<div class="wrap"><div class="done-screen">${pic('win')}
     <h1>${L.u.boss?(L.u.ch==='2b'?'Микс пройден!':'Стена взята!'):'Уровень пройден!'}</h1>
     <p>${stars===3?'Ни одной ошибки — отлично.':L.mist?`Ошибок: ${L.mist}. Эти задания вернулись в конце и сделаны верно.`:''}</p>
@@ -1308,13 +1333,15 @@ async function askName(next){
     if(who==='нет'){err.textContent='Такого кода нет. Посмотри сообщение учителя ещё раз.';return}
     if(who==='много'){err.textContent='Слишком много попыток. Подожди час или спроси учителя.';return}
     if(!who){err.textContent='Нет интернета — код проверяется через сеть. Попробуй позже.';return}
-    sTap();save.pupil={id:who.id,name:who.name};store();next();
+    sTap();save.pupil={id:who.id,name:who.name};
+    save.lessonSession=who.lessonToken?{id:who.id,token:who.lessonToken}:null;store();next();
   };
   inp.focus();
   window.scrollTo(0,0);
 }
 
 function mine(){
+  const orderedUnits=CHS.flatMap(c=>chUnits(c.id).map(([u])=>u));
   const t=save.t||{},doneN=UNITS.filter(u=>save.u[u.id]).length,boss=!!save.u.boss,boss2=!!save.u['b-boss'];
   const waiting=(save.queue||[]).length;
   const d=ms=>{const x=new Date(ms);return x.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit'})+' '+x.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})};
@@ -1323,7 +1350,7 @@ function mine(){
     <div class="cert">
       <div class="who">${pic(boss?'win':'hi')}<div><div class="nm">${esc((save.pupil||{}).name||'')}</div><div class="cl">5Б · Meow English · Module 2a + 2b</div>
         <button class="hintbtn" id="cn" style="padding:2px 0;margin:0;font-size:14px">Это не я</button></div></div>
-      <ul>${UNITS.map((u,i)=>{const st=save.u[u.id]||0;return `${!i||UNITS[i-1].ch!==u.ch?`<li class="chhead">Глава ${u.ch} · ${CHS.find(c=>c.id===u.ch).title}</li>`:''}<li><span class="nm2">${u.name}</span>
+      <ul>${orderedUnits.map((u,i)=>{const st=save.u[u.id]||0;return `${!i||orderedUnits[i-1].ch!==u.ch?`<li class="chhead">Глава ${CHS.find(c=>c.id===u.ch).label||u.ch} · ${CHS.find(c=>c.id===u.ch).title}</li>`:''}<li><span class="nm2">${u.name}</span>
         ${st?`<span class="st">${[1,2,3].map(k=>`<span style="color:${k<=st?'var(--gold)':'var(--line)'}">${IC.star}</span>`).join('')}</span><span class="tm">${t[u.id]?d(t[u.id]):''}</span>`:'<span class="no">не пройден</span>'}</li>`}).join('')}</ul>
       <div class="sum"><span>Пройдено: ${doneN} из ${UNITS.length}</span><span class="big ${boss?'':'not'}">${boss?'Стена взята':'Стена ждёт'}</span><span class="big ${boss2?'':'not'}">${boss2?'Микс пройден':'Микс ждёт'}</span></div>
       <div class="sum" style="margin-top:6px"><span>Очки</span><span style="color:var(--gold-d);display:flex;align-items:center;gap:4px">${IC.bolt}${save.xp}</span></div>
@@ -1334,7 +1361,7 @@ function mine(){
     <div class="bottom"><div class="wrap"><button class="btn" id="hm">На карту</button></div></div>`;
   document.getElementById('x').onclick=home;document.getElementById('hm').onclick=home;
   document.getElementById('cn').onclick=()=>askName(mine);
-  flush();window.scrollTo(0,0);
+  flush();syncLessonState();window.scrollTo(0,0);
 }
 
 addEventListener('keydown',e=>{
@@ -1346,6 +1373,10 @@ addEventListener('keydown',e=>{
   if(L.q.type==='choice'&&/^[1-4]$/.test(e.key)){const b=app.querySelector(`.opt[data-o="${+e.key-1}"],.picopt[data-o="${+e.key-1}"]`);if(b)b.click()}
 });
 
+</script>
+<script src="lesson-2b.js"></script>
+<script src="lesson-state.js"></script>
+<script>
 flush();
 home();
 </script>

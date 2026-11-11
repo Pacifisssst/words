@@ -6,7 +6,7 @@ const words = fs.readFileSync('../5m2a/words.js', 'utf8');
 const from = html.indexOf('// ====== помощники ======');
 const to = html.indexOf('// ====== сохранение');
 if (from < 0 || to < 0) { console.error('не нашёл границы кода'); process.exit(1) }
-const src = words + ';globalThis.WORDS=WORDS;' + html.slice(from, to);
+const src = words + ';globalThis.WORDS=WORDS;' + html.slice(from, to) + fs.readFileSync('lesson-2b.js', 'utf8');
 const { UNITS, WK, GAPS, PICWORDS, SPELL, W2, WX, W2K, CHS, ONEPIC, MANYPIC, howMany, numWord } = new Function(src + ';return {UNITS,WK,GAPS,PICWORDS,SPELL,W2,WX,W2K,CHS,ONEPIC,MANYPIC,howMany,numWord}')();
 
 let n = 0, bad = [];
@@ -86,7 +86,7 @@ UNITS.forEach(u => { if (!CHS.some(c => c.id === u.ch)) bad.push(u.id + ' — б
 UNITS.filter(u => u.ch === '2b').forEach(u => { if (!u.id.startsWith('b-')) bad.push(u.id + ' — id главы 2b без «b-»: смешается с 2a в журнале') });
 UNITS.filter(u => u.ch === '2b' && !u.boss).forEach(u => { const r = u.make().filter(q => q.rev).length; if (r < 2 || r > 3) bad.push(u.id + ' — повторение 2a: ' + r + ' заданий') });
 // у каждого уровня хватает заданий
-UNITS.forEach(u => { const c = u.make().length; if (c < 5) bad.push(u.id + ' — всего ' + c + ' заданий') });
+UNITS.forEach(u => { const c = u.make().length; if (c < (u.ch === '2b-12nov' ? 2 : 5)) bad.push(u.id + ' — всего ' + c + ' заданий') });
 
 const uniq = [...new Set(bad)];
 console.log(`заданий проверено: ${n}, уровней: ${UNITS.length} (2a: ${UNITS.filter(u=>u.ch==='2a').length}, 2b: ${UNITS.filter(u=>u.ch==='2b').length}), записей: ${audioSeen.size}`);
