@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>On the move · Тренажёр 3b</title>
+  <style>
+:root{--paper:#f8faff;--ink:#111c37;--blue:#2f59ff;--soft:#f2f5ff;--green:#11724a;--line:#cbd2e0}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.45 -apple-system,"Avenir Next",sans-serif}main{max-width:620px;margin:auto;padding:20px}h1{font-size:1.6rem;margin:8px 0}p{margin:10px 0}button,select{font:inherit;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--ink);cursor:pointer}button:not([aria-pressed=true]):not(.primary):not(:disabled):hover{background:var(--soft);color:var(--ink)}button:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:3px}button:disabled{cursor:default}.bar{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}button[aria-pressed=true],.primary{background:var(--blue);color:white}#picture{display:block;width:100%;height:230px;object-fit:contain;border-radius:14px;background:var(--soft)}#prompt{font-weight:750;font-size:1.65rem;text-align:center;margin:16px 0}#answer{font-size:1.3rem;text-align:center;color:var(--green)}#choices{display:grid;gap:10px}#choices button{min-height:54px;text-align:left}#choices .correct{background:var(--green);color:white}#choices .wrong{background:#b83a25;color:white}#feedback{min-height:1.5em;font-weight:650}#progress,.help{font-size:.9rem;color:#53617d}[hidden]{display:none!important}@media(max-width:420px){main{padding:14px}#picture{height:190px}}
+#example{text-align:center}button:disabled{opacity:.72}
+</style>
+</head>
+<body>
+<main>
+  <h1 lang="en">On the move</h1>
+  <p>Spotlight 6 · Модуль 3b</p>
+  <div class="bar">
+    <label>Набор
+      <select id="deck">
+        <option value="all">Всё</option>
+        <option value="wordlist">Слова и фразы</option>
+        <option value="homonyms">Омонимы</option>
+      </select>
+    </label>
+    <button id="cards" aria-pressed="true">Карточки</button>
+    <button id="test" aria-pressed="false">Проверка</button>
+  </div>
+  <p id="progress" aria-live="polite"></p>
+  <img id="picture" src="img/careful.webp" alt="Иллюстрация к карточке">
+  <p id="prompt"></p>
+  <p id="example" lang="en" hidden></p>
+  <p id="answer" hidden></p>
+  <div id="choices"></div>
+  <p id="feedback" role="status"></p>
+  <div class="bar">
+    <button id="listen">Послушать</button>
+    <button id="reveal" class="primary">Показать перевод</button>
+    <button id="next">Дальше</button>
+    <button id="restart">Начать заново</button>
+  </div>
+</main>
+<script src="words.js"></script>
+<script src="trainer.js"></script>
+</body>
+</html>
