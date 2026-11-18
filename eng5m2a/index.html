@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Meow English — 5Б · Module 2a + 2b</title>
+<title>Meow English — 5Б · Module 2a + 2b + 2c</title>
 <meta name="description" content="Тренажёр английского, 5Б. Глава 2a: have got, страны, can. Глава 2b: Spidey’s birthday — подарки и множественное число.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -352,13 +352,22 @@ body{background:var(--bg)}
 .new-badge{display:inline-flex;align-items:center;vertical-align:middle;padding:3px 8px;border-radius:999px;background:var(--gold);color:var(--ink);font-size:13px;font-weight:900;line-height:1.2}
 .new-badge[hidden]{display:none}
 .lesson-tools{margin:0 0 22px}
+.collection-hero{width:135px;max-width:35%;height:auto;object-fit:contain;border-radius:12px}
+.collection-words{list-style:none;padding:0;margin:18px 0}
+.collection-words li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);text-align:left}
+.collection-words li div{min-width:0;overflow-wrap:anywhere}
+.collection-words b{font-size:20px}
+.collection-words small{display:block;color:var(--ink2);font-size:16px}
+.collection-words .iconbtn{flex-shrink:0}
+.listen{flex-wrap:wrap}
 </style>
+<link rel="stylesheet" href="collections.css?v=phrase-cards-1">
 </head>
 <body>
 <div id="app"></div>
 <script src="../5m2a/words.js"></script>
 <script src="song2b.js"></script>
-<script src="space-cats.js"></script>
+<script src="space-cats.js?v=collections-2"></script>
 <script>
 'use strict';
 // ====== значки ======
@@ -914,9 +923,9 @@ function sSong(){
 }
 // речь: один общий проигрыватель
 let player=null,audioOk=false;
-function speak(src,btn){
+function speak(src,btn,rate=1){
   try{
-    player=player||new Audio();player.pause();player.src=src;
+    player=player||new Audio();player.pause();player.src=src;player.playbackRate=rate;player.preservesPitch=true;
     const p=player.play();
     if(p&&p.then)p.then(()=>{audioOk=true}).catch(()=>{});
     if(btn){btn.classList.add('on');player.onended=()=>btn.classList.remove('on');setTimeout(()=>btn.classList.remove('on'),4000)}
@@ -949,16 +958,20 @@ function topEvents(){
   document.getElementById('lg').onclick=()=>{CH=null;home()};
 }
 function home(){
+  if(player)player.pause();
   if(!CH)return chapters();
   const list=chUnits(CH),ch=CHS.find(c=>c.id===CH);
   const newChapter=CH===LESSON_RELEASE.chapter;
+  const collectionChapter=CH===COLLECTION_CHAPTER;
   const total=list.length,doneN=list.filter(([u])=>save.u[u.id]).length;
   const nextI=(list.find(([u])=>!save.u[u.id])||[])[1];
   const offs=[0,-40,-60,-30,10,45,30,-10,-45,0];
   app.innerHTML=`${topbar(doneN,total)}
   <main class="wrap">
     <button class="chback" id="back">← Все главы</button>
-    <div class="hello">${pic(CH==='2a'?'hi':'gift')}<div class="bubble">${newChapter
+    <div class="hello">${collectionChapter?'<img class="collection-hero" src="img/collections/writing.webp" alt="Кот пишет огромным карандашом.">':pic(CH==='2a'?'hi':'gift')}<div class="bubble">${collectionChapter
+      ?'Meet the museum’s curious collections. Learn 22 words, listen to Alex, sing with Tom and create your own story. Tap English for Russian help.'
+      :newChapter
       ?'Урок <b>12 ноября</b>. Четыре новых уровня: слушай слова, выбирай this, these, that или those, составляй предложения и пиши множественное число.'
       :CH==='2b'
       ?'Глава <b>2b — Spidey’s birthday</b>. У Спайди день рождения и куча подарков! Назови их по-английски и научись говорить «много»: one mouse — two <b>mice</b>. В каждом уровне вернутся слова из 2a.'
@@ -967,6 +980,7 @@ function home(){
       <small>Happy Birthday, Spidey! · Space Cats</small></span></button>`:''}
     ${newChapter?`<div class="homebtns lesson-tools"><button class="btn blue" id="lesson-words">Слова урока</button>
       <button class="btn ghost" id="song">🎵 Space Cats</button><p id="space-error" role="status" hidden></p></div>`:''}
+    ${collectionChapter?'<div class="homebtns lesson-tools"><button class="btn blue" id="collection-words">Explore the words</button><button class="btn ghost" id="collection-song">Tom’s collection · sing</button><button class="btn ghost" id="collection-writing">Create my story</button></div>':''}
     <div class="path">${list.map(([u,i],j)=>{
       const st=save.u[u.id]||0;
       return `<div class="unit" style="transform:translateX(${offs[j%offs.length]}px);--c:${u.c};--cd:${u.cd}">
@@ -980,9 +994,14 @@ function home(){
     </div>
   </main>`;
   topEvents();
+  collectionHomeLabels();
   document.getElementById('back').onclick=()=>{sTap();CH=null;home()};
   const sb=document.getElementById('song');if(sb)sb.onclick=()=>{sTap();newChapter?openSpaceCats(sb):songPicker()};
   const words=document.getElementById('lesson-words');if(words)words.onclick=lessonVocabulary;
+  const cw=document.getElementById('collection-words');if(cw)cw.onclick=collectionVocabulary;
+  const writing=document.getElementById('collection-writing');if(writing)writing.onclick=collectionWriting;
+  const collectionSong=document.getElementById('collection-song');
+  if(collectionSong)collectionSong.onclick=()=>spaceCats({...TOM_COLLECTION_SONG,back:home});
   app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{sTap();const i=+b.dataset.u;save.pupil?intro(i):askName(()=>intro(i))});
   document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
   // стирает только эту главу: звёзды другой главы и очки остаются
@@ -1119,15 +1138,21 @@ function songScreen(keep){
 
 function intro(i){
   const u=UNITS[i];
+  if(u.id==='c17-write')return collectionStory();
+  if(u.ch===COLLECTION_CHAPTER && u.id!=='c17-phrases' && u.vocabulary)return lesson(i);
   app.innerHTML=`
   <div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="Назад">${IC.close}</button></div>
   <div class="intro">
+    ${u.image?'<img class="lesson-picture" src="'+u.image+'" alt="Сцена в Mystery Shack.">':''}
     ${u.boss?(s=>`<div class="introscene"><img src="${s[0]}" data-s="${s.join('|')}" data-i="0" alt="" onerror="nextPic(this)"></div>`)(PICS[u.ch==='2b'?'party':'scene']):''}
     <h1>${u.title}</h1><p class="lead">${u.lead}</p>
     <div class="robo">${pic(UPIC[u.id]||'hi')}<div class="rules">${u.rules.map(r=>`<div class="rule"><span class="eq">${esc(r[0])}</span><small>${esc(r[1])}</small></div>`).join('')}</div></div>
+  ${u.vocabulary?collectionWordList(u.vocabulary):''}
   </div></div>
   <div class="bottom"><div class="wrap"><button class="btn" id="go" style="background:${u.c};box-shadow:0 4px 0 ${u.cd}">${u.boss?'В бой!':'Поехали!'}</button></div></div>`;
   document.getElementById('x').onclick=home;
+  collectionAudioEvents();
+  if(u.ch===COLLECTION_CHAPTER)document.getElementById('go').textContent='Let’s go';
   document.getElementById('go').onclick=()=>{sTap();lesson(i)};
   window.scrollTo(0,0);
 }
@@ -1135,31 +1160,34 @@ function intro(i){
 let L;
 function lesson(i){
   const u=UNITS[i],qs=u.make();CH=u.ch;
-  L={u,i,queue:qs,total:qs.length,ok:0,mist:0,hearts:u.boss?3:null,combo:0,best:0,bad:0,t0:Date.now(),wrong:[],seen:new Set()};
+  L={u,i,queue:qs,total:qs.filter(q=>q.type!=='discover').length,ok:0,mist:0,hearts:u.boss?3:null,combo:0,best:0,bad:0,t0:Date.now(),wrong:[],seen:new Set()};
   ask();
   if(u.boss)setTimeout(()=>{if(L&&L.u.boss&&document.getElementById('chk'))
     flyer(u.fly||'Бомбардиро Крокодило летел мимо, увидел твой have got — и испугался!')},700);
 }
 function ask(){
+  if(player)player.pause();
   if(!L.queue.length)return finish();
-  const q=L.q=L.queue[0];L.ans=q.type==='build'?[]:null;L.hintShown=false;L.locked=false;
+  const q=L.q=L.queue[0];if(q.type==='discover')return collectionDiscovery(q);L.ans=q.type==='build'?[]:null;L.hintShown=false;L.locked=false;
   const pct=Math.round(L.ok/L.total*100);
   let body='';
   const tag=(q.book?`<span class="tag">из учебника · ${esc(q.book)}</span> `:'')
     +(q.rev?'<span class="tag bonus">🔁 повторяем 2a</span> ':'')+(q.pol?`<span class="tag ${q.pol==='no'?'bonus':''}">${q.pol==='no'?'❌ НЕТ':'✅ ЕСТЬ'}</span>`:'');
   if(q.audio)body+=`<div class="listen"><button class="play" id="pl" aria-label="Слушать">${IC.playic}</button>
-    <button class="again" id="ag">${IC.waveic} послушать ещё раз</button></div>`;
+    <button class="again" id="ag">${IC.waveic} послушать ещё раз</button>${q.transcript?'<button class="again" id="slow">Медленно</button>':''}</div>`;
   if(q.gap)body+=`<p class="gapline">${fmt(q.gap)}</p>`;
-  else body+=`<p class="prompt">${fmt(q.prompt)}</p>`;
+  else body+=`<p class="prompt">${q.promptRu?collectionHelp(q.prompt,q.promptRu):fmt(q.prompt)}</p>`;
   if(q.show)body+=q.show;
   if(q.img)body+=`<div class="introscene"><img src="${q.img}" alt="" style="aspect-ratio:16/9" onerror="this.style.display='none'"></div>`;
   if(q.ru)body+=`<p class="ru">${esc(q.ru)}</p>`;
-  if(q.type==='choice'&&q.pics){
+  if(q.type==='choice'&&q.visualOptions){
+    body+=collectionPictureOptions(q);
+  }else if(q.type==='choice'&&q.pics){
     body+=`<div class="picopts">${q.opts.map((k,i)=>`<button class="picopt" data-o="${i}"><img src="${wimg(k)}" alt="" onerror="this.style.visibility='hidden'"><span>${i+1}</span></button>`).join('')}</div>`;
   }else if(q.type==='choice'&&q.emo){
     body+=`<div class="picopts">${q.opts.map((k,i)=>`<button class="picopt" data-o="${i}"><span class="wbox${IMG2B.ok?' im':''}">${wp(k)}</span><span>${i+1}</span></button>`).join('')}</div>`;
   }else if(q.type==='choice'){
-    body+=`<div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-o="${k}"><span class="n">${k+1}</span><span>${esc(o)}</span></button>`).join('')}</div>`;
+    body+=`<div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-o="${k}"><span class="n">${k+1}</span><span>${L.u.ch===COLLECTION_CHAPTER?collectionOption(o):esc(o)}</span></button>`).join('')}</div>`;
   }else if(q.type==='build'){
     body+=`<div class="lineup empty" id="line"></div><div class="bank">${q.tiles.map((t,k)=>`<button class="tile" data-t="${k}" style="font-size:19px">${esc(t)}</button>`).join('')}</div>`;
   }else{
@@ -1190,9 +1218,11 @@ function ask(){
   if(q.audio){
     const pl=document.getElementById('pl');
     const go=()=>{sTap();speak(q.audio,pl)};
+    const slow=document.getElementById('slow');if(slow)slow.onclick=()=>speak(q.audio,slow,.75);
     pl.onclick=go;document.getElementById('ag').onclick=go;
-    if(audioOk)setTimeout(go,350);
+    if(audioOk)setTimeout(()=>{if(L.q===q&&!L.locked&&document.getElementById('pl')===pl)go()},350);
   }
+  collectionExerciseEvents();
   if(q.type==='choice'){
     const sel=q.pics||q.emo?'.picopt':'.opt';
     app.querySelectorAll(sel).forEach(b=>b.onclick=()=>{sTap();L.ans=+b.dataset.o;app.querySelectorAll(sel).forEach(o=>o.classList.toggle('sel',o===b));ready()});
@@ -1225,6 +1255,7 @@ function isRight(){
 function rightText(){const q=L.q;return esc(q.type==='choice'?(q.pics?WK[q.opts[q.correct]].en:q.emo?W2K[q.opts[q.correct]].en:q.opts[q.correct]):q.accept[0])}
 function testAnswer(right){
   if(L.locked)return;const q=L.q;
+  if(q.type==='discover'){L.queue.shift();return ask()}
   if(q.type==='choice')L.ans=right?q.correct:(q.correct+1)%q.opts.length;
   else if(q.type==='text')L.ans=right?q.accept[0]:'zzz';
   else if(right){const used=new Set();L.ans=(q.right||q.accept[0].split(' ')).map(t=>{const k=q.tiles.findIndex((x,i)=>x===t&&!used.has(i));used.add(k);return k})}
@@ -1232,6 +1263,8 @@ function testAnswer(right){
   check();
 }
 function check(){
+  if(L.locked)return;
+  if(player)player.pause();
   const q=L.q,good=isRight();L.locked=true;
   const sh=document.getElementById('sh');
   L.queue.shift();
@@ -1248,14 +1281,19 @@ function check(){
     if(L.bad>=3)joke='Не переживай, это всего лишь двойка будет, если ты не соберёшься 😼';
     else if(Math.random()<.5){joke='Черемша сочувствует. Попробуй ещё!';cherPic=pic('cherSad','ph wobble')}
   }
-  const praise=pick(['Отлично!','Верно!','Супер!','Точно!','Так держать!']);
+  if(L.u.ch===COLLECTION_CHAPTER)joke=good?'Another discovery for the museum!':'Take your time. This word will come back.';
+  const praise=pick(L.u.ch===COLLECTION_CHAPTER?['Well done!','Correct!','Great work!']:['Отлично!','Верно!','Супер!','Точно!','Так держать!']);
   sh.className='sheet '+(good?'ok':'bad');
   sh.innerHTML=`<div class="wrap"><div class="row">${cherPic||pic(face,fcls)}<div style="flex:1">
-    <h3>${good?IC.check+praise:IC.cross+'Почти!'}</h3>
+    <h3>${good?IC.check+praise:IC.cross+(L.u.ch===COLLECTION_CHAPTER?'Try again':'Почти!')}</h3>
     ${joke?`<p class="joke">${joke}</p>`:''}
-    <p class="why">${good?q.why:`Правильно: <b>${rightText()}</b>.<br>${q.why}`}</p>
+    <p class="why">${good?q.why:`${L.u.ch===COLLECTION_CHAPTER?'Answer':'Правильно'}: <b>${rightText()}</b>.<br>${q.why}`}</p>
     ${q.audio?`<button class="again" id="ag2">${IC.waveic} послушать ещё раз</button>`:''}</div></div>
     <button class="btn" id="nx">${!good&&L.hearts===0?'Ой…':'Дальше'}</button></div>`;
+  if(L.u.ch===COLLECTION_CHAPTER){
+    document.getElementById('nx').textContent='Continue';
+    const replay=sh.querySelector('#ag2');if(replay)replay.innerHTML=IC.waveic+'Listen again';
+  }
   document.getElementById('bt').style.visibility='hidden';
   requestAnimationFrame(()=>sh.classList.add('show'));
   const p=app.querySelector('.prog i');if(p)p.style.width=Math.max(Math.round(L.ok/L.total*100),3)+'%';
@@ -1293,6 +1331,7 @@ function finish(){
     ${L.u.boss?(L.u.id==='boss'?'<a class="btn songbtn" href="../5m2a/5b/" style="text-align:center;text-decoration:none">🎵 Слушать песню Spidey</a>':'')+'<button class="btn blue" id="mn">Мой результат для учителя</button>':''}
     <button class="btn" id="hm">Продолжить</button></div></div>`;
   document.getElementById('hm').onclick=home;
+  collectionFinishLabels();
   const mn=document.getElementById('mn');if(mn)mn.onclick=mine;
   if(L.u.boss){sSong();confetti();setTimeout(confetti,1600);setTimeout(confetti,3400)}else{sWin();confetti()}
 }
@@ -1376,6 +1415,9 @@ addEventListener('keydown',e=>{
 </script>
 <script src="lesson-2b.js"></script>
 <script src="lesson-state.js"></script>
+<script src="collections.js?v=phrase-cards-1"></script>
+<script src="tom-collection.js"></script>
+<script src="collections-learning.js?v=phrase-cards-1"></script>
 <script>
 flush();
 home();

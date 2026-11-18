@@ -38,22 +38,22 @@ async function openSpaceCats(button) {
   }
 }
 
-function spaceCats({intro, lines}) {
+function spaceCats({intro, lines, title='Space Cats', src='space-cats/space-cats.mp3', back=songPicker}) {
   app.innerHTML = `<main class="wrap space-player"><div class="lbar">
     <button class="iconbtn" id="x" aria-label="К списку песен">${IC.close}</button></div>
-    <h1 class="ptitle">Space Cats</h1>
+    <h1 class="ptitle">${esc(title)}</h1>
     <img class="lesson-picture" id="space-art" src="${intro}" alt="">
     <div class="space-captions"><div id="space-en" lang="en"></div><div id="space-ru"></div></div>
-    <audio controls preload="metadata" src="space-cats/space-cats.mp3" aria-label="Space Cats"></audio>
+    <audio controls preload="metadata" src="${esc(src)}" aria-label="${esc(title)}"></audio>
     <p id="space-error" role="status" hidden>Не удалось загрузить запись.</p>
     <div class="pbar">
-      <button class="chip on" data-caption="en" aria-pressed="true">Английский</button>
-      <button class="chip on" data-caption="ru" aria-pressed="true">Перевод</button>
+      <button class="chip on" data-caption="en" aria-pressed="true">English</button>
+      <button class="chip on" data-caption="ru" aria-pressed="true">Russian</button>
     </div>
     <div class="pbar">
-      <button class="chip" id="space-prev" aria-label="Предыдущая строчка">← Строчка</button>
-      <button class="chip" id="space-next" aria-label="Следующая строчка">Строчка →</button>
-      <button class="chip" id="space-repeat" aria-pressed="false">Повтор строки</button>
+      <button class="chip" id="space-prev" aria-label="Предыдущая строчка">← Line</button>
+      <button class="chip" id="space-next" aria-label="Следующая строчка">Line →</button>
+      <button class="chip" id="space-repeat" aria-pressed="false">Repeat line</button>
     </div>
   </main>`;
   const audio = app.querySelector('audio');
@@ -61,6 +61,14 @@ function spaceCats({intro, lines}) {
   const error = app.querySelector('#space-error');
   const en = app.querySelector('#space-en');
   const ru = app.querySelector('#space-ru');
+  if(title==='Tom’s collection'){
+    ru.hidden=true;
+    const russianButton=app.querySelector('[data-caption="ru"]');
+    russianButton.classList.remove('on');russianButton.setAttribute('aria-pressed','false');
+    en.setAttribute('role','button');en.tabIndex=0;en.setAttribute('aria-label','Tap the lyrics for Russian');
+    en.onclick=()=>russianButton.click();
+    en.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();russianButton.click()}};
+  }
   const prev = app.querySelector('#space-prev');
   const next = app.querySelector('#space-next');
   const repeat = app.querySelector('#space-repeat');
@@ -146,7 +154,7 @@ function spaceCats({intro, lines}) {
   app.querySelector('#x').onclick = () => {
     stop();
     removeEventListener('pagehide', stop);
-    songPicker();
+    back();
   };
   render();
   window.scrollTo(0, 0);
