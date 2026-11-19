@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Meow English — 5Б · Module 2a + 2b + 2c</title>
+<title>Meow English — 5Б · Module 2a–2d</title>
 <meta name="description" content="Тренажёр английского, 5Б. Глава 2a: have got, страны, can. Глава 2b: Spidey’s birthday — подарки и множественное число.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -362,6 +362,7 @@ body{background:var(--bg)}
 .listen{flex-wrap:wrap}
 </style>
 <link rel="stylesheet" href="collections.css?v=phrase-cards-1">
+<link rel="stylesheet" href="market.css">
 </head>
 <body>
 <div id="app"></div>
@@ -959,7 +960,9 @@ function topEvents(){
 }
 function home(){
   if(player)player.pause();
+  app.toggleAttribute('data-market', CH === MARKET_CHAPTER);
   if(!CH)return chapters();
+  if(CH === MARKET_CHAPTER)return marketHome();
   const list=chUnits(CH),ch=CHS.find(c=>c.id===CH);
   const newChapter=CH===LESSON_RELEASE.chapter;
   const collectionChapter=CH===COLLECTION_CHAPTER;
@@ -1168,11 +1171,15 @@ function lesson(i){
 function ask(){
   if(player)player.pause();
   if(!L.queue.length)return finish();
-  const q=L.q=L.queue[0];if(q.type==='discover')return collectionDiscovery(q);L.ans=q.type==='build'?[]:null;L.hintShown=false;L.locked=false;
+  const q=L.q=L.queue[0],market=L.u.ch===MARKET_CHAPTER;
+  app.toggleAttribute('data-market', market);
+  if(q.type==='discover')return market?marketDiscover(q):collectionDiscovery(q);
+  L.ans=q.type==='build'?[]:null;L.hintShown=false;L.locked=false;
   const pct=Math.round(L.ok/L.total*100);
   let body='';
   const tag=(q.book?`<span class="tag">из учебника · ${esc(q.book)}</span> `:'')
     +(q.rev?'<span class="tag bonus">🔁 повторяем 2a</span> ':'')+(q.pol?`<span class="tag ${q.pol==='no'?'bonus':''}">${q.pol==='no'?'❌ НЕТ':'✅ ЕСТЬ'}</span>`:'');
+  if(q.media)body+=marketAudio(q);
   if(q.audio)body+=`<div class="listen"><button class="play" id="pl" aria-label="Слушать">${IC.playic}</button>
     <button class="again" id="ag">${IC.waveic} послушать ещё раз</button>${q.transcript?'<button class="again" id="slow">Медленно</button>':''}</div>`;
   if(q.gap)body+=`<p class="gapline">${fmt(q.gap)}</p>`;
@@ -1180,7 +1187,9 @@ function ask(){
   if(q.show)body+=q.show;
   if(q.img)body+=`<div class="introscene"><img src="${q.img}" alt="" style="aspect-ratio:16/9" onerror="this.style.display='none'"></div>`;
   if(q.ru)body+=`<p class="ru">${esc(q.ru)}</p>`;
-  if(q.type==='choice'&&q.visualOptions){
+  if(q.marketPictures){
+    body+=marketPictureChoices(q);
+  }else if(q.type==='choice'&&q.visualOptions){
     body+=collectionPictureOptions(q);
   }else if(q.type==='choice'&&q.pics){
     body+=`<div class="picopts">${q.opts.map((k,i)=>`<button class="picopt" data-o="${i}"><img src="${wimg(k)}" alt="" onerror="this.style.visibility='hidden'"><span>${i+1}</span></button>`).join('')}</div>`;
@@ -1190,6 +1199,8 @@ function ask(){
     body+=`<div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-o="${k}"><span class="n">${k+1}</span><span>${L.u.ch===COLLECTION_CHAPTER?collectionOption(o):esc(o)}</span></button>`).join('')}</div>`;
   }else if(q.type==='build'){
     body+=`<div class="lineup empty" id="line"></div><div class="bank">${q.tiles.map((t,k)=>`<button class="tile" data-t="${k}" style="font-size:19px">${esc(t)}</button>`).join('')}</div>`;
+  }else if(q.say){
+    body+=marketSpeakRecall(q.say);
   }else{
     body+=`<input class="tin" id="tin" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="напиши слово">
       <p class="tinhelp">Большие буквы не важны.</p>`;
@@ -1204,7 +1215,7 @@ function ask(){
     ${TEST?'<div class="testbar"><button id="tOk">✓ Верно</button><button id="tBad">✗ Ошибка</button><button id="tWin">⏭ Весь уровень</button></div>':''}
     <div class="qbody" id="qb">${tag?'<div>'+tag+'</div>':''}${body}</div>
   </div>
-  <div class="bottom" id="bt"><div class="wrap"><button class="btn" id="chk" disabled>Проверить</button></div></div>
+  <div class="bottom" id="bt" ${q.say?'hidden':''}><div class="wrap"><button class="btn" id="chk" disabled>Проверить</button></div></div>
   <div class="sheet" id="sh"></div>`;
   document.getElementById('x').onclick=()=>yesNo('Выйти из уровня?','Выйти',home);
   document.getElementById('chk').onclick=check;
@@ -1223,12 +1234,13 @@ function ask(){
     if(audioOk)setTimeout(()=>{if(L.q===q&&!L.locked&&document.getElementById('pl')===pl)go()},350);
   }
   collectionExerciseEvents();
+  if(market)marketExercise(q);
   if(q.type==='choice'){
     const sel=q.pics||q.emo?'.picopt':'.opt';
     app.querySelectorAll(sel).forEach(b=>b.onclick=()=>{sTap();L.ans=+b.dataset.o;app.querySelectorAll(sel).forEach(o=>o.classList.toggle('sel',o===b));ready()});
   }else if(q.type==='build'){
     app.querySelectorAll('.bank .tile').forEach(b=>b.onclick=()=>{sTap();L.ans.push(+b.dataset.t);b.classList.add('used');drawLine()});
-  }else{
+  }else if(!q.say){
     const t=document.getElementById('tin');
     t.oninput=()=>{L.ans=t.value;ready()};
     t.onkeydown=e=>{if(e.key==='Enter'&&!document.getElementById('chk').disabled){e.preventDefault();t.blur();check()}};
@@ -1265,13 +1277,14 @@ function testAnswer(right){
 function check(){
   if(L.locked)return;
   if(player)player.pause();
-  const q=L.q,good=isRight();L.locked=true;
+  const q=L.q,good=isRight(),market=L.u.ch===MARKET_CHAPTER;L.locked=true;
+  document.getElementById('market-recording')?.pause();
   const sh=document.getElementById('sh');
   L.queue.shift();
   if(!L.seen.has(q)){L.seen.add(q);if(!good&&q.qid)L.wrong.push(q.qid)}
   let face=good?'yes':'oops',fcls=good?'jump':'wobble',joke='',cherPic='';
   if(good){L.ok++;L.combo++;L.bad=0;L.best=Math.max(L.best,L.combo);
-    if(L.combo===6||L.combo===7){s67();face='six7';fcls='six7';joke='Сикс-севен подряд! 🤷 Засчитано.'}
+    if(!market&&(L.combo===6||L.combo===7)){s67();face='six7';fcls='six7';joke='Сикс-севен подряд! 🤷 Засчитано.'}
     else if(L.combo>=3)sCombo(L.combo);else sGood();
   }else{
     L.mist++;L.combo=0;L.bad++;sBad();
@@ -1281,14 +1294,18 @@ function check(){
     if(L.bad>=3)joke='Не переживай, это всего лишь двойка будет, если ты не соберёшься 😼';
     else if(Math.random()<.5){joke='Черемша сочувствует. Попробуй ещё!';cherPic=pic('cherSad','ph wobble')}
   }
+  if(market){
+    cherPic='';
+    joke=good?'':'Это задание вернётся в конце.';
+  }
   if(L.u.ch===COLLECTION_CHAPTER)joke=good?'Another discovery for the museum!':'Take your time. This word will come back.';
   const praise=pick(L.u.ch===COLLECTION_CHAPTER?['Well done!','Correct!','Great work!']:['Отлично!','Верно!','Супер!','Точно!','Так держать!']);
   sh.className='sheet '+(good?'ok':'bad');
-  sh.innerHTML=`<div class="wrap"><div class="row">${cherPic||pic(face,fcls)}<div style="flex:1">
+  sh.innerHTML=`<div class="wrap"><div class="row">${market?'':cherPic||pic(face,fcls)}<div style="flex:1">
     <h3>${good?IC.check+praise:IC.cross+(L.u.ch===COLLECTION_CHAPTER?'Try again':'Почти!')}</h3>
     ${joke?`<p class="joke">${joke}</p>`:''}
     <p class="why">${good?q.why:`${L.u.ch===COLLECTION_CHAPTER?'Answer':'Правильно'}: <b>${rightText()}</b>.<br>${q.why}`}</p>
-    ${q.audio?`<button class="again" id="ag2">${IC.waveic} послушать ещё раз</button>`:''}</div></div>
+    ${(q.audio||q.media||q.say)?`<button class="again" id="ag2">${IC.waveic} послушать ещё раз</button>`:''}</div></div>
     <button class="btn" id="nx">${!good&&L.hearts===0?'Ой…':'Дальше'}</button></div>`;
   if(L.u.ch===COLLECTION_CHAPTER){
     document.getElementById('nx').textContent='Continue';
@@ -1298,7 +1315,13 @@ function check(){
   requestAnimationFrame(()=>sh.classList.add('show'));
   const p=app.querySelector('.prog i');if(p)p.style.width=Math.max(Math.round(L.ok/L.total*100),3)+'%';
   const h=app.querySelector('.hearts');if(h)h.innerHTML=IC.heart+L.hearts;
-  const a2=document.getElementById('ag2');if(a2)a2.onclick=()=>speak(q.audio);
+  const a2=document.getElementById('ag2');if(a2)a2.onclick=()=>{
+    if(q.media){
+      const recording=document.getElementById('market-recording');
+      recording.currentTime=0;
+      recording.play().catch(()=>{});
+    }else speak(q.say?marketClip(q.say):q.audio);
+  };
   document.getElementById('nx').onclick=()=>{L.locked=false;if(L.hearts===0)return lost();ask()};
   document.getElementById('nx').focus({preventScroll:true});
 }
@@ -1311,15 +1334,17 @@ function lost(){
   document.getElementById('hm').onclick=home;
 }
 function finish(){
+  const market=L.u.ch===MARKET_CHAPTER;
+  if(L.u.id===MARKET_PORTFOLIO&&!L.portfolioReady)return marketPortfolio();
   const first=L.total,acc=Math.round(first/(first+L.mist)*100);
   const stars=L.mist===0?3:L.mist<=2?2:1;
   const xp=10+first+(L.u.boss?20:0)+(stars===3?5:0);
   const sec=Math.round((Date.now()-L.t0)/1000);
   save.xp+=xp;save.u[L.u.id]=Math.max(save.u[L.u.id]||0,stars);save.t=save.t||{};save.t[L.u.id]=Date.now();store();
   queueResult({pupil:save.pupil,level:L.u.id,levelName:(L.u.reportPrefix||(L.u.ch==='2b'?'2b · ':''))+L.u.name,stars,sec,mist:L.mist,wrong:L.wrong,at:new Date().toISOString()});
-  app.innerHTML=`<div class="wrap"><div class="done-screen">${pic('win')}
-    <h1>${L.u.boss?(L.u.ch==='2b'?'Микс пройден!':'Стена взята!'):'Уровень пройден!'}</h1>
-    <p>${stars===3?'Ни одной ошибки — отлично.':L.mist?`Ошибок: ${L.mist}. Эти задания вернулись в конце и сделаны верно.`:''}</p>
+  app.innerHTML=`<div class="wrap"><div class="done-screen">${market?'<div class="market-wax" aria-hidden="true">'+IC.check+'</div>':pic('win')}
+    <h1>${market?'Печать получена!':L.u.boss?(L.u.ch==='2b'?'Микс пройден!':'Стена взята!'):'Уровень пройден!'}</h1>
+    <p>${L.u.id===MARKET_PORTFOLIO?'Два предложения сохранены. Подготовь карту и представь её классу.':stars===3?'Ни одной ошибки — отлично.':L.mist?`Ошибок: ${L.mist}. Эти задания вернулись в конце и сделаны верно.`:''}</p>
     <div class="bigstars">${[1,2,3].map(k=>`<span class="pop" style="color:${k<=stars?'var(--gold)':'var(--line)'};animation-delay:${k*.15}s">${IC.star.replace('class="ic"','')}</span>`).join('')}</div>
     <div class="res"><div style="--c:var(--gold)"><b>Очки</b><span>${IC.bolt}+${xp}</span></div>
       <div style="--c:var(--green)"><b>Точность</b><span>${acc}%</span></div>
@@ -1333,7 +1358,9 @@ function finish(){
   document.getElementById('hm').onclick=home;
   collectionFinishLabels();
   const mn=document.getElementById('mn');if(mn)mn.onclick=mine;
-  if(L.u.boss){sSong();confetti();setTimeout(confetti,1600);setTimeout(confetti,3400)}else{sWin();confetti()}
+  if(market)sWin();
+  else if(L.u.boss){sSong();confetti();setTimeout(confetti,1600);setTimeout(confetti,3400)}
+  else{sWin();confetti()}
 }
 function confetti(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -1380,6 +1407,7 @@ async function askName(next){
 }
 
 function mine(){
+  app.removeAttribute('data-market');
   const orderedUnits=CHS.flatMap(c=>chUnits(c.id).map(([u])=>u));
   const t=save.t||{},doneN=UNITS.filter(u=>save.u[u.id]).length,boss=!!save.u.boss,boss2=!!save.u['b-boss'];
   const waiting=(save.queue||[]).length;
@@ -1387,7 +1415,7 @@ function mine(){
   app.innerHTML=`<div class="wrap"><div class="lbar"><button class="iconbtn" id="x" aria-label="На карту">${IC.close}</button></div>
     <div class="shot">${IC.bulb}<span>Результат уходит учителю сам. Можно ещё сделать скриншот этого экрана.</span></div>
     <div class="cert">
-      <div class="who">${pic(boss?'win':'hi')}<div><div class="nm">${esc((save.pupil||{}).name||'')}</div><div class="cl">5Б · Meow English · Module 2a + 2b</div>
+      <div class="who">${pic(boss?'win':'hi')}<div><div class="nm">${esc((save.pupil||{}).name||'')}</div><div class="cl">5Б · Meow English · Module 2a–2d</div>
         <button class="hintbtn" id="cn" style="padding:2px 0;margin:0;font-size:14px">Это не я</button></div></div>
       <ul>${orderedUnits.map((u,i)=>{const st=save.u[u.id]||0;return `${!i||orderedUnits[i-1].ch!==u.ch?`<li class="chhead">Глава ${CHS.find(c=>c.id===u.ch).label||u.ch} · ${CHS.find(c=>c.id===u.ch).title}</li>`:''}<li><span class="nm2">${u.name}</span>
         ${st?`<span class="st">${[1,2,3].map(k=>`<span style="color:${k<=st?'var(--gold)':'var(--line)'}">${IC.star}</span>`).join('')}</span><span class="tm">${t[u.id]?d(t[u.id]):''}</span>`:'<span class="no">не пройден</span>'}</li>`}).join('')}</ul>
@@ -1404,7 +1432,7 @@ function mine(){
 }
 
 addEventListener('keydown',e=>{
-  if(!L||!document.getElementById('chk'))return;
+  if(!L||L.q?.say||!document.getElementById('chk')||e.target?.closest?.('.market-audio'))return;
   const sh=document.getElementById('sh');
   if(e.key==='Enter'){e.preventDefault();if(sh&&sh.classList.contains('show'))document.getElementById('nx').click();
     else if(!document.getElementById('chk').disabled)check();return}
@@ -1418,6 +1446,7 @@ addEventListener('keydown',e=>{
 <script src="collections.js?v=phrase-cards-1"></script>
 <script src="tom-collection.js"></script>
 <script src="collections-learning.js?v=phrase-cards-1"></script>
+<script src="market.js"></script>
 <script>
 flush();
 home();
