@@ -6,6 +6,11 @@ try {
   if (cached && typeof cached === 'object' && !Array.isArray(cached)) lessonSeen = cached;
 } catch {}
 let syncingLessons = false;
+let resyncAfterOpen = false;
+const chapterRelease = {
+  '2a': '2a', '2b': '2b', '2b-12nov': '2026-11-12',
+  '2c-17nov': '2026-11-17', '2d-19nov': '2026-11-19'
+};
 
 function hasSeenLesson(release) {
   return !!(save.pupil && lessonSeen[save.pupil.id]?.[release]);
@@ -49,31 +54,38 @@ async function syncLessonState() {
     if (!response.ok) return;
     const data = await response.json();
     if (!currentPupil()) return;
-    if (data.seen?.includes(LESSON_RELEASE.id)) saveSeenLesson(LESSON_RELEASE.id);
-    // A marker made offline stays pending until the server confirms it.
-    if (hasSeenLesson(LESSON_RELEASE.id) && !data.seen?.includes(LESSON_RELEASE.id)) {
-      await fetch(url, {...options, method: 'POST',
-        headers: {...options.headers, 'content-type': 'application/json'},
-        body: JSON.stringify({release: LESSON_RELEASE.id})});
+    const seen = new Set(data.seen || []);
+    for (const release of Object.values(chapterRelease)) {
+      if (!currentPupil()) return;
+      if (seen.has(release)) {
+        if (!hasSeenLesson(release)) saveSeenLesson(release);
+      } else if (hasSeenLesson(release)) {
+        await fetch(url, {...options, method: 'POST',
+          headers: {...options.headers, 'content-type': 'application/json'},
+          body: JSON.stringify({release})});
+      }
     }
   } catch {
     // Keep the local marker. Online and focus events retry the same idempotent write.
   } finally {
     clearTimeout(timeout);
     syncingLessons = false;
-    if (save.pupil?.id !== pupilId) syncLessonState();
+    if (resyncAfterOpen || save.pupil?.id !== pupilId) {
+      resyncAfterOpen = false;
+      syncLessonState();
+    }
   }
 }
 
-function openLessonChapter() {
+function openLessonChapter(chapter = LESSON_RELEASE.chapter) {
   const open = () => {
-    CH = LESSON_RELEASE.chapter;
-    saveSeenLesson(LESSON_RELEASE.id);
+    CH = chapter;
+    if (chapterRelease[chapter]) saveSeenLesson(chapterRelease[chapter]);
+    if (syncingLessons) resyncAfterOpen = true;
     home();
     syncLessonState();
   };
-  // Existing pupil saves can still use old chapters. The new sync needs a code-authenticated session.
-  if (!save.pupil || (!TEST && save.lessonSession?.id !== save.pupil.id)) return askName(open);
+  if (!save.pupil || (!TEST && navigator.onLine && save.lessonSession?.id !== save.pupil.id)) return askName(open);
   open();
 }
 

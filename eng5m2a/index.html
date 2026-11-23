@@ -1024,8 +1024,7 @@ function chapters(){
   </main>`;
   topEvents();
   app.querySelectorAll('.chbtn').forEach(b=>b.onclick=()=>{sTap();
-    if(b.dataset.c===LESSON_RELEASE.chapter)return openLessonChapter();
-    CH=b.dataset.c;home()});
+    openLessonChapter(b.dataset.c)});
   document.getElementById('mine').onclick=()=>{sTap();save.pupil?mine():askName(mine)};
   flush();syncLessonState();window.scrollTo(0,0);
 }
@@ -1442,7 +1441,7 @@ addEventListener('keydown',e=>{
 
 </script>
 <script src="lesson-2b.js"></script>
-<script src="lesson-state.js"></script>
+<script src="lesson-state.js?v=all-chapters"></script>
 <script src="collections.js?v=phrase-cards-1"></script>
 <script src="tom-collection.js"></script>
 <script src="collections-learning.js?v=phrase-cards-1"></script>
